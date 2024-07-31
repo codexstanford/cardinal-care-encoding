@@ -1,0 +1,44 @@
+
+
+
+
+claim.patient(C, Patient)
+"Who received the service?"
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% General exclusions 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Armed forces
+claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces
+"Was the service received from a provider as a result of an injury sustained, or illness contracted, while in the service of the armed forces of any counntry?"
+
+% Beyond legal authority
+claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority
+"Was the service provided by a provider that was acting beyond the scope of its legal authority? (I.e. was the provider licensed/certified to provide the health care services they provided to you? If not, then they were acting beyond the scope of their legal authority.)"
+
+% Clinical trial therapies (experimental or investigational)
+claim.service_is_clinical_trial_therapy_experimental_investigational
+"Was the service an experimental or investigational clinical trial therapy?"
+
+% Genetic care
+claim.service_is_genetic_care
+"Did the service alter the body's genes, genetic make-up, or the expression of the body's genes?"
+
+claim.service_for_correction_of_congenital_birth_defects
+"Was the service for the correction of congenital birth defects?"
+
+% Judgment or settlement
+claim.payment_for_service_made_for_judgment_settlement
+"Is payment for this service made as a judgment or settlement by any person deemed responsible for an injury or illness, or by their insurers?"
+
+
+% Services provided by a family member
+claim.service_provided_by_family_member
+"Was the service provided by a spouse, domestic partner, civil union partner, parent, child, step-child, brother, sister, in-law or any household member of the patient?"
+
+
+% Treatment in a federal, state, or governmental entity
+claim.treated_in_facility_owned_or_operated_by_governmental_entity
+"Was the service received in a facility owned or operated by any federal, state, or other governmental entity?"
