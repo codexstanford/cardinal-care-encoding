@@ -5,6 +5,37 @@
 claim.patient(C, Patient)
 "Who received the service?"
 
+claim.date_service_received
+"On what date was the service received?"
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Received from a valid provider
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+claim.location_service_received
+"Where was the service received?"
+Should be one of 
+- A Stanford Health Care provider
+- Menlo Medical Clinic
+- A Sutter Health/Palo Alto Medical Foundation provider
+- An Aetna Tier two in-network provider
+- Another provider
+
+claim.service_available_at_tier_one_or_two_location
+"Is the service available at a Tier One or Tier Two location?"
+The wording above will definitely need to be changed
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Policy in effect
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+person.quarter_enrolled_2023_2024
+"What was the first quarter you were enrolled at Stanford during the 2023-2024 school year?"
+
+claim.waived_cardinal_care
+"Did you waive enrollment in Cardinal Care for the 2023-2024 school year?"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% General exclusions 

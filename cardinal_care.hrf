@@ -4,16 +4,57 @@ covers(Policy, C) :-
 
 
 covered_under_policy(C, Policy, aetna_cardinal_care) :-
-    service_received_at_valid_provider(C, Policy) &
     policy_in_effect(C, Policy) &
+    service_received_at_valid_provider(C, Policy) &
     medically_necessary_service(C) &
     precertified_if_necessary(C) &
     ~general_exclusion_applies(C)
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Policy in effect
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Does not currently capture conditions on withdrawal/leaves of absence, coverage on another Stanford-offered plan, or special extensions on coverage dates
+
+% Whether the policy was in effect when the service was received
+policy_in_effect(C, Policy) :-
+    claim.date_service_received(C, Date) &
+    claim.patient(C, Patient) &
+    policy_in_effect_for_person_on_date(Policy, Patient, Date) &
+    ~claim.waived_cardinal_care(C, yes)
+
+% Student enrolled in Autumn 2023
+policy_in_effect_on_date(Policy, Patient, ServiceDate) :-
+    person.quarter_enrolled_stanford_2023_2024(Person, autumn_quarter_2023) &
+    date_between_dates_incl(ServiceDate, 2023_09_01, 2024_08_31)
+
+% Student enrolled in Winter 2024
+policy_in_effect_on_date(Policy, Patient, ServiceDate) :-
+    person.quarter_enrolled_stanford_2023_2024(Person, winter_quarter_2024) &
+    date_between_dates_incl(ServiceDate, 2024_01_01, 2024_08_31)
+
+% Student enrolled in Spring 2024
+policy_in_effect_on_date(Policy, Patient, ServiceDate) :-
+    person.quarter_enrolled_stanford_2023_2024(Person, spring_quarter_2024) &
+    date_between_dates_incl(ServiceDate, 2024_04_01, 2024_08_31)
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Received from a valid provider
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Encoding does not currently capture the cases where treatment began out-of-network before the policy began, or when the care is emergency or urgent care and received from an out-of-network provider
 
+service_received_at_valid_provider(C, Policy) :-
+    claim.location_service_received(C, Location) &
+    member(Location, [
+        stanford_health_care,
+        menlo_medical_clinic,
+        sutter_health_palo_alto_medical_foundation,
+        tier_two_in_network
+    ])
 
+service_received_at_valid_provider(C, Policy) :-
+    claim.location_service_received(C, other) &
+    ~claim.service_available_at_tier_one_or_two_location(C, yes)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -74,3 +115,20 @@ general_exclusion_applies(C) :-
 % Treatment in a federal, state, or governmental entity
 general_exclusion_applies(C) :-
     claim.treated_in_facility_owned_or_operated_by_governmental_entity(C, yes)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Helper functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
+    get_timestamp_from_date(Date, DateTS) &
+    get_timestamp_from_date(BeginDateRange, BeginTS) &
+    get_timestamp_from_date(EndDateRange, EndTS) &
+    leq(BeginTS, DateTS) &
+    leq(DateTS, EndTS)
+
+get_timestamp_from_date(DATE,STAMP) :-
+  evaluate(parsedate(DATE),[Y,M,D]) &
+  evaluate(maketimestamp(Y,M,D,0,0,0),STAMP)
+
