@@ -133,7 +133,7 @@ meets_day_3_fsh_level_criteria(C, Patient) :-
     leq(40, Age) &
     countofall(T, claim.day_3_fsh_test_after_age_40(C, fsh_test(T, Level, _)) & leq(19, Level), 0)
 
-% Gets day 3 fsh tests that have been performed after the patient became 40 years old
+% Gets day 3 fsh tests that have been performed since the patient became 40 years old
 claim.day_3_fsh_test_after_age_40(C, fsh_test(Index, Level, DateTime)) :-
     claim.patient(C, Person) &
     person.dob(Person, DOB) &
@@ -182,13 +182,13 @@ eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
     lt(Level, 19) &
     meets_fsh_test_recency_req(C, fsh_test(Index, Level, DateTime))
 
-% If 40 or over, care about all prior tests in last 6 months (this is inferred from two constraints mentioned in the CPB Note 4)
+% If 40 or over, care about all prior tests since became 40 (This is inferred from the "Comprehensive infertility services" FSH level reqs, and the Note 4 text "Check benefit plan descriptions")
 eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
     claim.will_be_retrieving_eggs_for_use(C, yes) &
     leq(40, Age) &
-    
+    countofall(T, claim.day_3_fsh_test_after_age_40(C, fsh_test(T, Level, _)) & leq(19, Level), 0)
 
-% Vacuously met if not retrieving eggs for use
+% Vacuously satisfied if not retrieving eggs for use
 eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, _) :-
     ~claim.will_be_retrieving_eggs_for_use(C, yes)
 
