@@ -9,7 +9,7 @@ covered_under_policy(C, Policy, aetna_cardinal_care) :-
     meets_additional_eligibility_requirements_if_present(C) &
     medically_necessary_service(C) & % TODO
     precertified_if_necessary(C) &
-    ~beyond_limitations(C) & % TODO
+    ~beyond_limitations(C) &
     ~general_exclusion_applies(C)
 
 
@@ -331,13 +331,32 @@ requires_precertification(ServiceType) :-
     is_comprehensive_infertility_service(ServiceType)
 
 is_basic_infertility_service(diagnose_and_evaluate_underlying_medical_cause_of_infertility)
-is_basic_infertility_service(srugery_to_treat_underlying_medical_cause_of_infertility)
+is_basic_infertility_service(surgery_to_treat_underlying_medical_cause_of_infertility)
+
+is_comprehensive_infertility_service(ovulation_induction_cycle_with_menotropins)
+is_comprehensive_infertility_service(intrauterine_insemination)
 
 is_ART_service(ivf_for_fertility_preservation)
 is_ART_service(cryopreservation_for_fertility_preservation)
 
-is_comprehensive_infertility_service(ovulation_induction_cycle_with_menotropins)
-is_comprehensive_infertility_service(intrauterine_insemination)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Note: final encoding will compute these from other claims, but right now we're only doing one claim at a time
+% Maximum six covered attempts at IUI in a policy year (between September 1 2023 and August 31 2024, in this case)
+beyond_limitations(Claim) :-
+    claim.service_type(Claim, intrauterine_insemination) &
+    claim.num_other_covered_artificial_insemination_attempts(Claim, N) &
+    lt(N, 6)
+
+beyond_limitations(Claim) :-
+    claim.service_type(Claim, ServiceType) &
+    is_ART_service(ServiceType) &
+    claim.num_other_covered_ART_services(Claim, N) &
+    lt(N, 1)
+    
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% General exclusions 
