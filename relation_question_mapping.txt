@@ -2,7 +2,7 @@
 
 
 
-claim.patient(C, Patient)
+claim.patient
 "Who received the service?"
 
 claim.date_service_received
