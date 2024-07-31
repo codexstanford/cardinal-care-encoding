@@ -10,6 +10,10 @@ covered_under_policy(C, Policy, aetna_cardinal_care) :-
     precertified_if_necessary(C) &
     ~general_exclusion_applies(C)
 
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Policy in effect
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -56,6 +60,35 @@ service_received_at_valid_provider(C, Policy) :-
     claim.location_service_received(C, other) &
     ~claim.service_available_at_tier_one_or_two_location(C, yes)
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    requires_precertification(ServiceType) & 
+    claim.precertification_received(C, yes)
+
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    ~requires_precertification(ServiceType)
+
+
+%%%% Infertility
+
+requires_precertification(ServiceType) :-
+    is_ART_service(ServiceType)
+
+requires_precertification(ServiceType) :-
+    is_comprehensive_infertility_service(ServiceType)
+
+is_ART_service(ivf_for_fertility_preservation)
+is_ART_service(cryopreservation_for_fertility_preservation)
+
+is_comprehensive_infertility_service(ovulation_induction_cycle_with_menotropins)
+is_comprehensive_infertility_service(intrauterine_insemination)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% General exclusions 

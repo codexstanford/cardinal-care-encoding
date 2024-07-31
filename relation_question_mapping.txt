@@ -9,6 +9,12 @@ claim.date_service_received
 "On what date was the service received?"
 
 
+claim.service_type
+"What type of service was received?"
+Actually just determined by the claims page that we are on, so not uder input in the same way.
+
+claim.precertification_received
+"Was precertification received for the service? (If you received the service at an in-network provider, then it is not your responsibility to obtain precertification. Instead, it is your physician's responsibility.)"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Received from a valid provider
