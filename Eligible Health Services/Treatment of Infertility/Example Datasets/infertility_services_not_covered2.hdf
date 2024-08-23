@@ -1,0 +1,54 @@
+%%%%%% Not covered example 2 %%%%%%
+%%%%%% Service: cryopreservation_for_fertility_preservation %%%%%%
+%%%%%% Patient: Female without male partner (partner not relevant for ART services) %%%%%%
+%%%%%% Reason: Most recent day 3 fsh test level is >= 19 and will be retrieving her own eggs for use %%%%%%
+
+%%% Types %%%
+type(policy1, policy)
+type(rta_bondonado, person)
+type(claim1, claim)
+
+%%% Policy %%%
+policy.insuree(policy1, rta_bondonado)
+policy.type(policy1, aetna_cardinal_care_2023_2024)
+
+%%% Person %%%
+person.dob(rta_bondonado, 1981_06_25)
+
+person.quarter_enrolled_stanford_2023_2024(rta_bondonado, autumn_quarter_2023)
+
+person.has_female_reproductive_organs(rta_bondonado, yes)
+person.has_male_reproductive_organs(rta_bondonado, no)
+
+
+%%% Claim %%%
+claim.patient(claim1, rta_bondonado)
+claim.date_service_received(claim1,2024_08_10)
+claim.service_type(claim1, cryopreservation_for_fertility_preservation)
+claim.precertification_received(claim1, yes)
+claim.waived_cardinal_care(claim1, no)
+
+claim.location_service_received(claim1, stanford_health_care)
+claim.service_available_at_tier_one_or_two_location(claim1, yes)
+
+claim.patient_is_believed_to_be_fertile(claim1, yes)
+claim.patient_has_premature_ovarian_failure(claim1, yes)
+
+
+claim.day_3_fsh_test(claim1, fsh_test(0, 19, dt(2023_07_01, 12_00_00)))
+
+claim.planned_service(claim1, chemotherapy)
+claim.planned_service(claim1, other)
+
+claim.will_be_retrieving_eggs_for_use(claim1, yes)
+claim.num_other_covered_art_services(claim1, 0)
+
+%% General Exclusions %% 
+claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(claim1, no)
+claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority(claim1, no)
+claim.service_is_clinical_trial_therapy_experimental_investigational(claim1, no)
+claim.service_is_genetic_care(claim1, no)
+claim.service_for_correction_of_congenital_birth_defects(claim1, no)
+claim.payment_for_service_made_for_judgment_settlement(claim1, no)
+claim.service_provided_by_family_member(claim1, no)
+claim.treated_in_facility_owned_or_operated_by_governmental_entity(claim1, no)

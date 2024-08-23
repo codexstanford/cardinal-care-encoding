@@ -1,0 +1,44 @@
+%%%%%% Covered example 2 %%%%%%
+%%%%%% Service: female_voluntary_sterilization %%%%%%
+
+%%% Types %%%
+type(policy1, policy)
+type(rta_bondonado, person)
+type(claim1, claim)
+
+%%% Policy %%%
+policy.insuree(policy1, rta_bondonado)
+policy.type(policy1, aetna_cardinal_care_2023_2024)
+
+%%% Person %%%
+person.dob(rta_bondonado, 1999_06_25)
+
+person.quarter_enrolled_stanford_2023_2024(rta_bondonado, autumn_quarter_2023)
+
+person.has_female_reproductive_organs(rta_bondonado, yes)
+person.has_male_reproductive_organs(rta_bondonado, no)
+
+%%% Claim %%%
+%% Service-generic %%
+claim.patient(claim1, rta_bondonado)
+claim.date_service_received(claim1,2024_08_10)
+claim.service_type(claim1, female_voluntary_sterilization)
+claim.precertification_received(claim1, no)
+claim.waived_cardinal_care(claim1, no)
+
+claim.location_service_received(claim1, stanford_health_care)
+claim.service_available_at_tier_one_or_two_location(claim1, yes)
+
+
+%% Service-specific %%
+claim.type_of_female_voluntary_sterilization_procedure_service_or_supplies(claim1, tubal_ligation)
+
+%% General Exclusions %% 
+claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(claim1, no)
+claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority(claim1, no)
+claim.service_is_clinical_trial_therapy_experimental_investigational(claim1, no)
+claim.service_is_genetic_care(claim1, no)
+claim.service_for_correction_of_congenital_birth_defects(claim1, no)
+claim.payment_for_service_made_for_judgment_settlement(claim1, no)
+claim.service_provided_by_family_member(claim1, no)
+claim.treated_in_facility_owned_or_operated_by_governmental_entity(claim1, no)
