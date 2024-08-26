@@ -26,7 +26,7 @@ policy_in_effect(C, Policy) :-
     claim.date_service_received(C, Date) &
     claim.patient(C, Patient) &
     policy_in_effect_for_person_on_date(Policy, Patient, Date) &
-    ~claim.waived_cardinal_care(C, yes)
+    claim.waived_cardinal_care(C, no)
 
 % Student enrolled in Autumn 2023
 policy_in_effect_for_person_on_date(Policy, Patient, ServiceDate) :-
@@ -63,7 +63,7 @@ service_received_at_valid_provider(C, Policy) :-
 
 service_received_at_valid_provider(C, Policy) :-
     claim.location_service_received(C, other) &
-    ~claim.service_available_at_tier_one_or_two_location(C, yes)
+    claim.service_available_at_tier_one_or_two_location(C, no)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -103,15 +103,15 @@ meets_comprehensive_infertility_service_eligibility_requirements(C) :-
         natural_male_reproductive_aging,
         other_natural_physiologic_process
     ]) &
-    ~claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan(C, yes) &
+    claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan(C, no) &
     meets_day_3_fsh_level_criteria(C, Patient)
 
 meets_no_voluntary_sterilization_req(C) :-
-    ~claim.patient_has_had_voluntary_sterilization(C, yes)
+    claim.patient_has_had_voluntary_sterilization(C, no)
 
 meets_no_voluntary_sterilization_req(C) :-
     claim.patient_had_partner(C, yes) &
-    ~claim.patients_partner_has_had_voluntary_sterilization(C, yes)
+    claim.patients_partner_has_had_voluntary_sterilization(C, no)
 
 % If under 40, only care about most recent test
 % Also a requirement for under 35, but is redundant here
@@ -208,7 +208,7 @@ eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
 
 % Vacuously satisfied if not retrieving eggs for use
 eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, _) :-
-    ~claim.will_be_retrieving_eggs_for_use(C, yes)
+    claim.will_be_retrieving_eggs_for_use(C, no)
 
 % If 39 or over, test must be in the last six months
 % Bug Note: same datetime bugginess as in the NUM_MS_IN_TWO_WEEKS case
@@ -235,7 +235,7 @@ meets_fsh_test_recency_req(C, _) :-
 % Female without a male partner
 is_infertile(C, Person) :-
     person.has_female_reproductive_organs(Person, yes) &
-    ~claim.patient_has_partner_with_male_reproductive_organs(C, yes) &
+    claim.patient_has_partner_with_male_reproductive_organs(C, no) &
     age_at_time_of_service(C, Person, Age) &
     meets_attempt_to_conceive_reqs_female_without_male_partner(C, Age)
 
@@ -301,7 +301,7 @@ meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
 % Bug Note: This is actually buggy because the policy would care about dates, not solar/sidereal time - should use a real datetime module for computing difference of two weeks
 is_infertile(C, Person) :-
     person.has_male_reproductive_organs(Person, yes) &
-    ~claim.patient_has_partner_with_female_reproductive_organs(C, yes) &
+    claim.patient_has_partner_with_female_reproductive_organs(C, no) &
     claim.abnormal_semen_analysis_on_date(C, Date1) &
     claim.abnormal_semen_analysis_on_date(C, Date2) & 
     get_timestamp_from_date(Date1, TS1) &
@@ -835,7 +835,7 @@ general_exclusion_applies(C) :-
 % Genetic care
 general_exclusion_applies(C) :-
     claim.service_is_genetic_care(C, yes) &
-    ~claim.service_for_correction_of_congenital_birth_defects(C, yes)
+    claim.service_for_correction_of_congenital_birth_defects(C, no)
 
 % Incidental surgeries
 % Note: Not encoding this now because it is implied by the fact that incidental surgeries are non-medically necessary
