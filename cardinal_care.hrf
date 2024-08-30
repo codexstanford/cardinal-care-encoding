@@ -879,7 +879,7 @@ age_on_date(Person, Date, Age) :-
     person.dob(Person, DOB) &
     evaluate(parsedate(Date),[Year,Month,Day]) &
     evaluate(parsedate(DOB),[DOBYear,DOBMonth,DOBDay]) &
-    evaluate(minus(Year,Year), YearDiff) &
+    evaluate(minus(Year,DOBYear), YearDiff) &
     not_yet_birthday_delta(Month,Day, DOBMonth, DOBDay, Delta) &
     evaluate(plus(YearDiff, Delta), Age)
 
