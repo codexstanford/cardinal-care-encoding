@@ -23,10 +23,10 @@ covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024) :-
 
 % Whether the policy was in effect when the service was received
 policy_in_effect(C, Policy) :-
-    claim.date_service_received(C, Date) &
     claim.patient(C, Patient) &
-    policy_in_effect_for_person_on_date(Policy, Patient, Date) &
-    claim.waived_cardinal_care(C, no)
+    claim.waived_cardinal_care(C, no) &
+    claim.date_service_received(C, Date) &
+    policy_in_effect_for_person_on_date(Policy, Patient, Date)
 
 % Student enrolled in Autumn 2023
 policy_in_effect_for_person_on_date(Policy, Patient, ServiceDate) :-
