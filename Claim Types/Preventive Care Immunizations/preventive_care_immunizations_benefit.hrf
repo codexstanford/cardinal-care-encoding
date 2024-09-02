@@ -221,12 +221,12 @@ max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, pfizer_biontech, 1, d
 max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, Brand, 1, dose_counts(NumOldModerna, NumOldPfizer, _, _)) :-
     evaluate(plus(NumOldModerna, NumOldPfizer), NumOldmrna) &
     leq(3, NumOldmrna) &
-    leq(Brand, [moderna, novavax, pfizer_biontech])
+    member(Brand, [moderna, novavax, pfizer_biontech])
 
 max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, Brand, 1, dose_counts(_, _, NumOldNovavax, NumOldJnJ)) :-
     evaluate(plus(NumOldNovavax, NumOldJnJ), NumOldNonmrna) &
     leq(1, NumOldNonmrna) &
-    leq(Brand, [moderna, novavax, pfizer_biontech])
+    member(Brand, [moderna, novavax, pfizer_biontech])
     
 
 % Note: Only doing 2024 guidelines, since we won't be using 2023 guidelines in the final service if we don't make the 2023-2024 policy available
