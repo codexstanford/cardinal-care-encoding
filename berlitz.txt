@@ -22,8 +22,8 @@ person.quarter_enrolled_stanford_2023_2024(P, Q)
 "$Q$ is the first quarter that $P$ was enrolled in Stanford in the 2023-2024 academic year"
 One of:
 - autumn_quarter_2023: "Autumn Quarter 2023"
-- winter_quarter_2023: "Winter Quarter 2023"
-- spring_quarter_2023: "Spring Quarter 2023"
+- winter_quarter_2024: "Winter Quarter 2024"
+- spring_quarter_2024: "Spring Quarter 2024"
 
 
 person.has_male_reproductive_organs(P, yes)

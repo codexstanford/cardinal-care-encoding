@@ -1,6 +1,6 @@
 type(autumn_quarter_2023, quarter_2023_2024)
-type(winter_quarter_2023, quarter_2023_2024)
-type(spring_quarter_2023, quarter_2023_2024)
+type(winter_quarter_2024, quarter_2023_2024)
+type(spring_quarter_2024, quarter_2023_2024)
 
 type(stanford_health_care, cardinal_care_2023_2024_location)
 type(menlo_medical_clinic, cardinal_care_2023_2024_location)
