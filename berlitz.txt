@@ -17,6 +17,12 @@ policy.insuree(P, I)
 person.dob(P, D)
 "the date of birth of $P$ is $D$"
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Claim relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%% Claim type-generic %%%%%%%%%%%%%%%%%%%%%%%
+
+claim.patient(C, P)
+"the patient in $C$ is $P$"
 
 claim.quarter_enrolled_stanford_2023_2024(C, Q)
 "$Q$ is the first quarter that the patient in $C$ was enrolled in Stanford in the 2023-2024 academic year"
@@ -25,32 +31,8 @@ One of:
 - winter_quarter_2024: "Winter Quarter 2024"
 - spring_quarter_2024: "Spring Quarter 2024"
 
-
-person.has_male_reproductive_organs(P, yes)
-"$P$ has male reproductive organs"
-
-person.has_male_reproductive_organs(P, no)
-"$P$ does not have male reproductive organs"
-
-
-person.has_female_reproductive_organs(P, yes)
-"$P$ has female reproductive organs"
-
-person.has_female_reproductive_organs(P, no)
-"$P$ does not have female reproductive organs"
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%% Claim relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%% Service-generic %%%%%%%%%%%%%%%%%%%%%%%
-
-claim.patient(C, P)
-"the patient in $C$ is $P$"
-
-
 claim.date_service_received(C, D)
 "the service in $C$ was received on $D$"
-
 
 claim.service_type(C, S)
 "the service in $C$ has type $S$"
@@ -99,9 +81,21 @@ claim.service_available_at_tier_one_or_two_location(C, no)
 "the service in $C$ is not available at a tier one or tier two location"
 
 
-%%%%%%%%%%%%%%%%%%%%%%% Service-specific %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%% Claim type-specific %%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%% Treatment of Infertility Benefit %%%%%%%%%%%
+
+claim.patient_has_male_reproductive_organs(C, yes)
+"the patient in $C$ has male reproductive organs"
+
+claim.patient_has_male_reproductive_organs(C, no)
+"the patient in $C$ does not have male reproductive organs"
+
+claim.patient_has_female_reproductive_organs(C, yes)
+"the patient in $C$ has female reproductive organs"
+
+claim.patient_has_female_reproductive_organs(C, no)
+"the patient in $C$ does not have female reproductive organs"
 
 %%% I. Diagnose and Evaluate the Underlying Cause of Infertility
 

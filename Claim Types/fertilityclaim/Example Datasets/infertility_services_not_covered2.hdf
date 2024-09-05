@@ -15,10 +15,6 @@ policy.type(policy1, aetna_cardinal_care_2023_2024)
 %%% Person %%%
 person.dob(rta_bondonado, 1981_06_25)
 
-person.has_female_reproductive_organs(rta_bondonado, yes)
-person.has_male_reproductive_organs(rta_bondonado, no)
-
-
 %%% Claim %%%
 claim.patient(claim1, rta_bondonado)
 claim.quarter_enrolled_stanford_2023_2024(claim1, autumn_quarter_2023)
@@ -29,6 +25,10 @@ claim.waived_cardinal_care(claim1, no)
 
 claim.location_service_received(claim1, stanford_health_care)
 claim.service_available_at_tier_one_or_two_location(claim1, yes)
+
+%% Claim type-specific %%
+claim.patient_has_female_reproductive_organs(claim1, yes)
+claim.patient_has_male_reproductive_organs(claim1, no)
 
 claim.patient_is_believed_to_be_fertile(claim1, yes)
 claim.patient_has_premature_ovarian_failure(claim1, yes)

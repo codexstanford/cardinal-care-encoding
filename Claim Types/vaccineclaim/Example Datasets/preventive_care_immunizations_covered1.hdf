@@ -16,9 +16,6 @@ policy.type(policy1, aetna_cardinal_care_2023_2024)
 %%% Person %%%
 person.dob(rta_bondonado, 2015_08_15)
 
-person.has_female_reproductive_organs(rta_bondonado, yes)
-person.has_male_reproductive_organs(rta_bondonado, no)
-
 %%% Claim %%%
 %% Service-generic %%
 claim.patient(claim1, rta_bondonado)

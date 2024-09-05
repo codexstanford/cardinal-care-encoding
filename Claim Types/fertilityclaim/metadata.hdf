@@ -1,5 +1,7 @@
 type(fertilityclaim, class)
 superclass(fertilityclaim, claim)
+attribute(fertilityclaim, claim.patient_has_male_reproductive_organs)
+attribute(fertilityclaim, claim.patient_has_female_reproductive_organs)
 attribute(fertilityclaim, claim.num_months_regular_intravaginal_inseminations)
 attribute(fertilityclaim, claim.num_cycles_timed_intrauterine_intracervical_inseminations)
 attribute(fertilityclaim, claim.num_other_covered_artificial_insemination_attempts)
@@ -24,6 +26,19 @@ attribute(fertilityclaim, claim.planned_service)
 attribute(fertilityclaim, claim.will_be_retrieving_eggs_for_use)
 attribute(fertilityclaim, claim.patient_has_premature_ovarian_failure)
 attribute(fertilityclaim, claim.num_other_covered_art_services)
+
+
+type(claim.patient_has_male_reproductive_organs, attributerelation)
+domain(claim.patient_has_male_reproductive_organs, claim)
+codomain(claim.patient_has_male_reproductive_organs, boolean)
+unique(claim.patient_has_male_reproductive_organs, yes)
+total(claim.patient_has_male_reproductive_organs, yes)
+
+type(claim.patient_has_female_reproductive_organs, attributerelation)
+domain(claim.patient_has_female_reproductive_organs, claim)
+codomain(claim.patient_has_female_reproductive_organs, boolean)
+unique(claim.patient_has_female_reproductive_organs, yes)
+total(claim.patient_has_female_reproductive_organs, yes)
 
 
 type(claim.num_months_regular_intravaginal_inseminations, attributerelation)
