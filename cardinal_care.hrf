@@ -25,25 +25,26 @@ covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024) :-
 policy_in_effect(C, Policy) :-
     claim.patient(C, Patient) &
     claim.waived_cardinal_care(C, no) &
-    claim.date_service_received(C, Date) &
-    policy_in_effect_for_person_on_date(Policy, Patient, Date)
+    policy_in_effect_for_claim(Policy, C)
+
 
 % Student enrolled in Autumn 2023
-policy_in_effect_for_person_on_date(Policy, Patient, ServiceDate) :-
-    policy.insuree(Policy, Patient) & 
-    person.quarter_enrolled_stanford_2023_2024(Patient, autumn_quarter_2023) &
+policy_in_effect_for_claim(Policy, Claim) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    claim.quarter_enrolled_stanford_2023_2024(Claim, autumn_quarter_2023) &
     date_between_dates_incl(ServiceDate, 2023_09_01, 2024_08_31)
 
+
 % Student enrolled in Winter 2024
-policy_in_effect_for_person_on_date(Policy, Patient, ServiceDate) :-
-    policy.insuree(Policy, Patient) & 
-    person.quarter_enrolled_stanford_2023_2024(Patient, winter_quarter_2024) &
+policy_in_effect_for_claim(Policy, Claim) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    claim.quarter_enrolled_stanford_2023_2024(Claim, winter_quarter_2024) &
     date_between_dates_incl(ServiceDate, 2024_01_01, 2024_08_31)
 
 % Student enrolled in Spring 2024
-policy_in_effect_for_person_on_date(Policy, Patient, ServiceDate) :-
-    policy.insuree(Policy, Patient) & 
-    person.quarter_enrolled_stanford_2023_2024(Patient, spring_quarter_2024) &
+policy_in_effect_for_claim(Policy, Claim) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    claim.quarter_enrolled_stanford_2023_2024(Claim, spring_quarter_2024) &
     date_between_dates_incl(ServiceDate, 2024_04_01, 2024_08_31)
 
 

@@ -15,14 +15,13 @@ policy.type(policy1, aetna_cardinal_care_2023_2024)
 %%% Person %%%
 person.dob(rta_bondonado, 1981_06_25)
 
-person.quarter_enrolled_stanford_2023_2024(rta_bondonado, autumn_quarter_2023)
-
 person.has_female_reproductive_organs(rta_bondonado, yes)
 person.has_male_reproductive_organs(rta_bondonado, no)
 
 
 %%% Claim %%%
 claim.patient(claim1, rta_bondonado)
+claim.quarter_enrolled_stanford_2023_2024(claim1, autumn_quarter_2023)
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, cryopreservation_for_fertility_preservation)
 claim.precertification_received(claim1, yes)

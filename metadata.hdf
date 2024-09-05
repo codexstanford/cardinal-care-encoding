@@ -19,7 +19,6 @@ total(policy.insuree, yes)
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Person relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
 type(person, class)
 attribute(person, person.dob)
-attribute(person, person.quarter_enrolled_stanford_2023_2024)
 attribute(person, person.has_male_reproductive_organs)
 attribute(person, person.has_female_reproductive_organs)
 
@@ -29,11 +28,6 @@ codomain(person.dob, date)
 unique(person.dob, yes)
 total(person.dob, yes)
 
-type(person.quarter_enrolled_stanford_2023_2024, attributerelation)
-domain(person.quarter_enrolled_stanford_2023_2024, person)
-codomain(person.quarter_enrolled_stanford_2023_2024, quarter_2023_2024)
-unique(person.quarter_enrolled_stanford_2023_2024, yes)
-total(person.quarter_enrolled_stanford_2023_2024, no)
 
 type(person.has_male_reproductive_organs, attributerelation)
 domain(person.has_male_reproductive_organs, person)
@@ -53,6 +47,7 @@ type(claim, class)
 
 %%%%%%%%%%%%%%%%%%%%%%% Service-generic %%%%%%%%%%%%%%%%%%%%%%%
 attribute(claim, claim.patient)
+attribute(claim, claim.quarter_enrolled_stanford_2023_2024)
 attribute(claim, claim.date_service_received)
 attribute(claim, claim.service_type)
 attribute(claim, claim.precertification_received)
@@ -65,6 +60,12 @@ domain(claim.patient, claim)
 codomain(claim.patient, person)
 unique(claim.patient, yes)
 total(claim.patient, yes)
+
+type(claim.quarter_enrolled_stanford_2023_2024, attributerelation)
+domain(claim.quarter_enrolled_stanford_2023_2024, claim)
+codomain(claim.quarter_enrolled_stanford_2023_2024, quarter_2023_2024)
+unique(claim.quarter_enrolled_stanford_2023_2024, yes)
+total(claim.quarter_enrolled_stanford_2023_2024, no)
 
 type(claim.date_service_received, attributerelation)
 domain(claim.date_service_received, claim)

@@ -14,13 +14,13 @@ policy.type(policy1, aetna_cardinal_care_2023_2024)
 %%% Person %%%
 person.dob(petra_maldonado, 1999_06_25)
 
-person.quarter_enrolled_stanford_2023_2024(petra_maldonado, autumn_quarter_2023)
 
 person.has_female_reproductive_organs(petra_maldonado, no)
 person.has_male_reproductive_organs(petra_maldonado, yes)
 
 %%% Claim %%%
 claim.patient(claim1, petra_maldonado)
+claim.quarter_enrolled_stanford_2023_2024(claim1, autumn_quarter_2023)
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, diagnose_and_evaluate_underlying_medical_cause_of_infertility)
 claim.precertification_received(claim1, no)

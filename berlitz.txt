@@ -18,8 +18,8 @@ person.dob(P, D)
 "the date of birth of $P$ is $D$"
 
 
-person.quarter_enrolled_stanford_2023_2024(P, Q)
-"$Q$ is the first quarter that $P$ was enrolled in Stanford in the 2023-2024 academic year"
+claim.quarter_enrolled_stanford_2023_2024(C, Q)
+"$Q$ is the first quarter that the patient in $C$ was enrolled in Stanford in the 2023-2024 academic year"
 One of:
 - autumn_quarter_2023: "Autumn Quarter 2023"
 - winter_quarter_2024: "Winter Quarter 2024"
@@ -498,8 +498,8 @@ general_exclusion_applies(C)
 "one or more general exclusions apply to $C$"
 
 
-policy_in_effect_for_person_on_date(POL, PT, D)
-"$POL$ is in effect for $PT$ on $D$"
+policy_in_effect_for_claim(POL, C)
+"$POL$ is in effect for $C$
 
 
 date_between_dates_incl(ServiceDate, StartDate, EndDate)
