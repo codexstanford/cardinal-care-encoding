@@ -90,11 +90,11 @@ type(related_supplies, cardinal_care_2023_2024_type_of_female_voluntary_steriliz
 type(influenza_disease, disease_type)
 type(covid19_disease, disease_type)
 
-type(immunization_reason, preventive_care)
-type(immunization_reason, recommended_as_preventive_care)
-type(immunization_reason, required_for_employment)
-type(immunization_reason, required_for_travel)
-type(immunization_reason, other)
+type(preventive_care, immunization_reason)
+type(recommended_as_preventive_care, immunization_reason)
+type(required_for_employment, immunization_reason)
+type(required_for_travel, immunization_reason)
+type(other, immunization_reason)
 
 type(yes_ternary, yes_no_unknown)
 type(unknown, yes_no_unknown)
