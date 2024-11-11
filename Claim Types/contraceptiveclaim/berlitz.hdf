@@ -1,0 +1,64 @@
+%%%%%%%%%%% Family Planning Services - Female Contraceptives Benefit %%%%%%%%%%%
+
+%%% Counseling services
+berlitz(claim.type_of_contraceptive_counseling(C, T),
+        "the contraceptive counseling in $C$ is regarding $T$")
+
+
+berlitz(claim.counseling_setting(C, S),
+        "the setting of the contraceptive counseling in $C$ is $S$")
+
+
+%%% Contraceptives (drugs or devices) - includes OTC prescribed by provider, and follow-up care
+
+berlitz(claim.type_of_female_contraceptive_method_provided(C, T),
+        "the female contraceptive method provided in $C$ is $T$")
+
+berlitz(claim.otc_female_contraceptive_method_is_prescribed_by_provider(C, yes),
+        "the over-the-counter female contraceptive method in $C$ is prescribed by a provider")
+berlitz(claim.otc_female_contraceptive_method_is_prescribed_by_provider(C, no),
+        "the over-the-counter female contraceptive method in $C$ is not prescribed by a provider")
+
+berlitz(claim.mode_of_providing_service(C, provided_by), 
+        "$C$ is regarding a service provided by a healthcare provider")
+berlitz(claim.mode_of_providing_service(C, administered_by), 
+        "$C$ is regarding a service administered by a healthcare provider")
+berlitz(claim.mode_of_providing_service(C, removed_by), 
+        "$C$ is regarding removal by a healthcare provider")
+berlitz(claim.mode_of_providing_service(C, provided_related_service), 
+        "$C$ is regarding the provision of services related to the primary service listed in $C$")
+berlitz(claim.mode_of_providing_service(C, provided_related_supplies), 
+        "$C$ is regarding the provision of supplies related to the primary type of service listed in $C$")
+berlitz(claim.mode_of_providing_service(C, provided_follow_up_care), 
+        "$C$ is regarding follow-up care for the primary type of service listed in $C$")
+berlitz(claim.mode_of_providing_service(C, other), 
+        "$C$ is regarding service provided in a non-standard modality")
+
+%% Voluntary sterilization
+berlitz(claim.type_of_female_voluntary_sterilization_procedure_service_or_supplies(C, T),
+        "the type of female voluntary sterilization procedure or related services or supplies in $C$ is $T$")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Defined Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(is_covered_type_of_contraceptive_counseling(C),
+        "the type of contraceptive counseling in $C$ is covered")
+
+berlitz(is_group_or_individual_counseling(C),
+        "the counseling in the service in $C$ is in a group or individual setting")
+
+berlitz(fda_approved_female_contraceptive_method(M),
+        "$M$ is an FDA-approved method of female contraception")
+
+berlitz(female_contraceptive_method_is_prescribed_if_otc(C),
+        "the female contraceptive method in the service in $C$, if it is over-the-counter, is prescribed by a physician")
+
+berlitz(otc_female_contraceptive_method(M),
+        "$M$ is an over-the-counter female contraceptive method")
+
+berlitz(valid_mode_of_providing_female_contraceptive_method(C),
+        "the contraceptive method in $C$ was provided in a valid mode")
+
+berlitz(female_contraceptives_service(S),
+        "$S$ is a female contraceptives service")

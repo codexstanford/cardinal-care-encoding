@@ -1,0 +1,18 @@
+%%%%%%%% Treatment of Infertility %%%%%%%%
+
+type(natural_menopause, cardinal_care_2023_2024_infertility_causing_condition)
+type(natural_perimenopause, cardinal_care_2023_2024_infertility_causing_condition)
+type(natural_male_reproductive_aging, cardinal_care_2023_2024_infertility_causing_condition)
+type(other_natural_physiologic_process, cardinal_care_2023_2024_infertility_causing_condition)
+% type(other, cardinal_care_2023_2024_infertility_causing_condition)
+
+type(chemotherapy, cardinal_care_2023_2024_infertility_causing_service)
+type(pelvic_radiotherapy, cardinal_care_2023_2024_infertility_causing_service)
+type(gonadotoxic_therapy, cardinal_care_2023_2024_infertility_causing_service)
+type(orchiectomy, cardinal_care_2023_2024_infertility_causing_service)
+type(oophorectomy, cardinal_care_2023_2024_infertility_causing_service)
+type(hysterectomy, cardinal_care_2023_2024_infertility_causing_service)
+type(orchiectomy_for_treatment_of_disease, cardinal_care_2023_2024_infertility_causing_service)
+type(oophorectomy_for_treatment_of_disease, cardinal_care_2023_2024_infertility_causing_service)
+type(other_treatment_demonstrated_to_result_in_infertility, cardinal_care_2023_2024_infertility_causing_service)
+% type(other, cardinal_care_2023_2024_infertility_causing_service)
