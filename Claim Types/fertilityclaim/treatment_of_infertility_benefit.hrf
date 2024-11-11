@@ -1,0 +1,399 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eligible for service - additional eligibility requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% Treatment of Infertility
+%%%% Important question: how do we want to handle the explicit exclusions that don't actually apply to anything that is covered by the policy? E.g. page 65 of the Certificate of Coverage
+
+
+%% Basic infertility services
+covered_under_cardinal_care_23_24_benefit(C, treatment_of_infertility_benefit) :-
+    claim.service_type(C, ServiceType) & 
+    is_basic_infertility_service(ServiceType) &
+    claim.patient(C, Patient) &
+    is_infertile(C, Patient)
+
+
+%% Comprehensive infertility services
+covered_under_cardinal_care_23_24_benefit(C, treatment_of_infertility_benefit) :-
+    claim.service_type(C, ServiceType) & 
+    is_comprehensive_infertility_service(ServiceType) &
+    claim.patient(C, Patient) &
+    is_infertile(C, Patient) &
+    meets_comprehensive_infertility_service_eligibility_requirements(C)
+
+meets_comprehensive_infertility_service_eligibility_requirements(C) :-
+    claim.patient(C, Patient) & 
+    meets_no_voluntary_sterilization_req(C) &
+    claim.demonstrated_and_documented_condition_causing_infertility(C, Condition) &
+    ~member(Condition, [
+        natural_menopause,
+        natural_perimenopause,
+        natural_male_reproductive_aging,
+        other_natural_physiologic_process
+    ]) &
+    claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan(C, no) &
+    meets_day_3_fsh_level_criteria(C, Patient)
+
+meets_no_voluntary_sterilization_req(C) :-
+    claim.patient_has_had_voluntary_sterilization(C, no)
+
+meets_no_voluntary_sterilization_req(C) :-
+    claim.patient_had_partner(C, yes) &
+    claim.patients_partner_has_had_voluntary_sterilization(C, no)
+
+% If under 40, only care about most recent test
+% Also a requirement for under 35, but is redundant here
+meets_day_3_fsh_level_criteria(C, Patient) :-
+    age_at_time_of_service(C, Patient, Age) &
+    lt(Age, 40) &
+    most_recent_day_3_fsh_test(C, fsh_test(_, Level, _)) &
+    lt(Level, 19)
+
+% If multiple tests have the same datetime, then we can't decide which was most recent and this is not satisfied.
+most_recent_day_3_fsh_test(C, fsh_test(Index, Level, DateTime)) :-
+    claim.day_3_fsh_test(C, fsh_test(Index, Level, DateTime)) &
+    countofall(T, claim.day_3_fsh_test(C, fsh_test(T, _, DateTime2)) & distinct(Index, T) & leq_datetime(DateTime, DateTime2), 0)
+
+% If over 40, care about all tests performed after age 40
+% Practically, this almost certainly means "since you became 40". But this is technically an assumption.
+% Another practical assumption: There must be at least one test after age 40
+meets_day_3_fsh_level_criteria(C, Patient) :-
+    age_at_time_of_service(C, Patient, Age) &
+    leq(40, Age) &
+    claim.day_3_fsh_test_after_age_40(C, _) &
+    countofall(T, claim.day_3_fsh_test_after_age_40(C, fsh_test(T, Level, _)) & leq(19, Level), 0)
+
+% Gets day 3 fsh tests that have been performed since the patient became 40 years old
+claim.day_3_fsh_test_after_age_40(C, fsh_test(Index, Level, DateTime)) :-
+    claim.patient(C, Person) &
+    person.dob(Person, DOB) &
+    evaluate(parsedate(DOB), [Y, M, D]) &
+    evaluate(maketimestamp(plus(Y, 40), M, D, 0, 0, 0), FortiethBirthdayTS) &
+    claim.day_3_fsh_test(C, fsh_test(Index, Level, dt(Date, Time))) &
+    datetimetotimestamp(Date, Time, TestTS) &
+    leq(FortiethBirthdayTS, TestTS)
+
+% N/A if male
+meets_day_3_fsh_level_criteria(C, Patient) :-
+    claim.patient_has_male_reproductive_organs(C, yes)
+
+
+
+%% Advanced reproductive technology services
+covered_under_cardinal_care_23_24_benefit(C, treatment_of_infertility_benefit) :-
+    claim.service_type(C, ServiceType) & 
+    is_art_service(ServiceType) &
+    claim.patient(C, Patient) &
+    meets_fertility_preservation_eligibility_requirements(C) &
+    ~claim.location_service_received(C, other) % ART service-specific exclusion in the infertility treatment benefit. Not provided for out-of-network care.
+
+
+meets_fertility_preservation_eligibility_requirements(C) :-
+    claim.patient(C, Patient) &
+    claim.patient_is_believed_to_be_fertile(C, yes) &
+    claim.planned_service(C, PlannedService) &
+    member(PlannedService, [
+        chemotherapy,
+        pelvic_radiotherapy,
+        gonadotoxic_therapy,
+        orchiectomy,
+        oophorectomy,
+        hysterectomy,
+        orchiectomy_for_treatment_of_disease,
+        oophorectomy_for_treatment_of_disease,
+        other_treatment_demonstrated_to_result_in_infertility
+    ]) &
+    age_at_time_of_service(C, Patient, Age) &
+    eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age)
+
+% Source: Note 4 from CPB 0327 on 7/31/2024: https://www.aetna.com/cpb/medical/data/300_399/0327.html
+% If under 40, just care about most recent test
+eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
+    claim.will_be_retrieving_eggs_for_use(C, yes) &
+    lt(Age, 40) &
+    most_recent_day_3_fsh_test(C, fsh_test(Index, Level, DateTime)) &
+    lt(Level, 19) &
+    meets_fsh_test_recency_req(C, fsh_test(Index, Level, DateTime))
+
+% If 40 or over, care about all prior tests since became 40 (This is inferred from the "Comprehensive infertility services" FSH level reqs, and the Note 4 text "Check benefit plan descriptions")
+% Another practical assumption: There must be at least one test after age 40
+eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
+    claim.will_be_retrieving_eggs_for_use(C, yes) &
+    leq(40, Age) &
+    claim.day_3_fsh_test_after_age_40(C, _) &
+    countofall(T, claim.day_3_fsh_test_after_age_40(C, fsh_test(T, Level, _)) & leq(19, Level), 0)
+
+% Source: Note 5 from CPB 0327 on 7/31/2024: https://www.aetna.com/cpb/medical/data/300_399/0327.html
+% Additional (more generous) eligibility requirements if a woman has premature ovarian failure
+eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
+    claim.will_be_retrieving_eggs_for_use(C, yes) &
+    leq(40, Age) &
+    claim.patient(C, Patient) &
+    claim.patient_has_premature_ovarian_failure(C, yes) &
+    most_recent_day_3_fsh_test(C, fsh_test(_, Level, _)) &
+    lt(Level, 19)
+
+
+% Vacuously satisfied if not retrieving eggs for use
+eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, _) :-
+    claim.will_be_retrieving_eggs_for_use(C, no)
+
+% If 39 or over, test must be in the last six months
+% Bug Note: same datetime bugginess as in the NUM_MS_IN_TWO_WEEKS case
+% Could be fixed by implementing date_n_months_before(ServiceDate, 6, DateSixMonthsBefore), but requires some function finickiness I would rather sort out with Mike
+meets_fsh_test_recency_req(C, fsh_test(_, _, dt(TestDate, TestTime))) :-
+    claim.patient(C, Patient) &
+    age_at_time_of_service(C, Patient, Age) &
+    leq(39, Age) &
+    claim.date_service_received(C, ServiceDate) &
+    get_timestamp_from_date(ServiceDate, ServiceDateTS) &
+    evaluate(times(365, 24, 60, 60, 1000), NUM_MS_IN_SIX_MONTHS) &
+    evaluate(minus(ServiceDateTS, NUM_MS_IN_SIX_MONTHS), SixMonthsBeforeTS) &
+    datetimetotimestamp(TestDate, TestTime, TestDateTimeTS) &
+    leq(SixMonthsBeforeTS, TestDateTimeTS)
+
+% If under 39, no additional requirement
+meets_fsh_test_recency_req(C, _) :-
+    claim.patient(C, Patient) &
+    age_at_time_of_service(C, Patient, Age) &
+    lt(Age, 39)
+
+%% General definition of infertility
+
+% Female without a male partner
+is_infertile(C, Person) :-
+    claim.patient_has_female_reproductive_organs(C, yes) &
+    claim.patient_has_partner_with_male_reproductive_organs(C, no) &
+    age_at_time_of_service(C, Person, Age) &
+    meets_attempt_to_conceive_reqs_female_without_male_partner(C, Age)
+
+% Under 35
+meets_attempt_to_conceive_reqs_female_without_male_partner(C, PersonAge) :-
+    lt(PersonAge, 35) &
+    claim.num_cycles_donor_insemination(C, NumCycles) &
+    leq(12, NumCycles)
+
+% 35 and over
+meets_attempt_to_conceive_reqs_female_without_male_partner(C, PersonAge) :-
+    leq(35, PersonAge) &
+    claim.num_cycles_donor_insemination(C, NumCycles) &
+    leq(6, NumCycles)
+
+
+% Female with a male partner
+is_infertile(C, Person) :-
+    claim.patient_has_female_reproductive_organs(C, yes) &
+    claim.patient_has_partner_with_male_reproductive_organs(C, yes) &
+    age_at_time_of_service(C, Person, Age) &
+    meets_attempt_to_conceive_reqs_female_with_male_partner(C, Age)
+
+
+% Under 35
+meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
+    lt(PersonAge, 35) &
+    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    leq(12, NumMonths)
+
+% 35 or over
+meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
+    leq(35, PersonAge) &
+    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    leq(6, NumMonths)
+
+% Can also have tried donor insemination
+meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
+    meets_attempt_to_conceive_reqs_female_without_male_partner(C, PersonAge)
+
+
+% Male with a female partner
+is_infertile(C, Person) :-
+    claim.patient_has_male_reproductive_organs(C, yes) &
+    claim.patient_has_partner_with_female_reproductive_organs(C, yes) &
+    claim.age_of_patients_female_partner(C, PartnerAge) & 
+    meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge)
+
+% Female partner under 35
+meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
+    lt(PartnerAge, 35) &
+    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    leq(12, NumMonths)
+
+% Female partner 35 or over
+meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
+    leq(35, PartnerAge) &
+    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    leq(6, NumMonths)
+
+
+% Male without a female partner
+% Bug Note: This is actually buggy because the policy would care about dates, not solar/sidereal time - should use a real datetime module for computing difference of two weeks
+is_infertile(C, Person) :-
+    claim.patient_has_male_reproductive_organs(C, yes) &
+    claim.patient_has_partner_with_female_reproductive_organs(C, no) &
+    claim.abnormal_semen_analysis_on_date(C, Date1) &
+    claim.abnormal_semen_analysis_on_date(C, Date2) & 
+    get_timestamp_from_date(Date1, TS1) &
+    get_timestamp_from_date(Date2, TS2) &
+    evaluate(minus(TS2,TS1), TimeDiff) &
+    evaluate(times(14, 24, 60, 60, 1000), NUM_MS_IN_TWO_WEEKS) &
+    leq(NUM_MS_IN_TWO_WEEKS, TimeDiff)
+    
+
+% Person with gender dysphoria
+is_infertile(C, _) :-
+    claim.patient_diagnosed_with_gender_dysphoria(C, yes)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+medically_necessary_service(C) :-
+    claim.service_type(C, diagnose_and_evaluate_underlying_medical_cause_of_infertility)
+
+medically_necessary_service(C) :-
+    claim.service_type(C, surgery_to_treat_underlying_medical_cause_of_infertility)
+
+medically_necessary_service(C) :-
+    claim.service_type(C, ovulation_induction_cycle_with_menotropins) &
+    claim.patient(C, Patient) &
+    age_at_time_of_service(C, Patient, Age) &
+    leq(Age, 37) &
+    meets_ovulation_induction_cpb_reqs(C)
+
+meets_ovulation_induction_cpb_reqs(C) :-
+    claim.patient(C, Patient) &
+    age_at_time_of_service(C, Patient, Age) &
+    lt(Age, 35) &
+    meets_ovulation_induction_reqs_under_35(C)
+
+
+meets_ovulation_induction_reqs_under_35(C) :-
+    claim.num_months_regular_intravaginal_inseminations(C, N) &
+    leq(12, N)
+
+meets_ovulation_induction_reqs_under_35(C) :-
+    claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
+    leq(4, N)
+
+meets_ovulation_induction_cpb_reqs(C) :-
+    claim.patient(C, Patient) &
+    age_at_time_of_service(C, Patient, Age) &
+    leq(35, Age) &
+    meets_ovulation_induction_reqs_35_and_over(C)
+
+meets_ovulation_induction_reqs_under_35(C) :-
+    claim.num_months_regular_intravaginal_inseminations(C, N) &
+    leq(6, N)
+
+meets_ovulation_induction_reqs_35_and_over(C) :-
+    claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
+    leq(3, N)
+
+
+% Based on artificial inseminations being considered medically necessary from CPB 0327 section "Artificial Inseminations"
+medically_necessary_service(C) :-
+    claim.service_type(C, intrauterine_insemination)
+
+medically_necessary_service(C) :-
+    claim.service_type(C, ivf_for_fertility_preservation) & 
+    meets_ivf_cpb_reqs(C)
+
+% If the patient has premature ovarian failure, ivf is medically necessary until 45
+% Note: CPB 0327 Note 5 partially defines premature ovarian failure, but doesn't specify which D3 FSH levels must be taken into account
+meets_ivf_cpb_reqs(C) :-
+    claim.patient(C, Patient) &
+    claim.patient_has_premature_ovarian_failure(C, yes) &
+    age_at_time_of_service(C, Patient, Age) &
+    lt(Age, 45)
+
+
+% CPB 0327 E.3.a.i
+meets_ivf_cpb_reqs(C) :-
+    claim.patient(C, Patient) &
+    age_at_time_of_service(C, Patient, Age) &
+    leq(Age, 37) &
+    claim.num_cycles_oral_or_injectable_ovulation_induction(C, 3)
+
+% CPB 0327 E.3.a.ii
+meets_ivf_cpb_reqs(C) :-
+    claim.patient(C, Patient) &
+    age_at_time_of_service(C, Patient, Age) &
+    leq(38, Age)
+
+
+% CPB 0327 E.3.b
+% Note: They list some examples of such individuals, but don't seem to be comprehensive
+meets_ivf_cpb_reqs(C) :-
+    claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_only_effective_treatment(C, yes)
+
+
+% CPB 0327 E.3.c
+meets_ivf_cpb_reqs(C) :-
+    claim.service_is_ivf_with_embryo_transfer(C, yes)
+
+
+% Almost redundant with eligibility reqs listed in the policy itself
+% Is also more restrictive than the planned service constraint in the policy's eligibility reqs, even though the policy reqs are likely to be the ones honored here
+medically_necessary_service(C) :-
+    claim.service_type(C, cryopreservation_for_fertility_preservation) &
+    claim.planned_service(C, PlannedService) &
+    member(PlannedService, [
+        chemotherapy,
+        pelvic_radiotherapy,
+        gonadotoxic_therapy,
+        orchiectomy_for_treatment_of_disease,
+        oophorectomy_for_treatment_of_disease
+    ])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+requires_precertification(ServiceType) :-
+    is_art_service(ServiceType)
+
+requires_precertification(ServiceType) :-
+    is_comprehensive_infertility_service(ServiceType)
+
+is_basic_infertility_service(diagnose_and_evaluate_underlying_medical_cause_of_infertility)
+is_basic_infertility_service(surgery_to_treat_underlying_medical_cause_of_infertility)
+
+is_comprehensive_infertility_service(ovulation_induction_cycle_with_menotropins)
+is_comprehensive_infertility_service(intrauterine_insemination)
+
+is_art_service(ivf_for_fertility_preservation)
+is_art_service(cryopreservation_for_fertility_preservation)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Note: later encodings will compute these from other claims, but right now we're only doing one claim at a time
+% Maximum six covered attempts at IUI in a policy year (between September 1 2023 and August 31 2024, in this case)
+beyond_limits(Claim) :-
+    claim.service_type(Claim, intrauterine_insemination) &
+    claim.num_other_covered_artificial_insemination_attempts(Claim, N) &
+    leq(6, N)
+
+beyond_limits(Claim) :-
+    claim.service_type(Claim, ServiceType) &
+    is_art_service(ServiceType) &
+    claim.num_other_covered_art_services(Claim, N) &
+    leq(1, N)
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Helper functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+get_timestamp_from_date(DATE,STAMP) :-
+  evaluate(parsedate(DATE),[Y,M,D]) &
+  evaluate(maketimestamp(Y,M,D,0,0,0),STAMP)
+
+leq_datetime(dt(Date1, Time1), dt(Date2, Time2)) :-
+    datetimetotimestamp(Date1, Time1, TS1) &
+    datetimetotimestamp(Date2, Time2, TS2) & 
+    leq(TS1, TS2)

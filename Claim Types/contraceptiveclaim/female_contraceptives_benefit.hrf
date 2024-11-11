@@ -103,10 +103,6 @@ covered_under_cardinal_care_23_24_benefit(C, family_planning_services_female_con
 %%% Medical necessity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-medically_necessary_service(C) :-
-    claim.service_type(C, ServiceType) &
-    is_preventive_care_service(ServiceType)
-
 % Preventive care is a larger category of benefits, including immunizations
 is_preventive_care_service(ServiceType) :-
     female_contraceptives_service(ServiceType)
