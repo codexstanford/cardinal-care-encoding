@@ -239,6 +239,7 @@ below_2023_cdc_acip_age_guideline_max(Claim) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Helper functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 patient_geq_6_months_old_at_time_of_service(Claim) :-
     claim.date_service_received(Claim, ServiceDate) &
     claim.patient(Claim, Patient) & 

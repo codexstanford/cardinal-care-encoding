@@ -1,0 +1,222 @@
+covers(Policy, C) :-
+    policy.type(Policy, aetna_cardinal_care_2023_2024) &
+    covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024)
+
+
+covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024) :-
+    policy_in_effect(C, Policy) &
+    service_received_at_valid_provider(C, Policy) &
+    meets_additional_eligibility_requirements_if_present(C) &
+    medically_necessary_service(C) &
+    precertified_if_necessary(C) &
+    ~beyond_limits(C) &
+    ~general_exclusion_applies(C)
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Policy in effect
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Does not currently capture conditions on withdrawal/leaves of absence, coverage on another Stanford-offered plan, or special extensions on coverage dates
+
+% Whether the policy was in effect when the service was received
+policy_in_effect(C, Policy) :-
+    claim.patient(C, Patient) &
+    claim.waived_cardinal_care(C, no) &
+    policy_in_effect_for_claim(Policy, C)
+
+
+% Student enrolled in Autumn 2023
+policy_in_effect_for_claim(Policy, Claim) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    claim.quarter_enrolled_stanford_2023_2024(Claim, autumn_quarter_2023) &
+    date_between_dates_incl(ServiceDate, 2023_09_01, 2024_08_31)
+
+
+% Student enrolled in Winter 2024
+policy_in_effect_for_claim(Policy, Claim) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    claim.quarter_enrolled_stanford_2023_2024(Claim, winter_quarter_2024) &
+    date_between_dates_incl(ServiceDate, 2024_01_01, 2024_08_31)
+
+% Student enrolled in Spring 2024
+policy_in_effect_for_claim(Policy, Claim) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    claim.quarter_enrolled_stanford_2023_2024(Claim, spring_quarter_2024) &
+    date_between_dates_incl(ServiceDate, 2024_04_01, 2024_08_31)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Received from a valid provider
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Encoding does not currently capture the cases where treatment began out-of-network before the policy began, or when the care is emergency or urgent care and received from an out-of-network provider
+
+service_received_at_valid_provider(C, Policy) :-
+    claim.location_service_received(C, Location) &
+    member(Location, [
+        stanford_health_care,
+        menlo_medical_clinic,
+        sutter_health_palo_alto_medical_foundation,
+        tier_two_in_network
+    ])
+
+service_received_at_valid_provider(C, Policy) :-
+    claim.location_service_received(C, other) &
+    claim.service_available_at_tier_one_or_two_location(C, no)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eligible for service - additional eligibility requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+meets_additional_eligibility_requirements_if_present(C) :-
+    covered_under_cardinal_care_23_24_benefit(C, B)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+medically_necessary_service(C) :-
+    claim.service_type(C, ServiceType) &
+    is_preventive_care_service(ServiceType)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    requires_precertification(ServiceType) & 
+    claim.precertification_received(C, yes)
+
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    ~requires_precertification(ServiceType)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Important Note: Loaded from other, benefit-specific rulesets
+    
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% General exclusions 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: only those applicable to the Treatment of Infertility benefits have been encoded so far
+
+% Armed forces
+general_exclusion_applies(C) :-
+    claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(C, yes)
+
+% Beyond legal authority
+general_exclusion_applies(C) :-
+    claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority(C, yes)
+
+% Clinical trial therapies (experimental or investigational)
+general_exclusion_applies(C) :-
+    claim.service_is_clinical_trial_therapy_experimental_investigational(C, yes)
+
+
+% Experimental or investigational - Not encoded right now, as this should be a function of the service selected and whether it meets certain requirements re: clinical trials for terminal etc. conditions
+%general_exclusion_applies(C) :-
+%    claim.service_is_experimental_investigational(C)
+
+% Gene-based, cellular and other innovative therapies (GCIT)
+% Not really applicable to infertility treatment, as it's primarily for life-threating conditions. Need to do a thorough check to be sure, though.
+% general_exclusion_applies(C) :-
+
+% Genetic care
+general_exclusion_applies(C) :-
+    claim.service_is_genetic_care(C, yes) &
+    claim.service_for_correction_of_congenital_birth_defects(C, no)
+
+% Incidental surgeries
+% Note: Not encoding this now because it is implied by the fact that incidental surgeries are non-medically necessary
+%general_exclusion_applies(C) :-
+%    claim.service_is_incidental_surgery(C, yes)
+
+% Judgment or settlement
+general_exclusion_applies(C) :-
+    claim.payment_for_service_made_for_judgment_settlement(C, yes)
+
+% Non-U.S. citizen
+% Note: if received as part of emergency services or urgent care, different conditions apply
+% Note 2: Not encoded right now because this is implied by the in-network requirements of the policy
+% general_exclusion_applies(C) :-
+
+% Services provided by a family member
+% Note: this should ultimately be inferrable from the provider and kinship relations
+general_exclusion_applies(C) :-
+    claim.service_provided_by_family_member(C, yes)
+
+% Services, supplies and drugs received outside of the United States
+% Note: the Aetna in-network locations should prohibit this from happening. Will encode this later, as a function of the country in which providers/facilities are located
+%general_exclusion_applies(C) :-
+%    claim.service_received_
+
+% Treatment in a federal, state, or governmental entity
+general_exclusion_applies(C) :-
+    claim.treated_in_facility_owned_or_operated_by_governmental_entity(C, yes)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Helper functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+age_at_time_of_service(Claim, Person, Age) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    age_on_date(Person, ServiceDate, Age)
+
+age_on_date(Person, Date, Age) :-
+    person.dob(Person, DOB) &
+    evaluate(parsedate(Date),[Year,Month,Day]) &
+    evaluate(parsedate(DOB),[DOBYear,DOBMonth,DOBDay]) &
+    evaluate(minus(Year,DOBYear), YearDiff) &
+    not_yet_birthday_delta(Month,Day, DOBMonth, DOBDay, Delta) &
+    evaluate(plus(YearDiff, Delta), Age)
+
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, -1) :-
+    lt(Month, DOBMonth)
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, -1) :-
+    same(Month, DOBMonth) &
+    lt(Day, DOBDay)
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, 0) :-
+    lt(DOBMonth, Month)
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, 0) :-
+    same(Month, DOBMonth) &
+    leq(DOBDay, Day)
+
+
+date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
+    symleq(BeginDateRange, Date) &
+    symleq(Date, EndDateRange)
+
+
+lt(X, Y) :-
+    leq(X, Y) &
+    distinct(X, Y)
+
+
+%%%% Redundant, because these are general rules that are loaded into each page
+parsedate(DATE) :=
+    map(readstring,tail(matches(stringify(DATE),"(....)_(..)_(..)")))
+
+parsetime(TIME) :=
+    map(readstring,tail(matches(stringify(TIME),"(..)_(..)_(..)")))
+
+tail(X!L) := L
+
+datetimetotimestamp(DATE,TIME,STAMP) :- 
+    evaluate(parsedate(DATE),[Y,M,D]) & 
+    evaluate(parsetime(TIME),[H,N,S]) & 
+    evaluate(maketimestamp(Y,M,D,H,N,S),STAMP) 
