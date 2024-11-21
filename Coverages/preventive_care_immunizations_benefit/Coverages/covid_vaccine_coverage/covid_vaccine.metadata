@@ -1,0 +1,68 @@
+---
+metadata:
+    - ../../preventive_care_immunizations.metadata
+    - ../../../../General/metadata.metadata
+---
+
+type(covid_vaccine_coverage, class)
+superclass(covid_vaccine_coverage, claim)
+attribute(covid_vaccine_coverage, claim.patient_is_immunocompromised)
+attribute(covid_vaccine_coverage, claim.covid19_vaccine_brand)
+attribute(covid_vaccine_coverage, claim.covid19_vaccination)
+
+
+type(claim.patient_is_immunocompromised, attributerelation)
+domain(claim.patient_is_immunocompromised, claim)
+codomain(claim.patient_is_immunocompromised, boolean)
+unique(claim.patient_is_immunocompromised, yes)
+total(claim.patient_is_immunocompromised, no)
+changestyle(claim.patient_is_immunocompromised,selector)
+
+type(claim.covid19_vaccine_brand, attributerelation)
+domain(claim.covid19_vaccine_brand, claim)
+codomain(claim.covid19_vaccine_brand, vaccine_brand)
+unique(claim.covid19_vaccine_brand, yes)
+total(claim.covid19_vaccine_brand, no)
+changestyle(claim.covid19_vaccine_brand,selector)
+
+type(claim.covid19_vaccination, attributerelation)
+domain(claim.covid19_vaccination, claim)
+codomain(claim.covid19_vaccination, covid19_vaccination)
+unique(claim.covid19_vaccination, no)
+total(claim.covid19_vaccination, no)
+changestyle(claim.covid19_vaccination,table)
+
+%%%% Functional classes %%%%
+
+type(covid19_vaccination,class)
+functional(covid19_vaccination, covid19_vaccination_event)
+attribute(covid19_vaccination, covid19_vaccination.index)
+attribute(covid19_vaccination, covid19_vaccination.brand)
+attribute(covid19_vaccination, covid19_vaccination.version)
+
+type(covid19_vaccination.index, attributerelation)
+domain(covid19_vaccination.index, covid19_vaccination)
+codomain(covid19_vaccination.index, number)
+unique(covid19_vaccination.index, yes)
+total(covid19_vaccination.index, yes)
+changestyle(covid19_vaccination.index,numberstyle)
+
+type(covid19_vaccination.brand, attributerelation)
+domain(covid19_vaccination.brand, covid19_vaccination)
+codomain(covid19_vaccination.brand, vaccine_brand)
+unique(covid19_vaccination.brand, yes)
+total(covid19_vaccination.brand, yes)
+changestyle(covid19_vaccination.brand,selector)
+
+type(covid19_vaccination.version, attributerelation)
+domain(covid19_vaccination.version, covid19_vaccination)
+codomain(covid19_vaccination.version, covid19_vaccine_version)
+unique(covid19_vaccination.version, yes)
+total(covid19_vaccination.version, yes)
+changestyle(covid19_vaccination.version,selector)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+type(vaccine_brand, class)

@@ -1,3 +1,10 @@
+---
+data:
+    - ../../world.hdf
+    - ../../../../General/world.hdf
+---
+
+
 %%%%%%%% Covid Vaccine Coverage %%%%%%%%
 
 type(moderna, vaccine_brand)

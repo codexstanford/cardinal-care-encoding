@@ -6,22 +6,21 @@
 %%%%%% Will not be covered if has received a third updated moderna vaccine %%%%%%
 
 %%% Types %%%
-type(policy1, policy)
+% type(policy1, policy)
 type(rta_bondonado, person)
 type(claim1, claim)
 
 %%% Policy %%%
-policy.insuree(policy1, rta_bondonado)
-policy.type(policy1, aetna_cardinal_care_2023_2024)
+% policy.insuree(policy1, rta_bondonado)
+% policy.type(policy1, aetna_cardinal_care_2023_2024)
 
-%%% Person %%%
-person.dob(rta_bondonado, 2011_08_31)
 
 %%% Claim %%%
 %% Service-generic %%
-claim.patient(claim1, rta_bondonado)
-claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
+% claim.patient(claim1, rta_bondonado)
+% claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
 claim.date_service_received(claim1,2024_08_30)
+claim.patient_dob(claim1, 2011_08_31)
 claim.service_type(claim1, preventive_care_immunization)
 claim.precertification_received(claim1, no)
 claim.waived_cardinal_care(claim1, no)

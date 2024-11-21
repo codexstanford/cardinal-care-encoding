@@ -1,21 +1,14 @@
 ---
 metadata:
-    - ../../metadata.hdf
-    - ../../../../General/metadata.hdf
+    - ../../preventive_care_immunizations.metadata
+    - ../../../../General/metadata.metadata
 ---
 
 type(flu_vaccine_coverage, class)
 superclass(flu_vaccine_coverage, claim)
-attribute(flu_vaccine_coverage, claim.reason_for_immunization)
 attribute(flu_vaccine_coverage, claim.2024_2025_influenza_vaccination)
 attribute(flu_vaccine_coverage, claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024)
 
-type(claim.reason_for_immunization, attributerelation)
-domain(claim.reason_for_immunization, claim)
-codomain(claim.reason_for_immunization, immunization_reason)
-unique(claim.reason_for_immunization, yes)
-total(claim.reason_for_immunization, no)
-changestyle(claim.reason_for_immunization,selector)
 
 type(claim.2024_2025_influenza_vaccination, attributerelation)
 domain(claim.2024_2025_influenza_vaccination, claim)

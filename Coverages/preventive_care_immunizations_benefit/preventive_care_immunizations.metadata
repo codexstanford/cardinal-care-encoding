@@ -5,6 +5,15 @@
 % unique(claim.immunization_for_disease, yes)
 % total(claim.immunization_for_disease, no)
 
+attribute(claim, claim.reason_for_immunization)
+
+type(claim.reason_for_immunization, attributerelation)
+domain(claim.reason_for_immunization, claim)
+codomain(claim.reason_for_immunization, immunization_reason)
+unique(claim.reason_for_immunization, yes)
+total(claim.reason_for_immunization, no)
+changestyle(claim.reason_for_immunization,selector)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Classes without attributes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

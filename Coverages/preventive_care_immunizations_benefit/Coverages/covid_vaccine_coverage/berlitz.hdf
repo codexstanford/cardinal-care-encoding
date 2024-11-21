@@ -1,3 +1,9 @@
+--- 
+data:
+    - ../../berlitz.hdf
+    - ../../../../General/berlitz.hdf
+---
+
 %%%%%%%%%%% Preventive Care Immunizations Benefit %%%%%%%%%%%
 
 berlitz(claim.covid19_vaccine_brand(C, BRAND),
