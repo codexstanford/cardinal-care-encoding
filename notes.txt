@@ -2,7 +2,7 @@ Notes on the implementation that are relevant to anyone wanting to use this enco
 
 %%%%%%% Constructors/Compound Terms %%%%%%%
 
-%%% fsh_test(Index, Level, dt(Date, Time))
+%%% fsh_test(Index, Level, Date, Time)
 
 %%% influenza_vaccination_event(Index, Date)
 

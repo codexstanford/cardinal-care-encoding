@@ -82,8 +82,8 @@ berlitz(claim.patient(C, P),
 %         "$Q$ is the first quarter that the patient in $C$ was enrolled in Stanford in the 2023-2024 academic year")
 
 
-% berlitz(claim.date_service_received(C, D), 
-%         "the service in $C$ was received on $D$")
+berlitz(claim.date_service_received(C, D), 
+        "the service in $C$ was received on $D$")
 
 berlitz(claim.service_type(C, S), 
         "the service in $C$ has type $S$")
@@ -165,9 +165,8 @@ berlitz(claim.treated_in_facility_owned_or_operated_by_governmental_entity(C, no
 %         "$P$ is in effect during $C$")
 
 
-berlitz(service_received_at_valid_provider(C, P),
-        "the service in $C$ was received at a provider that is valid in $P$")
-
+berlitz(service_received_at_valid_provider(C),
+        "the service in $C$ was received at a valid provider")
 
 berlitz(meets_additional_eligibility_requirements_if_present(C),
         "$C$ meets additional eligibility requirements, if there are any")

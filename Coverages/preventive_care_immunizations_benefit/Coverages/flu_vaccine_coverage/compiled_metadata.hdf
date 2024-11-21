@@ -52,7 +52,6 @@ changestyle(influenza_vaccination.date,datestyle)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-type(influenza_vaccination_event_obj, class)
 % attribute(vaccineclaim, claim.immunization_for_disease)
 % type(claim.immunization_for_disease, attributerelation)
 % domain(claim.immunization_for_disease, claim)

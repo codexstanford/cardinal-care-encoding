@@ -1,8 +1,3 @@
----
-data:
-    - ../../General/world.hdf
----
-
 %%%%%%%% Treatment of Infertility %%%%%%%%
 
 type(diagnose_and_evaluate_underlying_medical_cause_of_infertility, cardinal_care_2024_2025_service)
@@ -28,3 +23,13 @@ type(orchiectomy_for_treatment_of_disease, cardinal_care_2024_2025_infertility_c
 type(oophorectomy_for_treatment_of_disease, cardinal_care_2024_2025_infertility_causing_service)
 type(other_treatment_demonstrated_to_result_in_infertility, cardinal_care_2024_2025_infertility_causing_service)
 % type(other, cardinal_care_2024_2025_infertility_causing_service)
+% Commented out for now, since not explicitly checking time of service
+% type(autumn_quarter_2024, quarter_2024_2025)
+% type(winter_quarter_2025, quarter_2024_2025)
+% type(spring_quarter_2025, quarter_2024_2025)
+
+type(stanford_health_care, cardinal_care_2024_2025_location)
+type(menlo_medical_clinic, cardinal_care_2024_2025_location)
+type(sutter_health_palo_alto_medical_foundation, cardinal_care_2024_2025_location)
+type(tier_two_in_network, cardinal_care_2024_2025_location)
+type(other, cardinal_care_2024_2025_location)

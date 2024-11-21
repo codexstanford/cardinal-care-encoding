@@ -209,18 +209,3 @@ not_yet_birthday_delta(Month, Day, FOBMonth, DOBDay, 0) :-
 date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
     symleq(BeginDateRange, Date) &
     symleq(Date, EndDateRange)
-
-
-%%%% Redundant, because these are general rules that are loaded into each page
-parsedate(DATE) :=
-    map(readstring,tail(matches(stringify(DATE),"(....)_(..)_(..)")))
-
-parsetime(TIME) :=
-    map(readstring,tail(matches(stringify(TIME),"(..)_(..)_(..)")))
-
-tail(X!L) := L
-
-datetimetotimestamp(DATE,TIME,STAMP) :- 
-    evaluate(parsedate(DATE),[Y,M,D]) & 
-    evaluate(parsetime(TIME),[H,N,S]) & 
-    evaluate(maketimestamp(Y,M,D,H,N,S),STAMP) 

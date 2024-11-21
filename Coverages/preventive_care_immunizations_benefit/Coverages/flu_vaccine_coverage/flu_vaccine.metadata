@@ -50,5 +50,3 @@ changestyle(influenza_vaccination.date,datestyle)
 %%% Classes without attributes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-type(influenza_vaccination_event_obj, class)

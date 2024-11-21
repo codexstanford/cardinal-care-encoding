@@ -1,0 +1,3 @@
+ruleset: treatment_of_infertility_benefit.hrf
+dataset: Example Datasets/infertility_services_not_covered2.hdf
+query: covered(claim1)
