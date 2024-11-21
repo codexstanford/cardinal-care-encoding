@@ -99,7 +99,7 @@ One of:
 - female_condom: "Female condom"
 - spermicide_otc: "Spermicide (over-the-counter)"
 - spermicide_prescription: "Spermicide (prescription)"
-- levonorgestrel_1.5_mg: "Levonorgestrel 1.5 mg (1 pill)"
+- levonorgestrel_1_5_mg: "Levonorgestrel 1.5 mg (1 pill)"
 - ulipristal_acetate: "Ulipristal acetate"
 - other: "Other"
 

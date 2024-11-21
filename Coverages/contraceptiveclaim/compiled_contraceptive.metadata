@@ -1,0 +1,247 @@
+type(female_contraceptives_coverage, class)
+superclass(female_contraceptives_coverage, claim)
+attribute(female_contraceptives_coverage, claim.type_of_contraceptive_counseling)
+attribute(female_contraceptives_coverage, claim.counseling_setting)
+attribute(female_contraceptives_coverage, claim.type_of_female_contraceptive_method_provided)
+attribute(female_contraceptives_coverage, claim.otc_female_contraceptive_method_is_prescribed_by_provider)
+attribute(female_contraceptives_coverage, claim.mode_of_providing_service)
+attribute(female_contraceptives_coverage, claim.type_of_female_voluntary_sterilization_procedure_service_or_supplies)
+
+type(claim.type_of_contraceptive_counseling, attributerelation)
+domain(claim.type_of_contraceptive_counseling, claim)
+codomain(claim.type_of_contraceptive_counseling, cardinal_care_2024_2025_contraceptive_counseling_type)
+unique(claim.type_of_contraceptive_counseling, yes)
+total(claim.type_of_contraceptive_counseling, no)
+changestyle(claim.type_of_contraceptive_counseling, selector)
+
+type(claim.counseling_setting, attributerelation)
+domain(claim.counseling_setting, claim)
+codomain(claim.counseling_setting, cardinal_care_2024_2025_counseling_setting)
+unique(claim.counseling_setting, yes)
+total(claim.counseling_setting, no)
+changestyle(claim.counseling_setting, selector)
+
+type(claim.type_of_female_contraceptive_method_provided, attributerelation)
+domain(claim.type_of_female_contraceptive_method_provided, claim)
+codomain(claim.type_of_female_contraceptive_method_provided, cardinal_care_2024_2025_type_of_female_contraceptive_method)
+unique(claim.type_of_female_contraceptive_method_provided, yes)
+total(claim.type_of_female_contraceptive_method_provided, no)
+changestyle(claim.type_of_female_contraceptive_method_provided, selector)
+
+type(claim.otc_female_contraceptive_method_is_prescribed_by_provider, attributerelation)
+domain(claim.otc_female_contraceptive_method_is_prescribed_by_provider, claim)
+codomain(claim.otc_female_contraceptive_method_is_prescribed_by_provider, boolean)
+unique(claim.otc_female_contraceptive_method_is_prescribed_by_provider, yes)
+total(claim.otc_female_contraceptive_method_is_prescribed_by_provider, no)
+changestyle(claim.otc_female_contraceptive_method_is_prescribed_by_provider, selector)
+
+type(claim.mode_of_providing_service, attributerelation)
+domain(claim.mode_of_providing_service, claim)
+codomain(claim.mode_of_providing_service, cardinal_care_2024_2025_mode_of_providing_service)
+unique(claim.mode_of_providing_service, yes)
+total(claim.mode_of_providing_service, no)
+changestyle(claim.mode_of_providing_service, selector)
+
+
+type(claim.type_of_female_voluntary_sterilization_procedure_service_or_supplies, attributerelation)
+domain(claim.type_of_female_voluntary_sterilization_procedure_service_or_supplies, claim)
+codomain(claim.type_of_female_voluntary_sterilization_procedure_service_or_supplies, cardinal_care_2024_2025_type_of_female_voluntary_sterilization_procedure_service_or_supplies)
+unique(claim.type_of_female_voluntary_sterilization_procedure_service_or_supplies, yes)
+total(claim.type_of_female_voluntary_sterilization_procedure_service_or_supplies, no)
+changestyle(claim.type_of_female_voluntary_sterilization_procedure_service_or_supplies, selector)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+type(cardinal_care_2024_2025_contraceptive_counseling_type, class)
+type(cardinal_care_2024_2025_counseling_setting, class)
+type(cardinal_care_2024_2025_type_of_female_contraceptive_method, class)
+type(cardinal_care_2024_2025_mode_of_providing_service, class)
+type(cardinal_care_2024_2025_type_of_female_voluntary_sterilization_procedure_service_or_supplies, class)
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Policy relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% type(policy, class)
+%%% attribute(policy, policy.type)
+%%% attribute(policy, policy.insuree)
+
+%%% type(policy.type, attributerelation)
+%%% domain(policy.type, policy)
+%%% codomain(policy.type, product)
+%%% unique(policy.type, yes)
+%%% total(policy.type, yes)
+
+%%% type(policy.insuree, attributerelation)
+%%% domain(policy.insuree, policy)
+%%% codomain(policy.insuree, person)
+%%% unique(policy.insuree, no)
+%%% total(policy.insuree, yes)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Person relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% type(person, class)
+% attribute(person, person.dob)
+
+% type(person.dob, attributerelation)
+% domain(person.dob, person)
+% codomain(person.dob, date)
+% unique(person.dob, yes)
+% total(person.dob, yes)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Claim relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
+type(claim, class)
+
+%%%%%%%%%%%%%%%%%%%%%%% Claim type-generic %%%%%%%%%%%%%%%%%%%%%%%
+%attribute(female_contraceptives_coverage, claim.patient)
+attribute(female_contraceptives_coverage, claim.patient_dob)
+%%% attribute(female_contraceptives_coverage, claim.quarter_enrolled_stanford_2024_2025)
+attribute(female_contraceptives_coverage, claim.date_service_received)
+attribute(female_contraceptives_coverage, claim.service_type)
+attribute(female_contraceptives_coverage, claim.precertification_received)
+%%% attribute(female_contraceptives_coverage, claim.waived_cardinal_care)
+attribute(female_contraceptives_coverage, claim.location_service_received)
+attribute(female_contraceptives_coverage, claim.service_available_at_tier_one_or_two_location)
+
+% type(claim.patient, attributerelation)
+% domain(claim.patient, claim)
+% codomain(claim.patient, person)
+% unique(claim.patient, yes)
+% total(claim.patient, yes)
+
+type(claim.patient_dob, attributerelation)
+domain(claim.patient_dob, claim)
+codomain(claim.patient_dob, date)
+unique(claim.patient_dob, yes)
+total(claim.patient_dob, yes)
+changestyle(claim.patient_dob,datestyle)
+
+
+%%% type(claim.quarter_enrolled_stanford_2024_2025, attributerelation)
+%%% domain(claim.quarter_enrolled_stanford_2024_2025, claim)
+%%% codomain(claim.quarter_enrolled_stanford_2024_2025, quarter_2023_2024)
+%%% unique(claim.quarter_enrolled_stanford_2024_2025, yes)
+%%% total(claim.quarter_enrolled_stanford_2024_2025, no)
+
+type(claim.date_service_received, attributerelation)
+domain(claim.date_service_received, claim)
+codomain(claim.date_service_received, date)
+unique(claim.date_service_received, yes)
+total(claim.date_service_received, yes)
+changestyle(claim.date_service_received,datestyle)
+
+type(claim.service_type, attributerelation)
+domain(claim.service_type, claim)
+codomain(claim.service_type, cardinal_care_2024_2025_service)
+unique(claim.service_type, yes)
+total(claim.service_type, yes)
+changestyle(claim.service_type,selector)
+
+type(claim.precertification_received, attributerelation)
+domain(claim.precertification_received, claim)
+codomain(claim.precertification_received, boolean)
+unique(claim.precertification_received, yes)
+total(claim.precertification_received, yes)
+changestyle(claim.precertification_received,selector)
+
+%%% type(claim.waived_cardinal_care, attributerelation)
+%%% domain(claim.waived_cardinal_care, claim)
+%%% codomain(claim.waived_cardinal_care, boolean)
+%%% unique(claim.waived_cardinal_care, yes)
+%%% total(claim.waived_cardinal_care, yes)
+
+type(claim.location_service_received, attributerelation)
+domain(claim.location_service_received, claim)
+codomain(claim.location_service_received, cardinal_care_2024_2025_location)
+unique(claim.location_service_received, yes)
+total(claim.location_service_received, yes)
+changestyle(claim.location_service_received,selector)
+
+type(claim.service_available_at_tier_one_or_two_location, attributerelation)
+domain(claim.service_available_at_tier_one_or_two_location, claim)
+codomain(claim.service_available_at_tier_one_or_two_location, boolean)
+unique(claim.service_available_at_tier_one_or_two_location, yes)
+total(claim.service_available_at_tier_one_or_two_location, yes)
+changestyle(claim.service_available_at_tier_one_or_two_location,selector)
+
+%%%%%%%%%%%%%%%%%%%%%%% General Exclusions %%%%%%%%%%%%%%%%%%%%%%%
+attribute(female_contraceptives_coverage, claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces)
+attribute(female_contraceptives_coverage, claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority)
+attribute(female_contraceptives_coverage, claim.service_is_clinical_trial_therapy_experimental_investigational)
+attribute(female_contraceptives_coverage, claim.service_is_genetic_care)
+attribute(female_contraceptives_coverage, claim.service_for_correction_of_congenital_birth_defects)
+attribute(female_contraceptives_coverage, claim.payment_for_service_made_for_judgment_settlement)
+attribute(female_contraceptives_coverage, claim.service_provided_by_family_member)
+attribute(female_contraceptives_coverage, claim.treated_in_facility_owned_or_operated_by_governmental_entity)
+
+
+type(claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces, attributerelation)
+domain(claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces, claim)
+codomain(claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces, boolean)
+unique(claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces, yes)
+total(claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces, yes)
+changestyle(claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces,selector)
+
+type(claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority, attributerelation)
+domain(claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority, claim)
+codomain(claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority, boolean)
+unique(claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority, yes)
+total(claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority, yes)
+changestyle(claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority,selector)
+
+type(claim.service_is_clinical_trial_therapy_experimental_investigational, attributerelation)
+domain(claim.service_is_clinical_trial_therapy_experimental_investigational, claim)
+codomain(claim.service_is_clinical_trial_therapy_experimental_investigational, boolean)
+unique(claim.service_is_clinical_trial_therapy_experimental_investigational, yes)
+total(claim.service_is_clinical_trial_therapy_experimental_investigational, yes)
+changestyle(claim.service_is_clinical_trial_therapy_experimental_investigational,selector)
+
+type(claim.service_is_genetic_care, attributerelation)
+domain(claim.service_is_genetic_care, claim)
+codomain(claim.service_is_genetic_care, boolean)
+unique(claim.service_is_genetic_care, yes)
+total(claim.service_is_genetic_care, yes)
+changestyle(claim.service_is_genetic_care,selector)
+
+type(claim.service_for_correction_of_congenital_birth_defects, attributerelation)
+domain(claim.service_for_correction_of_congenital_birth_defects, claim)
+codomain(claim.service_for_correction_of_congenital_birth_defects, boolean)
+unique(claim.service_for_correction_of_congenital_birth_defects, yes)
+total(claim.service_for_correction_of_congenital_birth_defects, yes)
+changestyle(claim.service_for_correction_of_congenital_birth_defects,selector)
+
+type(claim.payment_for_service_made_for_judgment_settlement, attributerelation)
+domain(claim.payment_for_service_made_for_judgment_settlement, claim)
+codomain(claim.payment_for_service_made_for_judgment_settlement, boolean)
+unique(claim.payment_for_service_made_for_judgment_settlement, yes)
+total(claim.payment_for_service_made_for_judgment_settlement, yes)
+changestyle(claim.payment_for_service_made_for_judgment_settlement,selector)
+
+type(claim.service_provided_by_family_member, attributerelation)
+domain(claim.service_provided_by_family_member, claim)
+codomain(claim.service_provided_by_family_member, boolean)
+unique(claim.service_provided_by_family_member, yes)
+total(claim.service_provided_by_family_member, yes)
+changestyle(claim.service_provided_by_family_member,selector)
+
+type(claim.treated_in_facility_owned_or_operated_by_governmental_entity, attributerelation)
+domain(claim.treated_in_facility_owned_or_operated_by_governmental_entity, claim)
+codomain(claim.treated_in_facility_owned_or_operated_by_governmental_entity, boolean)
+unique(claim.treated_in_facility_owned_or_operated_by_governmental_entity, yes)
+total(claim.treated_in_facility_owned_or_operated_by_governmental_entity, yes)
+changestyle(claim.treated_in_facility_owned_or_operated_by_governmental_entity,selector)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+type(boolean,class)
+type(person,class)
+type(product,class)
+type(date,class)
+type(number,class)
+
+type(quarter_2024_2025, class)
+type(cardinal_care_2024_2025_location, class)
+type(cardinal_care_2024_2025_service, class)

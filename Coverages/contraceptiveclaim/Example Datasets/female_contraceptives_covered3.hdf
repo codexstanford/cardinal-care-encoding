@@ -3,21 +3,15 @@
 %%% OTC method - levornorgestrel pill %%%
 
 %%% Types %%%
-type(policy1, policy)
 type(rta_bondonado, person)
 type(claim1, claim)
 
-%%% Policy %%%
-policy.insuree(policy1, rta_bondonado)
-policy.type(policy1, aetna_cardinal_care_2024_2025)
-
-%%% Person %%%
-person.dob(rta_bondonado, 1999_06_25)
 
 %%% Claim %%%
 %% Service-generic %%
-claim.patient(claim1, rta_bondonado)
-claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
+% claim.patient(claim1, rta_bondonado)
+% claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
+claim.patient_dob(claim1, 1999_06_25)
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, female_contraceptive_drugs_or_devices_and_follow_up_care)
 claim.precertification_received(claim1, no)
@@ -28,7 +22,7 @@ claim.service_available_at_tier_one_or_two_location(claim1, yes)
 
 
 %% Service-specific %%
-claim.type_of_female_contraceptive_method_provided(claim1, levonorgestrel_1.5_mg)
+claim.type_of_female_contraceptive_method_provided(claim1, levonorgestrel_1_5_mg)
 claim.otc_female_contraceptive_method_is_prescribed_by_provider(claim1, yes)
 claim.mode_of_providing_service(claim1, provided_by)
 

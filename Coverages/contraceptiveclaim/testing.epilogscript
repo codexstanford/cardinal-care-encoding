@@ -1,0 +1,3 @@
+ruleset: female_contraceptives_benefit.hrf
+dataset: Example Datasets/
+query: covered(claim1)

@@ -1,3 +1,9 @@
+---
+rules:
+    - ../../General/cardinal_care.hrf
+    - ../../System-wide/library.hrf
+---
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Eligible for service - additional eligibility requirements
@@ -51,7 +57,7 @@ otc_female_contraceptive_method(male_condom)
 otc_female_contraceptive_method(sponge_with_spermicide)
 otc_female_contraceptive_method(female_condom)
 otc_female_contraceptive_method(spermicide_otc)
-otc_female_contraceptive_method(levonorgestrel_1.5_mg)
+otc_female_contraceptive_method(levonorgestrel_1_5_mg)
 
 valid_mode_of_providing_female_contraceptive_method(C) :-
     claim.mode_of_providing_service(C, Mode) &
@@ -82,7 +88,7 @@ fda_approved_female_contraceptive_method(cervical_cap_with_spermicide)
 fda_approved_female_contraceptive_method(female_condom)
 fda_approved_female_contraceptive_method(spermicide_otc)
 fda_approved_female_contraceptive_method(spermicide_prescription)
-fda_approved_female_contraceptive_method(levonorgestrel_1.5_mg)
+fda_approved_female_contraceptive_method(levonorgestrel_1_5_mg)
 fda_approved_female_contraceptive_method(ulipristal_acetate)
 
 

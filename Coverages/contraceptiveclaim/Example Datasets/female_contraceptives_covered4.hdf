@@ -3,21 +3,14 @@
 %%% non-OTC method - IUD without hormone %%%
 
 %%% Types %%%
-type(policy1, policy)
 type(rta_bondonado, person)
 type(claim1, claim)
 
-%%% Policy %%%
-policy.insuree(policy1, rta_bondonado)
-policy.type(policy1, aetna_cardinal_care_2024_2025)
-
-%%% Person %%%
-person.dob(rta_bondonado, 1999_06_25)
-
 %%% Claim %%%
 %% Service-generic %%
-claim.patient(claim1, rta_bondonado)
-claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
+% claim.patient(claim1, rta_bondonado)
+% claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
+claim.patient_dob(claim1, 1999_06_25)
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, female_contraceptive_drugs_or_devices_and_follow_up_care)
 claim.precertification_received(claim1, no)
