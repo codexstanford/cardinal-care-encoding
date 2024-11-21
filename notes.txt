@@ -14,11 +14,11 @@ Notes on the implementation that are relevant to anyone wanting to use this enco
 
 %%%%%%% Claim Relations %%%%%%%
 
-%%% claim.quarter_enrolled_stanford_2023_2024
+%%% claim.quarter_enrolled_stanford_2024_2025
 Value should be one of:
-- autumn_quarter_2023: "Autumn Quarter 2023"
-- winter_quarter_2024: "Winter Quarter 2024"
-- spring_quarter_2024: "Spring Quarter 2024"
+- autumn_quarter_2024: "Autumn Quarter 2024"
+- winter_quarter_2025: "Winter Quarter 2025"
+- spring_quarter_2025: "Spring Quarter 2025"
 
 
 %%% claim.service_type

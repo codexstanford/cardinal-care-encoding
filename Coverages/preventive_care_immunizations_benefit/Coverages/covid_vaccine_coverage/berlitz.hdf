@@ -1,0 +1,28 @@
+%%%%%%%%%%% Preventive Care Immunizations Benefit %%%%%%%%%%%
+
+berlitz(claim.covid19_vaccine_brand(C, BRAND),
+        "the brand of the Covid-19 vaccine received during the immunization in $C$ is $BRAND$")
+
+berlitz(claim.covid19_vaccination(C, covid19_vaccination_event(_, BRAND, not_updated)),
+        "the patient in $C$ received a $BRAND$ Covid-19 vaccine on that was not the updated 2024-2025 formulation")
+berlitz(claim.covid19_vaccination(C, covid19_vaccination_event(_, BRAND, updated_2024_2025)),
+        "the patient in $C$ received a $BRAND$ Covid-19 vaccine on that was the updated 2024-2025 formulation")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Defined Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+berlitz(patient_age_bracket_for_covid19_vaccination(C, A, B),
+        "the age bracket of the patient in $C$ aged $A$ is $B$")
+
+berlitz(covid19_dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand),
+        "the number of Covid 19 vaccine doses received by the patient in $C$ is $NumOldModerna$ out-of-date Moderna vaccines, $NumOldPfizer$ out-of-date Pfizer vaccines, $NumOldNovavax$ out-of-date Novavax vaccines, $NumOldJnJ$ out-of-date J&J vaccines, and $NumUpdatedOfBrand$ up-to-date vaccines of the same brand as administered during the service in $C$")
+
+berlitz(max_allowed_doses_covid19_vaccine(yes, B, T, N, dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)),
+        "$N$ is the maximum number of doses of the $T$ Covid-19 vaccine that can be received by a moderately-to-severely immunocompromised patient in the age bracket $B$ who has received $NumOldModerna$ out-of-date Moderna vaccines, $NumOldPfizer$ out-of-date Pfizer vaccines, $NumOldNovavax$ out-of-date Novavax vaccines, and $NumOldJnJ$ out-of-date J&J vaccines")
+berlitz(max_allowed_doses_covid19_vaccine(no, B, T, N, dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)),
+        "$N$ is the maximum number of doses of the $T$ Covid-19 vaccine that can be received by a non-immunocompromised patient in the age bracket $B$ who has received $NumOldModerna$ out-of-date Moderna vaccines, $NumOldPfizer$ out-of-date Pfizer vaccines, $NumOldNovavax$ out-of-date Novavax vaccines, and $NumOldJnJ$ out-of-date J&J vaccines")
+
+berlitz(already_begun_another_updated_2024_2025_covid19_vaccination_series(C),
+        "the patient in $C$ has already begun a series of Covid-19 vaccinations with the updated 2024-2025 formulation, with vaccines of a different brand than the type received in the service in $C$")

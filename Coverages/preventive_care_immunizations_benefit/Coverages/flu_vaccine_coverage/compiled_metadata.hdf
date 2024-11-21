@@ -1,3 +1,71 @@
+type(flu_vaccine_coverage, class)
+superclass(flu_vaccine_coverage, claim)
+attribute(flu_vaccine_coverage, claim.reason_for_immunization)
+attribute(flu_vaccine_coverage, claim.2024_2025_influenza_vaccination)
+attribute(flu_vaccine_coverage, claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024)
+
+type(claim.reason_for_immunization, attributerelation)
+domain(claim.reason_for_immunization, claim)
+codomain(claim.reason_for_immunization, immunization_reason)
+unique(claim.reason_for_immunization, yes)
+total(claim.reason_for_immunization, no)
+changestyle(claim.reason_for_immunization,selector)
+
+type(claim.2024_2025_influenza_vaccination, attributerelation)
+domain(claim.2024_2025_influenza_vaccination, claim)
+codomain(claim.2024_2025_influenza_vaccination, influenza_vaccination)
+unique(claim.2024_2025_influenza_vaccination, no)
+total(claim.2024_2025_influenza_vaccination, no)
+changestyle(claim.2024_2025_influenza_vaccination,table)
+
+type(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024, attributerelation)
+domain(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024, claim)
+codomain(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024, boolean)
+unique(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024, yes)
+total(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024, no)
+changestyle(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024,selector)
+
+
+%%%% Functional classes %%%%
+
+type(influenza_vaccination,class)
+functional(influenza_vaccination, influenza_vaccination_event)
+attribute(influenza_vaccination, influenza_vaccination.index)
+attribute(influenza_vaccination, influenza_vaccination.date)
+
+type(influenza_vaccination.index, attributerelation)
+domain(influenza_vaccination.index, influenza_vaccination)
+codomain(influenza_vaccination.index, number)
+unique(influenza_vaccination.index, yes)
+total(influenza_vaccination.index, yes)
+changestyle(influenza_vaccination.index,numberstyle)
+
+type(influenza_vaccination.date, attributerelation)
+domain(influenza_vaccination.date, influenza_vaccination)
+codomain(influenza_vaccination.date, date)
+unique(influenza_vaccination.date, yes)
+total(influenza_vaccination.date, yes)
+changestyle(influenza_vaccination.date,datestyle)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+type(influenza_vaccination_event_obj, class)
+% attribute(vaccineclaim, claim.immunization_for_disease)
+% type(claim.immunization_for_disease, attributerelation)
+% domain(claim.immunization_for_disease, claim)
+% codomain(claim.immunization_for_disease, disease_type)
+% unique(claim.immunization_for_disease, yes)
+% total(claim.immunization_for_disease, no)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+type(disease_type, class)
+type(immunization_reason, class)
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Policy relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% type(policy, class)
 %%% attribute(policy, policy.type)
@@ -31,15 +99,15 @@
 type(claim, class)
 
 %%%%%%%%%%%%%%%%%%%%%%% Claim type-generic %%%%%%%%%%%%%%%%%%%%%%%
-%attribute(claim, claim.patient)
-attribute(claim, claim.patient_dob)
-%%% attribute(claim, claim.quarter_enrolled_stanford_2024_2025)
-attribute(claim, claim.date_service_received)
-attribute(claim, claim.service_type)
-attribute(claim, claim.precertification_received)
-%%% attribute(claim, claim.waived_cardinal_care)
-attribute(claim, claim.location_service_received)
-attribute(claim, claim.service_available_at_tier_one_or_two_location)
+%attribute(flu_vaccine_coverage, claim.patient)
+attribute(flu_vaccine_coverage, claim.patient_dob)
+%%% attribute(flu_vaccine_coverage, claim.quarter_enrolled_stanford_2024_2025)
+attribute(flu_vaccine_coverage, claim.date_service_received)
+attribute(flu_vaccine_coverage, claim.service_type)
+attribute(flu_vaccine_coverage, claim.precertification_received)
+%%% attribute(flu_vaccine_coverage, claim.waived_cardinal_care)
+attribute(flu_vaccine_coverage, claim.location_service_received)
+attribute(flu_vaccine_coverage, claim.service_available_at_tier_one_or_two_location)
 
 % type(claim.patient, attributerelation)
 % domain(claim.patient, claim)
@@ -103,14 +171,14 @@ total(claim.service_available_at_tier_one_or_two_location, yes)
 changestyle(claim.service_available_at_tier_one_or_two_location,selector)
 
 %%%%%%%%%%%%%%%%%%%%%%% General Exclusions %%%%%%%%%%%%%%%%%%%%%%%
-attribute(claim, claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces)
-attribute(claim, claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority)
-attribute(claim, claim.service_is_clinical_trial_therapy_experimental_investigational)
-attribute(claim, claim.service_is_genetic_care)
-attribute(claim, claim.service_for_correction_of_congenital_birth_defects)
-attribute(claim, claim.payment_for_service_made_for_judgment_settlement)
-attribute(claim, claim.service_provided_by_family_member)
-attribute(claim, claim.treated_in_facility_owned_or_operated_by_governmental_entity)
+attribute(flu_vaccine_coverage, claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces)
+attribute(flu_vaccine_coverage, claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority)
+attribute(flu_vaccine_coverage, claim.service_is_clinical_trial_therapy_experimental_investigational)
+attribute(flu_vaccine_coverage, claim.service_is_genetic_care)
+attribute(flu_vaccine_coverage, claim.service_for_correction_of_congenital_birth_defects)
+attribute(flu_vaccine_coverage, claim.payment_for_service_made_for_judgment_settlement)
+attribute(flu_vaccine_coverage, claim.service_provided_by_family_member)
+attribute(flu_vaccine_coverage, claim.treated_in_facility_owned_or_operated_by_governmental_entity)
 
 
 type(claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces, attributerelation)

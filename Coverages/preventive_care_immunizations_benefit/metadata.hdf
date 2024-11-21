@@ -1,0 +1,13 @@
+% attribute(vaccineclaim, claim.immunization_for_disease)
+% type(claim.immunization_for_disease, attributerelation)
+% domain(claim.immunization_for_disease, claim)
+% codomain(claim.immunization_for_disease, disease_type)
+% unique(claim.immunization_for_disease, yes)
+% total(claim.immunization_for_disease, no)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+type(disease_type, class)
+type(immunization_reason, class)

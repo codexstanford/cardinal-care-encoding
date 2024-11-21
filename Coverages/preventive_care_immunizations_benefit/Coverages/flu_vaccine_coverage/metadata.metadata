@@ -1,0 +1,61 @@
+---
+metadata:
+    - ../../metadata.hdf
+    - ../../../../General/metadata.hdf
+---
+
+type(flu_vaccine_coverage, class)
+superclass(flu_vaccine_coverage, claim)
+attribute(flu_vaccine_coverage, claim.reason_for_immunization)
+attribute(flu_vaccine_coverage, claim.2024_2025_influenza_vaccination)
+attribute(flu_vaccine_coverage, claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024)
+
+type(claim.reason_for_immunization, attributerelation)
+domain(claim.reason_for_immunization, claim)
+codomain(claim.reason_for_immunization, immunization_reason)
+unique(claim.reason_for_immunization, yes)
+total(claim.reason_for_immunization, no)
+changestyle(claim.reason_for_immunization,selector)
+
+type(claim.2024_2025_influenza_vaccination, attributerelation)
+domain(claim.2024_2025_influenza_vaccination, claim)
+codomain(claim.2024_2025_influenza_vaccination, influenza_vaccination)
+unique(claim.2024_2025_influenza_vaccination, no)
+total(claim.2024_2025_influenza_vaccination, no)
+changestyle(claim.2024_2025_influenza_vaccination,table)
+
+type(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024, attributerelation)
+domain(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024, claim)
+codomain(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024, boolean)
+unique(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024, yes)
+total(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024, no)
+changestyle(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024,selector)
+
+
+%%%% Functional classes %%%%
+
+type(influenza_vaccination,class)
+functional(influenza_vaccination, influenza_vaccination_event)
+attribute(influenza_vaccination, influenza_vaccination.index)
+attribute(influenza_vaccination, influenza_vaccination.date)
+
+type(influenza_vaccination.index, attributerelation)
+domain(influenza_vaccination.index, influenza_vaccination)
+codomain(influenza_vaccination.index, number)
+unique(influenza_vaccination.index, yes)
+total(influenza_vaccination.index, yes)
+changestyle(influenza_vaccination.index,numberstyle)
+
+type(influenza_vaccination.date, attributerelation)
+domain(influenza_vaccination.date, influenza_vaccination)
+codomain(influenza_vaccination.date, date)
+unique(influenza_vaccination.date, yes)
+total(influenza_vaccination.date, yes)
+changestyle(influenza_vaccination.date,datestyle)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+type(influenza_vaccination_event_obj, class)

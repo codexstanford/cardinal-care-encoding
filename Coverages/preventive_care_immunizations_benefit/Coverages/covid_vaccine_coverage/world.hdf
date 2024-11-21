@@ -1,0 +1,9 @@
+%%%%%%%% Covid Vaccine Coverage %%%%%%%%
+
+type(moderna, vaccine_brand)
+type(pfizer_biontech, vaccine_brand)
+type(novavax, vaccine_brand)
+type(j_n_j, vaccine_brand)
+
+type(updated_2024_2025, covid19_vaccine_version)
+type(not_updated, covid19_vaccine_version)

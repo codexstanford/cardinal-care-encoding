@@ -7,7 +7,7 @@
 
 
 %% Basic infertility services
-covered_under_cardinal_care_23_24_benefit(C, treatment_of_infertility_benefit) :-
+covered_under_cardinal_care_24_25_benefit(C, treatment_of_infertility_benefit) :-
     claim.service_type(C, ServiceType) & 
     is_basic_infertility_service(ServiceType) &
     claim.patient(C, Patient) &
@@ -15,7 +15,7 @@ covered_under_cardinal_care_23_24_benefit(C, treatment_of_infertility_benefit) :
 
 
 %% Comprehensive infertility services
-covered_under_cardinal_care_23_24_benefit(C, treatment_of_infertility_benefit) :-
+covered_under_cardinal_care_24_25_benefit(C, treatment_of_infertility_benefit) :-
     claim.service_type(C, ServiceType) & 
     is_comprehensive_infertility_service(ServiceType) &
     claim.patient(C, Patient) &
@@ -46,9 +46,9 @@ meets_no_voluntary_sterilization_req(C) :-
 % Also a requirement for under 35, but is redundant here
 meets_day_3_fsh_level_criteria(C, Patient) :-
     age_at_time_of_service(C, Patient, Age) &
-    lt(Age, 40) &
+    less(Age, 40) &
     most_recent_day_3_fsh_test(C, fsh_test(_, Level, _)) &
-    lt(Level, 19)
+    less(Level, 19)
 
 % If multiple tests have the same datetime, then we can't decide which was most recent and this is not satisfied.
 most_recent_day_3_fsh_test(C, fsh_test(Index, Level, DateTime)) :-
@@ -81,7 +81,7 @@ meets_day_3_fsh_level_criteria(C, Patient) :-
 
 
 %% Advanced reproductive technology services
-covered_under_cardinal_care_23_24_benefit(C, treatment_of_infertility_benefit) :-
+covered_under_cardinal_care_24_25_benefit(C, treatment_of_infertility_benefit) :-
     claim.service_type(C, ServiceType) & 
     is_art_service(ServiceType) &
     claim.patient(C, Patient) &
@@ -111,9 +111,9 @@ meets_fertility_preservation_eligibility_requirements(C) :-
 % If under 40, just care about most recent test
 eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
     claim.will_be_retrieving_eggs_for_use(C, yes) &
-    lt(Age, 40) &
+    less(Age, 40) &
     most_recent_day_3_fsh_test(C, fsh_test(Index, Level, DateTime)) &
-    lt(Level, 19) &
+    less(Level, 19) &
     meets_fsh_test_recency_req(C, fsh_test(Index, Level, DateTime))
 
 % If 40 or over, care about all prior tests since became 40 (This is inferred from the "Comprehensive infertility services" FSH level reqs, and the Note 4 text "Check benefit plan descriptions")
@@ -132,7 +132,7 @@ eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
     claim.patient(C, Patient) &
     claim.patient_has_premature_ovarian_failure(C, yes) &
     most_recent_day_3_fsh_test(C, fsh_test(_, Level, _)) &
-    lt(Level, 19)
+    less(Level, 19)
 
 
 % Vacuously satisfied if not retrieving eggs for use
@@ -157,7 +157,7 @@ meets_fsh_test_recency_req(C, fsh_test(_, _, dt(TestDate, TestTime))) :-
 meets_fsh_test_recency_req(C, _) :-
     claim.patient(C, Patient) &
     age_at_time_of_service(C, Patient, Age) &
-    lt(Age, 39)
+    less(Age, 39)
 
 %% General definition of infertility
 
@@ -170,7 +170,7 @@ is_infertile(C, Person) :-
 
 % Under 35
 meets_attempt_to_conceive_reqs_female_without_male_partner(C, PersonAge) :-
-    lt(PersonAge, 35) &
+    less(PersonAge, 35) &
     claim.num_cycles_donor_insemination(C, NumCycles) &
     leq(12, NumCycles)
 
@@ -191,7 +191,7 @@ is_infertile(C, Person) :-
 
 % Under 35
 meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
-    lt(PersonAge, 35) &
+    less(PersonAge, 35) &
     claim.num_months_unprotected_intercourse(C, NumMonths) &
     leq(12, NumMonths)
 
@@ -215,7 +215,7 @@ is_infertile(C, Person) :-
 
 % Female partner under 35
 meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
-    lt(PartnerAge, 35) &
+    less(PartnerAge, 35) &
     claim.num_months_unprotected_intercourse(C, NumMonths) &
     leq(12, NumMonths)
 
@@ -265,7 +265,7 @@ medically_necessary_service(C) :-
 meets_ovulation_induction_cpb_reqs(C) :-
     claim.patient(C, Patient) &
     age_at_time_of_service(C, Patient, Age) &
-    lt(Age, 35) &
+    less(Age, 35) &
     meets_ovulation_induction_reqs_under_35(C)
 
 
@@ -306,7 +306,7 @@ meets_ivf_cpb_reqs(C) :-
     claim.patient(C, Patient) &
     claim.patient_has_premature_ovarian_failure(C, yes) &
     age_at_time_of_service(C, Patient, Age) &
-    lt(Age, 45)
+    less(Age, 45)
 
 
 % CPB 0327 E.3.a.i

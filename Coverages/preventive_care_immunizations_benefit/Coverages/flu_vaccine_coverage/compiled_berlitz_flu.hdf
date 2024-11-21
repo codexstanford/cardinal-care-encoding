@@ -1,3 +1,72 @@
+%%%%%%%%%%% Preventive Care Immunizations Benefit %%%%%%%%%%%
+
+berlitz(claim.2024_2025_influenza_vaccination(C, influenza_vaccination_event(_, DATE)),
+        "the patient in $C$ received a 2024-2025 formulation of the flu vaccine on $DATE$")
+
+berlitz(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024(C, yes),
+        "the patient in $C$ had received at least two tri- or quadrivalent doses of the flu vaccine before July 2024")
+berlitz(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024(C, no),
+        "the patient in $C$ had not received at least two tri- or quadrivalent doses of the flu vaccine before July 2024")
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Defined Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+berlitz(max_doses_flu_vaccine_allowed_for_child_6_months_through_9_years(C, N),
+        "if the patient in $C$ is a child of age 6 months through 9 years, then the maximum number of doses of the flu vaccine they should receive this year is $N$")
+%%%%%%%%%%% Preventive Care Immunizations Benefit %%%%%%%%%%%
+
+
+berlitz(claim.reason_for_immunization(C, R),
+        "the immunization in $C$ was received because $R$")
+
+berlitz(claim.patient_is_immunocompromised(C, yes),
+        "the patient in $C$ is immunocompromised")
+berlitz(claim.patient_is_immunocompromised(C, no),
+        "the patient in $C$ is not immunocompromised")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Defined Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+berlitz(is_immunization_for_preventive_care(C),
+        "the immunization in $C$ is for preventive care")
+
+berlitz(infectious_disease_for_which_cdc_acip_recommends_immunization(D),
+        "$D$ is an infectious disease for which the CDC ACIP recommends immunization")
+
+berlitz(below_2025_cdc_acip_age_guideline_max(C),
+        "the patient in $C$ has not received the maximum number of vaccines of the type specified in $C$ for a person of their age based on the 2025 CDC ACIP guidelines")
+
+        
+berlitz(below_2024_cdc_acip_age_guideline_max_by_age(A, C),
+        "the patient in $C$ has not received the maximum number of vaccines of the type specified in $C$ for a person of age $A$ based on the 2024 CDC ACIP guidelines")
+
+
+berlitz(below_2024_cdc_acip_age_guideline_max(C),
+        "the patient in $C$ has not received the maximum number of vaccines of the type specified in $C$ for a person of their age based on the 2024 CDC ACIP guidelines")
+
+berlitz(below_2023_cdc_acip_age_guideline_max(C),
+        "the patient in $C$ has not received the maximum number of vaccines of the type specified in $C$ for a person of their age based on the 2023 CDC ACIP guidelines")
+
+
+%%%%%%%%%%% Helper Relations %%%%%%%%%%%
+
+
+berlitz(patient_geq_6_months_old_at_time_of_service(C),
+        "the patient in $C$ is at least 6 months old at the time of the service in the claim")
+
+
+berlitz(n_months_diff(D1, D2, N),
+        "the number of months between $D1$ and $D2$ is $N$")
+
+% Note: D1 and D2 are integers. This Berlitz entry is meant to give context around this relation's usage, if not its formal definition.
+berlitz(not_yet_day_of_month_delta(D1, D2, 0),
+        "the day of the month in the first date is at least that of the second date")
+berlitz(not_yet_day_of_month_delta(D1, D2, -1),
+        "the day of the month in the first date is less than that of the second date")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Base Relations 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

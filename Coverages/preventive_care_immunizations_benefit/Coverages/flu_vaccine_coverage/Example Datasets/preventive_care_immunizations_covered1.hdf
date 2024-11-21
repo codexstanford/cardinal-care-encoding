@@ -1,27 +1,22 @@
-%%%%%% Covered example 2 %%%%%%
+%%%%%% Covered example 1 %%%%%%
 %%%%%% Service: preventive_care_immunization %%%%%%
-%%%%%% Covid Vaccine in 2024 %%%%%%
-%%%%%% Immunocompromised %%%%%%
-%%%%%% Age 12 %%%%%%
-%%%%%% Reason: Already begun a different series %%%%%%
+%%%%%% Flu Vaccine in 2024 %%%%%%
+%%%%%% Vaccination would not be covered if the previous vaccine was received one day later, or if the patient had received at least two doses before July 2023 %%%%%%
 
 %%% Types %%%
-type(policy1, policy)
 type(rta_bondonado, person)
 type(claim1, claim)
 
-%%% Policy %%%
-policy.insuree(policy1, rta_bondonado)
-policy.type(policy1, aetna_cardinal_care_2023_2024)
 
 %%% Person %%%
-person.dob(rta_bondonado, 2011_08_31)
+% person.dob(rta_bondonado, 2015_10_15)
 
 %%% Claim %%%
 %% Service-generic %%
-claim.patient(claim1, rta_bondonado)
-claim.quarter_enrolled_stanford_2023_2024(claim1, autumn_quarter_2023)
-claim.date_service_received(claim1,2024_08_30)
+% claim.patient(claim1, rta_bondonado)
+claim.patient_dob(claim1, 2015_10_15)
+% claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
+claim.date_service_received(claim1,2024_10_31)
 claim.service_type(claim1, preventive_care_immunization)
 claim.precertification_received(claim1, no)
 claim.waived_cardinal_care(claim1, no)
@@ -30,16 +25,13 @@ claim.location_service_received(claim1, stanford_health_care)
 claim.service_available_at_tier_one_or_two_location(claim1, yes)
 
 %% Service-specific %%
-claim.immunization_for_disease(claim1, covid19_disease)
+% claim.immunization_for_disease(claim1, influenza_disease)
 claim.reason_for_immunization(claim1, preventive_care)
 
-% Covid vaccine-specific
-claim.patient_is_immunocompromised(claim1, yes)
-claim.covid19_vaccine_brand(claim1, pfizer_biontech)
-
-claim.covid19_vaccination(claim1, covid19_vaccination_event(0, moderna, updated_2023_2024))
-claim.covid19_vaccination(claim1, covid19_vaccination_event(1, moderna, updated_2023_2024))
-% Uncomment this to  claim.covid19_vaccination(claim1, covid19_vaccination_event(2, moderna, updated_2023_2024))
+% Influenza vaccine-specific
+claim.2024_2025_influenza_vaccination(claim1, influenza_vaccination_event(0, 2024_10_14))
+%claim.2024_2025_influenza_vaccination(claim1, influenza_vaccination_event(2, 2024_08_15))
+claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024(claim1, no)
 
 %% General Exclusions %% 
 claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(claim1, no)

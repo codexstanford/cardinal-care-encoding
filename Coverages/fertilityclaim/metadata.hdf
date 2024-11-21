@@ -139,7 +139,7 @@ total(claim.patients_partner_has_had_voluntary_sterilization, no)
 
 type(claim.demonstrated_and_documented_condition_causing_infertility, attributerelation)
 domain(claim.demonstrated_and_documented_condition_causing_infertility, claim)
-codomain(claim.demonstrated_and_documented_condition_causing_infertility, cardinal_care_2023_2024_infertility_causing_condition)
+codomain(claim.demonstrated_and_documented_condition_causing_infertility, cardinal_care_2024_2025_infertility_causing_condition)
 unique(claim.demonstrated_and_documented_condition_causing_infertility, yes)
 total(claim.demonstrated_and_documented_condition_causing_infertility, no)
 
@@ -163,7 +163,7 @@ total(claim.patient_is_believed_to_be_fertile, no)
 
 type(claim.planned_service, attributerelation)
 domain(claim.planned_service, claim)
-codomain(claim.planned_service, cardinal_care_2023_2024_infertility_causing_service)
+codomain(claim.planned_service, cardinal_care_2024_2025_infertility_causing_service)
 unique(claim.planned_service, no)
 total(claim.planned_service, no)
 
@@ -184,3 +184,11 @@ domain(claim.num_other_covered_art_services, claim)
 codomain(claim.num_other_covered_art_services, number)
 unique(claim.num_other_covered_art_services, yes)
 total(claim.num_other_covered_art_services, no)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+type(cardinal_care_2024_2025_infertility_causing_condition, class)
+type(cardinal_care_2024_2025_infertility_causing_service, class)
+type(fsh_test_obj, class)

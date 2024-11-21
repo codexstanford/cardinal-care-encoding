@@ -1,0 +1,3 @@
+ruleset: preventive_care_immunizations_benefit_flu.hrf
+dataset: Example Datasets/
+query: covered(claim1)

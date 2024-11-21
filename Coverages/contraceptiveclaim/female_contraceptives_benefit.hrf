@@ -6,7 +6,7 @@
 %%%% Family Planning Services - Female Contraceptives 
 
 %% Counseling services
-covered_under_cardinal_care_23_24_benefit(C, family_planning_services_female_contraceptives_benefit) :-
+covered_under_cardinal_care_24_25_benefit(C, family_planning_services_female_contraceptives_benefit) :-
     claim.service_type(C, female_contraceptive_counseling) &
     is_covered_type_of_contraceptive_counseling(C) &
     is_group_or_individual_counseling(C)
@@ -29,7 +29,7 @@ is_group_or_individual_counseling(C) :-
 
 %% Contraceptives (drugs or devices) - includes OTC prescribed by provider, and follow-up care
 % Note on interpretation: "prescribed by your provider" could modify either the OTC, or all prior 
-covered_under_cardinal_care_23_24_benefit(C, family_planning_services_female_contraceptives_benefit) :-
+covered_under_cardinal_care_24_25_benefit(C, family_planning_services_female_contraceptives_benefit) :-
     claim.service_type(C, female_contraceptive_drugs_or_devices_and_follow_up_care) &
     claim.type_of_female_contraceptive_method_provided(C, Type) & 
     fda_approved_female_contraceptive_method(Type) &
@@ -88,7 +88,7 @@ fda_approved_female_contraceptive_method(ulipristal_acetate)
 
 %% Voluntary sterilization
 % Note on interpretation: follow-up care is not quite explicitly covered given the wording, but intuitively it should be. Trying very hard to avoid a false positive here.
-covered_under_cardinal_care_23_24_benefit(C, family_planning_services_female_contraceptives_benefit) :-
+covered_under_cardinal_care_24_25_benefit(C, family_planning_services_female_contraceptives_benefit) :-
     claim.service_type(C, female_voluntary_sterilization) &
     claim.type_of_female_voluntary_sterilization_procedure_service_or_supplies(C, Procedure) &
     member(Procedure, [

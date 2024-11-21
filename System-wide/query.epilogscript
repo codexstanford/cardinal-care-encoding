@@ -1,0 +1,3 @@
+ruleset: library.hrf
+dataset: world.hdf
+query: g(X, Y)

@@ -1,0 +1,9 @@
+%%%%%%%% Preventive Care Immunizations %%%%%%%%
+
+type(preventive_care, immunization_reason)
+type(recommended_as_preventive_care, immunization_reason)
+type(required_for_employment, immunization_reason)
+type(required_for_travel, immunization_reason)
+type(other, immunization_reason)
+
+type(preventive_care_immunization, cardinal_care_2024_2025_service)

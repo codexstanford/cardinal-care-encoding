@@ -1,3 +1,143 @@
+infectious_disease_for_which_cdc_acip_recommends_immunization(influenza_disease)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Referenced in the superfolder benefit rules file
+
+%% Influenza vaccine
+% For ages >= 9 years, one dose annually (unless received first dose before turning 9, and needed multiple doses. That case is handled above.)
+below_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
+    leq(9, Age) &
+    countofall(I, claim.2024_2025_influenza_vaccination(Claim, influenza_vaccination_event(I, _)), 0)
+
+% For ages [6 months, 9 years), depends on number of doses received in prior seasons
+below_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
+    patient_geq_6_months_old_at_time_of_service(Claim) &
+    less(Age, 9) &
+    max_doses_flu_vaccine_allowed_for_child_6_months_through_9_years(Claim, MaxDoses) &
+    countofall(I, claim.2024_2025_influenza_vaccination(Claim, influenza_vaccination_event(I, _)), ReceivedDoses) &
+    less(ReceivedDoses, MaxDoses)
+
+% If child aged 9 hasn't received any doses of 2024-2025 yet, then 1 is allowed
+below_2024_cdc_acip_age_guideline_max_by_age(9, Claim) :-
+    countofall(I, claim.2024_2025_influenza_vaccination(Claim, influenza_vaccination_event(I, _)), 0)
+
+% If child aged 9 had received precisely one dose when they were 8 and they were allowed to receive two doses, then another is allowed
+below_2024_cdc_acip_age_guideline_max_by_age(9, Claim) :-
+    countofall(I, claim.2024_2025_influenza_vaccination(Claim, influenza_vaccination_event(I, _)), 1) &
+    claim.2024_2025_influenza_vaccination(Claim, influenza_vaccination_event(_, VaccinationDate)) & 
+    claim.patient_dob(Claim, PatientDOB) &
+    patient_age_on_date(PatientDOB, VaccinationDate, 8) &
+    max_doses_flu_vaccine_allowed_for_child_6_months_through_9_years(Claim, 2)
+    
+    % 1 dose if child had previously received >= 2 doses of tri- or quadrivalent flu vaccine >= 4 weeks apart before July 2024
+    % 2 doses >= 4 weeks apart if not, or if child's vaccination history is unknown
+max_doses_flu_vaccine_allowed_for_child_6_months_through_9_years(Claim, 1) :-
+    claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024(Claim, yes)
+
+% Intentional negation as failure, as this holds both when claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024 is unknown and when it is no
+max_doses_flu_vaccine_allowed_for_child_6_months_through_9_years(Claim, 2) :-
+    ~claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024(Claim, yes)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eligible for service - additional eligibility requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% Preventive Care Immunizations
+covered_under_cardinal_care_24_25_benefit(C, preventive_care_immunizations_benefit) :-
+    claim.service_type(C, preventive_care_immunization) &
+    is_immunization_for_preventive_care(C) &
+    % claim.immunization_for_disease(C, Disease) &
+    infectious_disease_for_which_cdc_acip_recommends_immunization(Disease)
+
+is_immunization_for_preventive_care(C) :-
+    claim.reason_for_immunization(C, R) &
+    member(R, [
+        preventive_care,
+        recommended_as_preventive_care
+    ]) % Other options: required_for_employment, required_for_travel, other
+
+% Note on policy wording interpretation: I am reading the policy as saying that the condition is on the CDC ACIP's recommendation as to which infectious diseases be vaccinated against, not which vaccines be used
+% Important Note: Not strictly necessary to check infectious_disease_for_which_cdc_acip_recommends_immunization, since we're only specifying coverages for immunizations for which the CDC ACIP recommends immunization, and each immunization is now split out into its own coverage
+    % But keeping it for now, since it's a relevant condition and I think it should be included in explanations.
+    % The infectious_disease_for_which_cdc_acip_recommends_immunization relation is defined in the respective immunization coverage files
+    % Removed the claim.immunization_for_disease subgoal from covered_under_cardinal_care_24_25_benefit since we don't need to specify it on a per-claim basis anymore
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% Preventive Care Immunizations
+% Preventive care is a larger category of benefits, including female contracepives
+% Note: CPB 0035 concerns Influenza Vaccines, but just points to the CDC ACIP guidelines
+is_preventive_care_service(preventive_care_immunization)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% beyond_limits(Claim) :-
+%     claim.service_type(Claim, preventive_care_immunization) &
+%     claim.date_service_received(Claim, Date) &
+%     date_between_dates_incl(Date, 2025_01_01, 2025_12_31) & 
+%     ~below_2025_cdc_acip_age_guideline_max(Claim)
+
+
+beyond_limits(Claim) :-
+    claim.service_type(Claim, preventive_care_immunization) &
+    claim.date_service_received(Claim, Date) &
+    date_between_dates_incl(Date, 2024_01_01, 2024_12_31) & 
+    ~below_2024_cdc_acip_age_guideline_max(Claim)
+
+% beyond_limits(Claim) :-
+%     claim.service_type(Claim, preventive_care_immunization) &
+%     claim.date_service_received(Claim, Date) &
+%     date_between_dates_incl(Date, 2023_01_01, 2023_12_31) & 
+%     ~below_2023_cdc_acip_age_guideline_max(Claim)
+
+%% CDC ACIP Guidelines
+% below_2025_cdc_acip_age_guideline_max(C) :-
+%   % claim.immunization_for_disease(C, D) & % Should remain commented out
+%     claim.patient(C, P) &
+%     age_at_time_of_service(C, P, A) &
+%     below_2025_cdc_acip_age_guideline_max_by_age(A, C) % Definition specified in the respective immunization coverage file
+
+
+below_2024_cdc_acip_age_guideline_max(C) :-
+    % claim.immunization_for_disease(C, D) & % Should remain commented out
+    patient_age_at_time_of_service(C, A) &
+    below_2024_cdc_acip_age_guideline_max_by_age(A, C)
+
+% Note: Only encoding 2024 and 2025 guidelines, since we won't be using 2023 guidelines in the final service if we don't make the 2023-2024 policy available
+% below_2023_cdc_acip_age_guideline_max(Claim) :-
+%     below_2024_cdc_acip_age_guideline_max(Claim)
+
+%%% Disease-specific guidelines are in the respective immunization coverage files
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Helper functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+patient_geq_6_months_old_at_time_of_service(Claim) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    claim.patient_dob(Claim, PatientDOB) & 
+    n_months_diff(PatientDOB, ServiceDate, N) &
+    leq(6, N)
+
+n_months_diff(EarlierDate, LaterDate, N) :-
+    evaluate(parsedate(EarlierDate),[EY,EM,ED]) & 
+    evaluate(parsedate(LaterDate),[LY,LM,LD]) &
+    evaluate(times(minus(LY, EY), 12), MonthsFromYear) & 
+    not_yet_day_of_month_delta(ED, LD, Delta) &
+    evaluate(plus(MonthsFromYear, minus(LM, EM), Delta), N)
+
+not_yet_day_of_month_delta(D1, D2, 0) :-
+    leq(D1, D2)
+
+not_yet_day_of_month_delta(D1, D2, -1) :-
+    less(D2, D1)
 % covers(Policy, C) :-
 %     policy.type(Policy, aetna_cardinal_care_2023_2024) &
 %     covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024)
@@ -223,4 +363,38 @@ tail(X!L) := L
 datetimetotimestamp(DATE,TIME,STAMP) :- 
     evaluate(parsedate(DATE),[Y,M,D]) & 
     evaluate(parsetime(TIME),[H,N,S]) & 
-    evaluate(maketimestamp(Y,M,D,H,N,S),STAMP) 
+    evaluate(maketimestamp(Y,M,D,H,N,S),STAMP)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% general definitions and predefined relations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+claim.birthdate(C,D) :- claim.patient(C,P) & person.dob(P,D)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+overlap(XS,XE,YS,YE) :-
+  evaluate(stringmin(YS,XE),YS) &
+  evaluate(stringmin(XS,YE),XS)
+
+datetimetotimestamp(DATE,TIME,STAMP) :-
+  evaluate(parsedate(DATE),[Y,M,D]) &
+  evaluate(parsetime(TIME),[H,N]) &
+  evaluate(maketimestamp(Y,M,D,H,N,0),STAMP)
+
+parsedate(DATE) :=
+  map(readstring,tail(matches(stringify(DATE),"(....)_(..)_(..)")))
+
+parsetime(TIME) :=
+  map(readstring,tail(matches(stringify(TIME),"(..)_(..)")))
+
+head(X!L) := X
+tail(X!L) := L
+
+%%% number relations, e.g. less, greater
+%%% string relations, e.g. stringappend
+%%% date relations, e.g. dateplus
+%%% and so forth...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

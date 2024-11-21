@@ -8,7 +8,7 @@ type(claim1, claim)
 
 %%% Policy %%%
 policy.insuree(policy1, rta_bondonado)
-policy.type(policy1, aetna_cardinal_care_2023_2024)
+policy.type(policy1, aetna_cardinal_care_2024_2025)
 
 %%% Person %%%
 person.dob(rta_bondonado, 1999_06_25)
@@ -16,7 +16,7 @@ person.dob(rta_bondonado, 1999_06_25)
 %%% Claim %%%
 %% Service-generic %%
 claim.patient(claim1, rta_bondonado)
-claim.quarter_enrolled_stanford_2023_2024(claim1, autumn_quarter_2023)
+claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, female_contraceptive_counseling)
 claim.precertification_received(claim1, no)

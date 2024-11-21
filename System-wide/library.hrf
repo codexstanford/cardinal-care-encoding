@@ -1,0 +1,36 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% general definitions and predefined relations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+claim.birthdate(C,D) :- claim.patient(C,P) & person.dob(P,D)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+overlap(XS,XE,YS,YE) :-
+  evaluate(stringmin(YS,XE),YS) &
+  evaluate(stringmin(XS,YE),XS)
+
+datetimetotimestamp(DATE,TIME,STAMP) :-
+  evaluate(parsedate(DATE),[Y,M,D]) &
+  evaluate(parsetime(TIME),[H,N]) &
+  evaluate(maketimestamp(Y,M,D,H,N,0),STAMP)
+
+parsedate(DATE) :=
+  map(readstring,tail(matches(stringify(DATE),"(....)_(..)_(..)")))
+
+parsetime(TIME) :=
+  map(readstring,tail(matches(stringify(TIME),"(..)_(..)")))
+
+head(X!L) := X
+tail(X!L) := L
+
+less(X, Y) :- leq(X, Y) & distinct(X, Y)
+
+%%% number relations, e.g. less, greater
+%%% string relations, e.g. stringappend
+%%% date relations, e.g. dateplus
+%%% and so forth...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
