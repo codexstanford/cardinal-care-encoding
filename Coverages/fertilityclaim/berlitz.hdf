@@ -80,7 +80,7 @@ berlitz(claim.num_months_unprotected_intercourse(C, N),
         "the patient in $C$ has tried to conceive for $N$ months of unprotected timed intercourse")
 
 
-berlitz(claim.abnormal_semen_analysis_on_date(C, D),
+berlitz(claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(I, D)),
         "an abnormal semen analysis on $D$ is listed in $C$")
 
 

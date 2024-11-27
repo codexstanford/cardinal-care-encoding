@@ -227,8 +227,8 @@ meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
 patient_is_infertile(C) :-
     claim.patient_has_male_reproductive_organs(C, yes) &
     claim.patient_has_partner_with_female_reproductive_organs(C, no) &
-    claim.abnormal_semen_analysis_on_date(C, Date1) &
-    claim.abnormal_semen_analysis_on_date(C, Date2) & 
+    claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(_, Date1)) &
+    claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(_, Date2)) & 
     get_timestamp_from_date(Date1, TS1) &
     get_timestamp_from_date(Date2, TS2) &
     evaluate(minus(TS2,TS1), TimeDiff) &

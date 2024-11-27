@@ -1,3 +1,8 @@
+---
+data:
+    - ../../../General/no_exclusion_claim.hdf
+---
+
 %%%%%% Not covered example 1 %%%%%%
 %%%%%% Service: female_contraceptive_drugs_or_devices_and_follow_up_care %%%%%%
 %%% non-OTC method - other %%%
@@ -28,11 +33,4 @@ claim.otc_female_contraceptive_method_is_prescribed_by_provider(claim1, yes)
 claim.mode_of_providing_service(claim1, provided_related_supplies)
 
 %% General Exclusions %% 
-claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(claim1, no)
-claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority(claim1, no)
-claim.service_is_clinical_trial_therapy_experimental_investigational(claim1, no)
-claim.service_is_genetic_care(claim1, no)
-claim.service_for_correction_of_congenital_birth_defects(claim1, no)
-claim.payment_for_service_made_for_judgment_settlement(claim1, no)
-claim.service_provided_by_family_member(claim1, no)
-claim.treated_in_facility_owned_or_operated_by_governmental_entity(claim1, no)
+% Imported from no_exclusion_claim.hdf

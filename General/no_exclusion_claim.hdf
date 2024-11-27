@@ -1,0 +1,13 @@
+% General Exclusions %
+
+claim.exclusions(claim1, [])
+
+% Per-exclusion attribute format - not currently used %
+% claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(claim1, no)
+% claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority(claim1, no)
+% claim.service_is_clinical_trial_therapy_experimental_investigational(claim1, no)
+% claim.service_is_genetic_care(claim1, no)
+% claim.service_for_correction_of_congenital_birth_defects(claim1, no)
+% claim.payment_for_service_made_for_judgment_settlement(claim1, no)
+% claim.service_provided_by_family_member(claim1, no)
+% claim.treated_in_facility_owned_or_operated_by_governmental_entity(claim1, no)

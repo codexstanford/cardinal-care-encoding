@@ -1,7 +1,6 @@
 ---
 metadata:
     - ../../General/general.metadata
-    - ../../General/exclusions.metadata
 ---
 
 type(treatment_of_infertility_coverage, class)
@@ -128,10 +127,10 @@ changestyle(claim.num_months_unprotected_intercourse, numberstyle)
 
 type(claim.abnormal_semen_analysis_on_date, attributerelation)
 domain(claim.abnormal_semen_analysis_on_date, claim)
-codomain(claim.abnormal_semen_analysis_on_date, date)
+codomain(claim.abnormal_semen_analysis_on_date, abnormal_semen_analysis)
 unique(claim.abnormal_semen_analysis_on_date, no)
 total(claim.abnormal_semen_analysis_on_date, no)
-changestyle(claim.abnormal_semen_analysis_on_date, datestyle)
+changestyle(claim.abnormal_semen_analysis_on_date, table)
 
 type(claim.patient_diagnosed_with_gender_dysphoria, attributerelation)
 domain(claim.patient_diagnosed_with_gender_dysphoria, claim)
@@ -220,17 +219,17 @@ changestyle(claim.num_other_covered_art_services, numberstyle)
 %%%% Functional classes %%%%
 type(fsh_test,class)
 functional(fsh_test, fsh_test_obj)
-attribute(fsh_test, fsh_test.unique_index)
+attribute(fsh_test, fsh_test.enter_custom_id)
 attribute(fsh_test, fsh_test.fsh_level)
 attribute(fsh_test, fsh_test.date)
 attribute(fsh_test, fsh_test.time)
 
-type(fsh_test.unique_index, attributerelation)
-domain(fsh_test.unique_index, fsh_test)
-codomain(fsh_test.unique_index, number)
-unique(fsh_test.unique_index, yes)
-total(fsh_test.unique_index, yes)
-changestyle(fsh_test.unique_index,numberstyle)
+type(fsh_test.enter_custom_id, attributerelation)
+domain(fsh_test.enter_custom_id, fsh_test)
+codomain(fsh_test.enter_custom_id, number)
+unique(fsh_test.enter_custom_id, yes)
+total(fsh_test.enter_custom_id, yes)
+changestyle(fsh_test.enter_custom_id,numberstyle)
 
 type(fsh_test.fsh_level, attributerelation)
 domain(fsh_test.fsh_level, fsh_test)
@@ -252,6 +251,26 @@ codomain(fsh_test.time, time)
 unique(fsh_test.time, yes)
 total(fsh_test.time, yes)
 changestyle(fsh_test.time,timestyle)
+
+
+type(abnormal_semen_analysis,class)
+functional(abnormal_semen_analysis, abnormal_semen_analysis_obj)
+attribute(abnormal_semen_analysis, abnormal_semen_analysis.unique_index)
+attribute(abnormal_semen_analysis, abnormal_semen_analysis.date)
+
+type(abnormal_semen_analysis.unique_index, attributerelation)
+domain(abnormal_semen_analysis.unique_index, abnormal_semen_analysis)
+codomain(abnormal_semen_analysis.unique_index, number)
+unique(abnormal_semen_analysis.unique_index, yes)
+total(abnormal_semen_analysis.unique_index, yes)
+changestyle(abnormal_semen_analysis.unique_index, numberstyle)
+
+type(abnormal_semen_analysis.date, attributerelation)
+domain(abnormal_semen_analysis.date, abnormal_semen_analysis)
+codomain(abnormal_semen_analysis.date, date)
+unique(abnormal_semen_analysis.date, yes)
+total(abnormal_semen_analysis.date, yes)
+changestyle(abnormal_semen_analysis.date, datestyle)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Classes without attributes

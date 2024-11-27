@@ -43,45 +43,45 @@ berlitz(claim.service_available_at_tier_one_or_two_location(C, no),
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% General Exclusions %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-berlitz(claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(C, yes),
-        "the service in $C$ was received from a provider as a result of an injury sustained, or illness contracted, while in the service of the armed forces of any country")
-berlitz(claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(C, no),
-        "the service in $C$ was not received from a provider as a result of an injury sustained, or illness contracted, while in the service of the armed forces of any country")
+% berlitz(claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(C, yes),
+%         "the service in $C$ was received from a provider as a result of an injury sustained, or illness contracted, while in the service of the armed forces of any country")
+% berlitz(claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(C, no),
+%        "the service in $C$ was not received from a provider as a result of an injury sustained, or illness contracted, while in the service of the armed forces of any country")
 
-berlitz(claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority(C, yes),
-        "the service in $C$ was provided by a provider that was acting beyond the scope of its legal authority, (I.e. the provider was not licensed/certified to provide the health care services they provided to the patient)")
-berlitz(claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority(C, no),
-        "the service in $C$ was not provided by a provider that was acting beyond the scope of its legal authority, (I.e. the provider was licensed/certified to provide the health care services they provided to the patient)")
+% berlitz(claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority(C, yes),
+%         "the service in $C$ was provided by a provider that was acting beyond the scope of its legal authority, (I.e. the provider was not licensed/certified to provide the health care services they provided to the patient)")
+% berlitz(claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority(C, no),
+%         "the service in $C$ was not provided by a provider that was acting beyond the scope of its legal authority, (I.e. the provider was licensed/certified to provide the health care services they provided to the patient)")
 
-berlitz(claim.service_is_clinical_trial_therapy_experimental_investigational(C, yes),
-        "the service in $C$ was an experimental or investigational clinical trial therapy")
-berlitz(claim.service_is_clinical_trial_therapy_experimental_investigational(C, no),
-        "the service in $C$ was not an experimental or investigational clinical trial therapy")
+% berlitz(claim.service_is_clinical_trial_therapy_experimental_investigational(C, yes),
+%         "the service in $C$ was an experimental or investigational clinical trial therapy")
+% berlitz(claim.service_is_clinical_trial_therapy_experimental_investigational(C, no),
+%         "the service in $C$ was not an experimental or investigational clinical trial therapy")
 
-berlitz(claim.service_is_genetic_care(C, yes),
-        "the service in $C$ altered the body's genes, genetic make-up, or the expression of the body's genes")
-berlitz(claim.service_is_genetic_care(C, no),
-        "the service in $C$ did not alter the body's genes, genetic make-up, or the expression of the body's genes")
+% berlitz(claim.service_is_genetic_care(C, yes),
+%         "the service in $C$ altered the body's genes, genetic make-up, or the expression of the body's genes")
+% berlitz(claim.service_is_genetic_care(C, no),
+%         "the service in $C$ did not alter the body's genes, genetic make-up, or the expression of the body's genes")
 
-berlitz(claim.service_for_correction_of_congenital_birth_defects(C, yes),
-        "the service in $C$ was for the correction of congenital birth defects")
-berlitz(claim.service_for_correction_of_congenital_birth_defects(C, no),
-        "the service in $C$ was not for the correction of congenital birth defects")
+% berlitz(claim.service_for_correction_of_congenital_birth_defects(C, yes),
+%         "the service in $C$ was for the correction of congenital birth defects")
+% berlitz(claim.service_for_correction_of_congenital_birth_defects(C, no),
+%         "the service in $C$ was not for the correction of congenital birth defects")
 
-berlitz(claim.payment_for_service_made_for_judgment_settlement(C, yes),
-        "the payment for the service in $C$ was made as a judgment or settlement by any person deemed responsible for an injury or illness, or by their insurers")
-berlitz(claim.payment_for_service_made_for_judgment_settlement(C, no),
-        "the payment for the service in $C$ was not made as a judgment or settlement by any person deemed responsible for an injury or illness, or by their insurers")
+% berlitz(claim.payment_for_service_made_for_judgment_settlement(C, yes),
+%         "the payment for the service in $C$ was made as a judgment or settlement by any person deemed responsible for an injury or illness, or by their insurers")
+% berlitz(claim.payment_for_service_made_for_judgment_settlement(C, no),
+%         "the payment for the service in $C$ was not made as a judgment or settlement by any person deemed responsible for an injury or illness, or by their insurers")
 
-berlitz(claim.service_provided_by_family_member(C, yes),
-        "the service in $C$ was provided by a spouse, domestic partner, civil union partner, parent, child, step-child, brother, sister, in-law or any household member of the patient")
-berlitz(claim.service_provided_by_family_member(C, no),
-        "the service in $C$ was not provided by a spouse, domestic partner, civil union partner, parent, child, step-child, brother, sister, in-law or any household member of the patient")
+% berlitz(claim.service_provided_by_family_member(C, yes),
+%         "the service in $C$ was provided by a spouse, domestic partner, civil union partner, parent, child, step-child, brother, sister, in-law or any household member of the patient")
+% berlitz(claim.service_provided_by_family_member(C, no),
+%         "the service in $C$ was not provided by a spouse, domestic partner, civil union partner, parent, child, step-child, brother, sister, in-law or any household member of the patient")
 
-berlitz(claim.treated_in_facility_owned_or_operated_by_governmental_entity(C, yes),
-        "the service in $C$ was received in a facility owned or operated by any federal, state, or other governmental entity")
-berlitz(claim.treated_in_facility_owned_or_operated_by_governmental_entity(C, no),
-        "the service in $C$ was not received in a facility owned or operated by any federal, state, or other governmental entity")
+% berlitz(claim.treated_in_facility_owned_or_operated_by_governmental_entity(C, yes),
+%         "the service in $C$ was received in a facility owned or operated by any federal, state, or other governmental entity")
+% berlitz(claim.treated_in_facility_owned_or_operated_by_governmental_entity(C, no),
+%         "the service in $C$ was not received in a facility owned or operated by any federal, state, or other governmental entity")
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

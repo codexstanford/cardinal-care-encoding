@@ -1,3 +1,5 @@
+% Important note: This format for exclusions is not currently used. Currently use a list-based format.
+
 %%%%%%%%%%%%%%%%%%%%%%% General Exclusions %%%%%%%%%%%%%%%%%%%%%%%
 attribute(claim, claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces)
 attribute(claim, claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority)

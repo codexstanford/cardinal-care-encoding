@@ -1,3 +1,8 @@
+---
+rules:
+    - exclusions.hrf
+---
+
 % covers(Policy, C) :-
 %     policy.type(Policy, aetna_cardinal_care_2023_2024) &
 %     covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024)
@@ -11,7 +16,7 @@ covered(C) :-
     medically_necessary_service(C) &
     precertified_if_necessary(C) &
     ~beyond_limits(C) &
-    ~general_exclusion_applies(C)
+    claim.exclusions(C, nil)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -101,65 +106,11 @@ precertified_if_necessary(C) :-
 
 % Important Note: Loaded from other, benefit-specific rulesets
     
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% General exclusions 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Important note: only those applicable to the Treatment of Infertility benefits have been encoded so far
 
-% Armed forces
-general_exclusion_applies(C) :-
-    claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(C, yes)
-
-% Beyond legal authority
-general_exclusion_applies(C) :-
-    claim.service_or_supplies_provided_by_provider_acting_beyond_scope_of_legal_authority(C, yes)
-
-% Clinical trial therapies (experimental or investigational)
-general_exclusion_applies(C) :-
-    claim.service_is_clinical_trial_therapy_experimental_investigational(C, yes)
-
-
-% Experimental or investigational - Not encoded right now, as this should be a function of the service selected and whether it meets certain requirements re: clinical trials for terminal etc. conditions
-%general_exclusion_applies(C) :-
-%    claim.service_is_experimental_investigational(C)
-
-% Gene-based, cellular and other innovative therapies (GCIT)
-% Not really applicable to infertility treatment, as it's primarily for life-threating conditions. Need to do a thorough check to be sure, though.
-% general_exclusion_applies(C) :-
-
-% Genetic care
-general_exclusion_applies(C) :-
-    claim.service_is_genetic_care(C, yes) &
-    claim.service_for_correction_of_congenital_birth_defects(C, no)
-
-% Incidental surgeries
-% Note: Not encoding this now because it is implied by the fact that incidental surgeries are non-medically necessary
-%general_exclusion_applies(C) :-
-%    claim.service_is_incidental_surgery(C, yes)
-
-% Judgment or settlement
-general_exclusion_applies(C) :-
-    claim.payment_for_service_made_for_judgment_settlement(C, yes)
-
-% Non-U.S. citizen
-% Note: if received as part of emergency services or urgent care, different conditions apply
-% Note 2: Not encoded right now because this is implied by the in-network requirements of the policy
-% general_exclusion_applies(C) :-
-
-% Services provided by a family member
-% Note: this should ultimately be inferrable from the provider and kinship relations
-general_exclusion_applies(C) :-
-    claim.service_provided_by_family_member(C, yes)
-
-% Services, supplies and drugs received outside of the United States
-% Note: the Aetna in-network locations should prohibit this from happening. Will encode this later, as a function of the country in which providers/facilities are located
-%general_exclusion_applies(C) :-
-%    claim.service_received_
-
-% Treatment in a federal, state, or governmental entity
-general_exclusion_applies(C) :-
-    claim.treated_in_facility_owned_or_operated_by_governmental_entity(C, yes)
+% Important Note: Loaded exclusion.hrf
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
