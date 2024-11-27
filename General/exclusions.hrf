@@ -3,9 +3,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Important note: only those applicable to the Treatment of Infertility benefits have been encoded so far
 
-general_exclusion_applies(C) :-
-    ~claim.exclusions(C, nil)
-
 % Important note: commented out logic below to update for checkboxfield version of the CodeX Insurance Analyst UX/UI.
 
 % Armed forces
