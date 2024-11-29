@@ -1,6 +1,6 @@
 ---
 data:
-    - ../../../General/no_exclusion_claim.hdf
+    - ../../../../../General/no_exclusion_claim.hdf
 ---
 
 %%%%%% Covered example 2 %%%%%%

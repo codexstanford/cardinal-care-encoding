@@ -1,9 +1,9 @@
 ---
 data:
-    - ../../../General/no_exclusion_claim.hdf
+    - ../../../../../General/no_exclusion_claim.hdf
 ---
 
-%%%%%% Not covered example 2 %%%%%%
+%%%%%% Not covered example 1 %%%%%%
 %%%%%% Service: cryopreservation_for_fertility_preservation %%%%%%
 %%%%%% Patient: Female without male partner (partner not relevant for ART services) %%%%%%
 %%%%%% Reason: Most recent day 3 fsh test level is >= 19 and will be retrieving her own eggs for use %%%%%%

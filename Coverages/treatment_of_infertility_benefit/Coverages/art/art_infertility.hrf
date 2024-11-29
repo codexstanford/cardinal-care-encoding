@@ -1,0 +1,152 @@
+---
+rules:
+    - ../../treatment_of_infertility_benefit.hrf
+    - ../../non-basic.hrf
+---
+
+
+%% Advanced reproductive technology services
+covered_under_cardinal_care_24_25_benefit(C, treatment_of_infertility_benefit) :-
+    claim.service_type(C, ServiceType) & 
+    is_art_service(ServiceType) &
+    meets_fertility_preservation_eligibility_requirements(C) &
+    ~claim.location_service_received(C, other) % ART service-specific exclusion in the infertility treatment benefit. Not provided for out-of-network care.
+
+
+meets_fertility_preservation_eligibility_requirements(C) :-
+    claim.patient_is_believed_to_be_fertile(C, yes) &
+    claim.planned_service(C, PlannedService) &
+    member(PlannedService, [
+        chemotherapy,
+        pelvic_radiotherapy,
+        gonadotoxic_therapy,
+        orchiectomy,
+        oophorectomy,
+        hysterectomy,
+        orchiectomy_for_treatment_of_disease,
+        oophorectomy_for_treatment_of_disease,
+        other_treatment_demonstrated_to_result_in_infertility
+    ]) &
+    patient_age_at_time_of_service(C, Age) &
+    eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age)
+
+% Source: Note 4 from CPB 0327 on 7/31/2024: https://www.aetna.com/cpb/medical/data/300_399/0327.html
+% If under 40, just care about most recent test
+eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
+    claim.will_be_retrieving_eggs_for_use(C, yes) &
+    less(Age, 40) &
+    most_recent_day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) &
+    less(Level, 19) &
+    meets_fsh_test_recency_req(C, fsh_test(Index, Level, Date, Time))
+
+% If 40 or over, care about all prior tests since became 40 (This is inferred from the "Comprehensive infertility services" FSH level reqs, and the Note 4 text "Check benefit plan descriptions")
+% Another practical assumption: There must be at least one test after age 40
+eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
+    claim.will_be_retrieving_eggs_for_use(C, yes) &
+    leq(40, Age) &
+    claim.day_3_fsh_test_after_age_40(C, _) &
+    countofall(T, claim.day_3_fsh_test_after_age_40(C, fsh_test(T, Level, _, _)) & leq(19, Level), 0)
+
+% Source: Note 5 from CPB 0327 on 7/31/2024: https://www.aetna.com/cpb/medical/data/300_399/0327.html
+% Additional (more generous) eligibility requirements if a woman has premature ovarian failure
+eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
+    claim.will_be_retrieving_eggs_for_use(C, yes) &
+    leq(40, Age) &
+    claim.patient_has_premature_ovarian_failure(C, yes) &
+    most_recent_day_3_fsh_test(C, fsh_test(_, Level, _, _)) &
+    less(Level, 19)
+
+
+% Vacuously satisfied if not retrieving eggs for use
+eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, _) :-
+    claim.will_be_retrieving_eggs_for_use(C, no)
+
+% If 39 or over, test must be in the last six months
+% Bug Note: same datetime bugginess as in the NUM_MS_IN_TWO_WEEKS case
+% Could be fixed by implementing date_n_months_before(ServiceDate, 6, DateSixMonthsBefore), but requires some function finickiness I would rather sort out with Mike
+meets_fsh_test_recency_req(C, fsh_test(_, _, TestDate, TestTime)) :-
+    patient_age_at_time_of_service(C, Age) &
+    leq(39, Age) &
+    claim.date_service_received(C, ServiceDate) &
+    get_timestamp_from_date(ServiceDate, ServiceDateTS) &
+    evaluate(times(365, 24, 60, 60, 1000), NUM_MS_IN_SIX_MONTHS) &
+    evaluate(minus(ServiceDateTS, NUM_MS_IN_SIX_MONTHS), SixMonthsBeforeTS) &
+    datetimetotimestamp(TestDate, TestTime, TestDateTimeTS) &
+    leq(SixMonthsBeforeTS, TestDateTimeTS)
+
+% If under 39, no additional requirement
+meets_fsh_test_recency_req(C, _) :-
+    patient_age_at_time_of_service(C, Age) &
+    less(Age, 39)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+medically_necessary_service(C) :-
+    claim.service_type(C, ivf_for_fertility_preservation) & 
+    meets_ivf_cpb_reqs(C)
+
+% If the patient has premature ovarian failure, ivf is medically necessary until 45
+% Note: CPB 0327 Note 5 partially defines premature ovarian failure, but doesn't specify which D3 FSH levels must be taken into account
+meets_ivf_cpb_reqs(C) :-
+    claim.patient_has_premature_ovarian_failure(C, yes) &
+    patient_age_at_time_of_service(C, Age) &
+    less(Age, 45)
+
+
+% CPB 0327 E.3.a.i
+meets_ivf_cpb_reqs(C) :-
+    patient_age_at_time_of_service(C, Age) &
+    leq(Age, 37) &
+    claim.num_cycles_oral_or_injectable_ovulation_induction(C, 3)
+
+% CPB 0327 E.3.a.ii
+meets_ivf_cpb_reqs(C) :-
+    patient_age_at_time_of_service(C, Age) &
+    leq(38, Age)
+
+
+% CPB 0327 E.3.b
+% Note: They list some examples of such individuals, but don't seem to be comprehensive
+meets_ivf_cpb_reqs(C) :-
+    claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_only_effective_treatment(C, yes)
+
+
+% CPB 0327 E.3.c
+meets_ivf_cpb_reqs(C) :-
+    claim.service_is_ivf_with_embryo_transfer(C, yes)
+
+
+% Almost redundant with eligibility reqs listed in the policy itself
+% Is also more restrictive than the planned service constraint in the policy's eligibility reqs, even though the policy reqs are likely to be the ones honored here
+medically_necessary_service(C) :-
+    claim.service_type(C, cryopreservation_for_fertility_preservation) &
+    claim.planned_service(C, PlannedService) &
+    member(PlannedService, [
+        chemotherapy,
+        pelvic_radiotherapy,
+        gonadotoxic_therapy,
+        orchiectomy_for_treatment_of_disease,
+        oophorectomy_for_treatment_of_disease
+    ])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+requires_precertification(ServiceType) :-
+    is_art_service(ServiceType)
+
+is_art_service(ivf_for_fertility_preservation)
+is_art_service(cryopreservation_for_fertility_preservation)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+beyond_limits(Claim) :-
+    claim.service_type(Claim, ServiceType) &
+    is_art_service(ServiceType) &
+    claim.num_other_covered_art_services(Claim, N) &
+    leq(1, N)

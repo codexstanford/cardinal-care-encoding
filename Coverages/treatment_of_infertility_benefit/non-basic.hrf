@@ -1,0 +1,4 @@
+% If multiple tests have the same datetime, then we can't decide which was most recent and this is not satisfied.
+most_recent_day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) :-
+    claim.day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) &
+    countofall(T, claim.day_3_fsh_test(C, fsh_test(T, _, Date2, Time2)) & distinct(Index, T) & leq_datetime(Date, Time, Date2, Time2), 0)

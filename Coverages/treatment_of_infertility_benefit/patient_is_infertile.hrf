@@ -1,0 +1,84 @@
+%% General definition of infertility
+
+% Female without a male partner
+patient_is_infertile(C) :-
+    claim.patient_has_female_reproductive_organs(C, yes) &
+    claim.patient_has_partner_with_male_reproductive_organs(C, no) &
+    patient_age_at_time_of_service(C, Age) &
+    meets_attempt_to_conceive_reqs_female_without_male_partner(C, Age)
+
+% Under 35
+meets_attempt_to_conceive_reqs_female_without_male_partner(C, PersonAge) :-
+    less(PersonAge, 35) &
+    claim.num_cycles_donor_insemination(C, NumCycles) &
+    leq(12, NumCycles)
+
+% 35 and over
+meets_attempt_to_conceive_reqs_female_without_male_partner(C, PersonAge) :-
+    leq(35, PersonAge) &
+    claim.num_cycles_donor_insemination(C, NumCycles) &
+    leq(6, NumCycles)
+
+
+% Female with a male partner
+patient_is_infertile(C) :-
+    claim.patient_has_female_reproductive_organs(C, yes) &
+    claim.patient_has_partner_with_male_reproductive_organs(C, yes) &
+    patient_age_at_time_of_service(C, Age) &
+    meets_attempt_to_conceive_reqs_female_with_male_partner(C, Age)
+
+
+% Under 35
+meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
+    less(PersonAge, 35) &
+    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    leq(12, NumMonths)
+
+% 35 or over
+meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
+    leq(35, PersonAge) &
+    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    leq(6, NumMonths)
+
+% Can also have tried donor insemination
+meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
+    meets_attempt_to_conceive_reqs_female_without_male_partner(C, PersonAge)
+
+
+% Male with a female partner
+patient_is_infertile(C) :-
+    claim.patient_has_male_reproductive_organs(C, yes) &
+    claim.patient_has_partner_with_female_reproductive_organs(C, yes) &
+    claim.age_of_patients_female_partner(C, PartnerAge) & 
+    meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge)
+
+% Female partner under 35
+meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
+    less(PartnerAge, 35) &
+    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    leq(12, NumMonths)
+
+% Female partner 35 or over
+meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
+    leq(35, PartnerAge) &
+    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    leq(6, NumMonths)
+
+
+% Male without a female partner
+% Bug Note: This is actually buggy because the policy would care about dates, not solar/sidereal time - should use a real datetime module for computing difference of two weeks
+patient_is_infertile(C) :-
+    claim.patient_has_male_reproductive_organs(C, yes) &
+    claim.patient_has_partner_with_female_reproductive_organs(C, no) &
+    claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(_, Date1)) &
+    claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(_, Date2)) & 
+    get_timestamp_from_date(Date1, TS1) &
+    get_timestamp_from_date(Date2, TS2) &
+    evaluate(minus(TS2,TS1), TimeDiff) &
+    evaluate(times(14, 24, 60, 60, 1000), NUM_MS_IN_TWO_WEEKS) &
+    leq(NUM_MS_IN_TWO_WEEKS, TimeDiff)
+    
+
+% Person with gender dysphoria
+patient_is_infertile(C) :-
+    claim.patient_diagnosed_with_gender_dysphoria(C, yes)
