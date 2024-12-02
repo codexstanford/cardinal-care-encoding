@@ -1,7 +1,7 @@
 ---
 rules:
     - ../../preventive_care_immunizations_benefit.hrf
-    - ../../../../General/cardinal_care.hrf
+    - ../../../../Cardinal Care Core/cardinal_care.hrf
     - ../../../../System-wide/library.hrf
 ---
 

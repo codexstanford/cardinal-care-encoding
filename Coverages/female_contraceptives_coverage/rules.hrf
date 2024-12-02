@@ -1,6 +1,6 @@
 ---
 rules:
-    - ../../General/cardinal_care.hrf
+    - ../../Cardinal Care Core/cardinal_care.hrf
     - ../../System-wide/library.hrf
 ---
 

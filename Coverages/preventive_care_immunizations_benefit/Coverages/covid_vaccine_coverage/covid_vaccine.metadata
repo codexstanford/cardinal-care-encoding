@@ -1,7 +1,7 @@
 ---
 metadata:
     - ../../preventive_care_immunizations.metadata
-    - ../../../../General/general.metadata
+    - ../../../../Cardinal Care Core/general.metadata
 ---
 
 type(covid_vaccine_coverage, class)

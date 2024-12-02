@@ -1,6 +1,6 @@
 ---
 metadata:
-    - ../../General/general.metadata
+    - ../../Cardinal Care Core/general.metadata
 ---
 
 type(female_contraceptives_coverage, class)
