@@ -105,7 +105,7 @@ precertified_if_necessary(C) :-
 %%% General exclusions 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Important Note: Loaded exclusion.hrf
+% Important Note: Formerly loaded from exclusion.hrf. Now encoded in world.hdf.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

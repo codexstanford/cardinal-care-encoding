@@ -28,7 +28,7 @@ is_immunization_for_preventive_care(C) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%% Preventive Care Immunizations
-% Preventive care is a larger category of benefits, including female contracepives
+% Preventive care is a larger category of benefits, including female contraceptives
 % Note: CPB 0035 concerns Influenza Vaccines, but just points to the CDC ACIP guidelines
 is_preventive_care_service(preventive_care_immunization)
 
