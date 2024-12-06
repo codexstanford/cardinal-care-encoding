@@ -1,0 +1,2 @@
+type(basic_infertility_coverage, class)
+superclass(basic_infertility_coverage, claim)

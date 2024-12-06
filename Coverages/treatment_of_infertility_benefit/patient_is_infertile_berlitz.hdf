@@ -1,0 +1,65 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Base Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%% For I, II, III, and IV: information relevant to determining whether someone meets the definition of infertile %%%%%%%%%%%%%%%%%%
+
+
+berlitz(claim.patient_has_male_reproductive_organs(C, yes), 
+        "the patient in $C$ has male reproductive organs")
+berlitz(claim.patient_has_male_reproductive_organs(C, no), 
+        "the patient in $C$ does not have male reproductive organs")
+
+berlitz(claim.patient_has_female_reproductive_organs(C, yes), 
+        "the patient in $C$ has female reproductive organs")
+berlitz(claim.patient_has_female_reproductive_organs(C, no), 
+        "the patient in $C$ does not have female reproductive organs")
+
+berlitz(claim.patient_has_partner_with_male_reproductive_organs(C, yes), 
+        "the patient in $C$ has a partner with male reproductive organs")
+berlitz(claim.patient_has_partner_with_male_reproductive_organs(C, no),
+        "the patient in $C$ does not have a partner with male reproductive organs")
+
+
+berlitz(claim.patient_has_partner_with_female_reproductive_organs(C, yes),
+        "the patient in $C$ has a partner with female reproductive organs")
+berlitz(claim.patient_has_partner_with_female_reproductive_organs(C, no),
+        "the patient in $C$ does not have a partner with female reproductive organs")
+
+
+berlitz(claim.age_of_patients_female_partner(C, A), 
+        "the patient in $C$ has a partner of age $A$ with female reproductive organs")
+
+
+berlitz(claim.num_cycles_donor_insemination(C, N), 
+        "the patient in $C$ has undergone $N$ cycles of donor artifical insemination")
+
+
+berlitz(claim.num_months_unprotected_intercourse(C, N), 
+        "the patient in $C$ has tried to conceive for $N$ months of unprotected timed intercourse")
+
+
+berlitz(claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(I, D)),
+        "an abnormal semen analysis on $D$ is listed in $C$")
+
+
+berlitz(claim.patient_diagnosed_with_gender_dysphoria(C, yes),
+        "the patient in $C$ has been diagnosed with gender dysphoria")
+berlitz(claim.patient_diagnosed_with_gender_dysphoria(C, no), 
+        "the patient in $C$ has not been diagnosed with gender dysphoria")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Defined Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(patient_is_infertile(C),
+        "the patient in $C$ is infertile")
+
+berlitz(meets_attempt_to_conceive_reqs_female_without_male_partner(C, A),
+        "$C$ meets the minimum requirements for attempting to conceive for a female of age $A$ without a male partner")
+
+berlitz(meets_attempt_to_conceive_reqs_female_with_male_partner(C, A),
+        "$C$ meets the minimum requirements for attempting to conceive for a female of age $A$ with a male partner")
+
+berlitz(meets_attempt_to_conceive_reqs_male_with_female_partner(C, A),
+        "$C$ meets the minimum requirements for attempting to conceive for a male with a female partner of age $A$")

@@ -1,0 +1,14 @@
+---
+data:
+    - ../../Cardinal Care Core/berlitz.hdf
+---
+
+%%%%%%%%%%% Treatment of Infertility Benefit %%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Defined Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(get_timestamp_from_date(D, S),
+        "the timestamp for $D$ is $S$")

@@ -49,15 +49,6 @@ patient_meets_day_3_fsh_level_criteria(C) :-
     claim.day_3_fsh_test_after_age_40(C, _) &
     countofall(T, claim.day_3_fsh_test_after_age_40(C, fsh_test(T, Level, _, _)) & leq(19, Level), 0)
 
-% Gets day 3 fsh tests that have been performed since the patient became 40 years old
-claim.day_3_fsh_test_after_age_40(C, fsh_test(Index, Level, Date, Time)) :-
-    claim.patient_dob(C, DOB) &
-    evaluate(parsedate(DOB), [Y, M, D]) &
-    evaluate(maketimestamp(plus(Y, 40), M, D, 0, 0, 0), FortiethBirthdayTS) &
-    claim.day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) &
-    datetimetotimestamp(Date, Time, TestTS) &
-    leq(FortiethBirthdayTS, TestTS)
-
 % N/A if male
 patient_meets_day_3_fsh_level_criteria(C) :-
     claim.patient_has_male_reproductive_organs(C, yes)

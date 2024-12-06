@@ -1,0 +1,65 @@
+type(comprehensive_infertility_coverage, class)
+superclass(comprehensive_infertility_coverage, claim)
+attribute(comprehensive_infertility_coverage, claim.num_months_regular_intravaginal_inseminations)
+attribute(comprehensive_infertility_coverage, claim.num_cycles_timed_intrauterine_intracervical_inseminations)
+attribute(comprehensive_infertility_coverage, claim.num_other_covered_artificial_insemination_attempts)
+attribute(comprehensive_infertility_coverage, claim.patient_has_had_voluntary_sterilization)
+attribute(comprehensive_infertility_coverage, claim.patients_partner_has_had_voluntary_sterilization)
+attribute(comprehensive_infertility_coverage, claim.demonstrated_and_documented_condition_causing_infertility)
+attribute(comprehensive_infertility_coverage, claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan)
+
+
+type(claim.num_months_regular_intravaginal_inseminations, attributerelation)
+domain(claim.num_months_regular_intravaginal_inseminations, claim)
+codomain(claim.num_months_regular_intravaginal_inseminations, number)
+unique(claim.num_months_regular_intravaginal_inseminations, yes)
+total(claim.num_months_regular_intravaginal_inseminations, no)
+changestyle(claim.num_months_regular_intravaginal_inseminations, numberstyle)
+
+type(claim.num_cycles_timed_intrauterine_intracervical_inseminations, attributerelation)
+domain(claim.num_cycles_timed_intrauterine_intracervical_inseminations, claim)
+codomain(claim.num_cycles_timed_intrauterine_intracervical_inseminations, number)
+unique(claim.num_cycles_timed_intrauterine_intracervical_inseminations, yes)
+total(claim.num_cycles_timed_intrauterine_intracervical_inseminations, no)
+changestyle(claim.num_cycles_timed_intrauterine_intracervical_inseminations, numberstyle)
+
+type(claim.num_other_covered_artificial_insemination_attempts, attributerelation)
+domain(claim.num_other_covered_artificial_insemination_attempts, claim)
+codomain(claim.num_other_covered_artificial_insemination_attempts, number)
+unique(claim.num_other_covered_artificial_insemination_attempts, yes)
+total(claim.num_other_covered_artificial_insemination_attempts, no)
+changestyle(claim.num_other_covered_artificial_insemination_attempts, numberstyle)
+
+type(claim.patient_has_had_voluntary_sterilization, attributerelation)
+domain(claim.patient_has_had_voluntary_sterilization, claim)
+codomain(claim.patient_has_had_voluntary_sterilization, boolean)
+unique(claim.patient_has_had_voluntary_sterilization, yes)
+total(claim.patient_has_had_voluntary_sterilization, no)
+changestyle(claim.patient_has_had_voluntary_sterilization, selector)
+
+type(claim.patients_partner_has_had_voluntary_sterilization, attributerelation)
+domain(claim.patients_partner_has_had_voluntary_sterilization, claim)
+codomain(claim.patients_partner_has_had_voluntary_sterilization, boolean)
+unique(claim.patients_partner_has_had_voluntary_sterilization, yes)
+total(claim.patients_partner_has_had_voluntary_sterilization, no)
+changestyle(claim.patients_partner_has_had_voluntary_sterilization, selector)
+
+type(claim.demonstrated_and_documented_condition_causing_infertility, attributerelation)
+domain(claim.demonstrated_and_documented_condition_causing_infertility, claim)
+codomain(claim.demonstrated_and_documented_condition_causing_infertility, cardinal_care_2024_2025_infertility_causing_condition)
+unique(claim.demonstrated_and_documented_condition_causing_infertility, yes)
+total(claim.demonstrated_and_documented_condition_causing_infertility, no)
+changestyle(claim.demonstrated_and_documented_condition_causing_infertility, selector)
+
+type(claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan, attributerelation)
+domain(claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan, claim)
+codomain(claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan, boolean)
+unique(claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan, yes)
+total(claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan, no)
+changestyle(claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan, selector)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+type(cardinal_care_2024_2025_infertility_causing_condition, class)

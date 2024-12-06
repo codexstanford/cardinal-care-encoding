@@ -2,3 +2,17 @@
 most_recent_day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) :-
     claim.day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) &
     countofall(T, claim.day_3_fsh_test(C, fsh_test(T, _, Date2, Time2)) & distinct(Index, T) & leq_datetime(Date, Time, Date2, Time2), 0)
+
+% Gets day 3 fsh tests that have been performed since the patient became 40 years old
+claim.day_3_fsh_test_after_age_40(C, fsh_test(Index, Level, Date, Time)) :-
+    claim.patient_dob(C, DOB) &
+    evaluate(parsedate(DOB), [Y, M, D]) &
+    evaluate(maketimestamp(plus(Y, 40), M, D, 0, 0, 0), FortiethBirthdayTS) &
+    claim.day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) &
+    datetimetotimestamp(Date, Time, TestTS) &
+    leq(FortiethBirthdayTS, TestTS)
+
+leq_datetime(Date1, Time1, Date2, Time2) :-
+    datetimetotimestamp(Date1, Time1, TS1) &
+    datetimetotimestamp(Date2, Time2, TS2) & 
+    leq(TS1, TS2)

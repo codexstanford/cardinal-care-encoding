@@ -1,0 +1,76 @@
+---
+data:
+    - ../../treatment_of_infertility_benefit_berlitz.hdf
+    - ../../patient_is_infertile_berlitz.hdf
+    - ../../non-basic_berlitz.hdf
+---
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Base Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% III. Ovulation Induction Cycle with Menotropins
+
+berlitz(claim.num_months_regular_intravaginal_inseminations(C, N), 
+        "the patient in $C$ has undergone $N$ months of regular intravaginal inseminations")
+
+berlitz(claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N), 
+        "the patient in $C$ has undergone $N$ cycles of intrauterine or intracervical inseminations, document in the medical record")
+
+
+%%% IV. Intrauterine Insemination
+
+berlitz(claim.num_other_covered_artificial_insemination_attempts(C, N), 
+        "$N$ other artificial insemination attempts have been covered this policy year")
+
+%%%%%%%%%%%%%%%%%% For III and IV %%%%%%%%%%%%%%%%%%
+
+berlitz(claim.patient_has_partner(C, yes),
+        "the patient in $C$ has a partner")
+berlitz(claim.patient_has_partner(C, no),
+        "the patient in $C$ does not have a partner")
+
+
+
+berlitz(claim.patient_has_had_voluntary_sterilization(C, yes),
+        "the patient in $C$ has had a voluntary sterilization")
+berlitz(claim.patient_has_had_voluntary_sterilization(C, no),
+        "the patient in $C$ has not had a voluntary sterilization")
+
+berlitz(claim.patients_partner_has_had_voluntary_sterilization(C, yes),
+        "the patient in $C$ has a partner who has had a voluntary sterilization procedure")
+berlitz(claim.patients_partner_has_had_voluntary_sterilization(C, no),
+        "the patient in $C$ does not have a partner who has had a voluntary sterilization procedure")
+
+berlitz(claim.demonstrated_and_documented_condition_causing_infertility(C, COND),
+        "the demonstrated and documented condition causing infertility for the patient in $C$ is $COND$")
+
+berlitz(claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan(C, yes),
+        "a successful pregnancy can be attained through a less costly treatment covered by Cardinal Care than the treatment in $C$")
+berlitz(claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan(C, no),
+        "a successful pregnancy can not be attained through a less costly treatment covered by Cardinal Care than the treatment in $C$")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Defined Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(is_comprehensive_infertility_service(S),
+        "$S$ is a comprehensive infertility service")
+
+berlitz(meets_comprehensive_infertility_service_eligibility_requirements(C),
+        "$C$ meets the eligibility requirements for comprehensive infertility services")
+
+berlitz(meets_no_voluntary_sterilization_req(C),
+        "either the patient in $C$ or their partner has not had a voluntary sterilization procedure")
+
+berlitz(patient_meets_day_3_fsh_level_criteria(C),
+        "the day 3 FSH level criteria are met by the patient in $C$")
+
+berlitz(meets_ovulation_induction_cpb_reqs(C),
+        "$C$ meets the requirements for ovulation induction that are listed in Aetna's CPB 0327")
+
+berlitz(meets_ovulation_induction_reqs_under_35(C),
+        "$C$ meets the requirements for ovulation induction for a patient under age 35 that are listed in Aetna's CPB 0327")
+
+berlitz(meets_ovulation_induction_reqs_35_and_over(C),
+        "$C$ meets the requirements for ovulation induction for a patient age 35 or over that are listed in Aetna's CPB 0327")
