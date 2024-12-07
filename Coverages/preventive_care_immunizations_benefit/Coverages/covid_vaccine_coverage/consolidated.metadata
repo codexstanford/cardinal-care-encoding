@@ -1,0 +1,202 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Policy relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% type(policy, class)
+%%% attribute(policy, policy.type)
+%%% attribute(policy, policy.insuree)
+
+%%% type(policy.type, attributerelation)
+%%% domain(policy.type, policy)
+%%% codomain(policy.type, product)
+%%% unique(policy.type, yes)
+%%% total(policy.type, yes)
+
+%%% type(policy.insuree, attributerelation)
+%%% domain(policy.insuree, policy)
+%%% codomain(policy.insuree, person)
+%%% unique(policy.insuree, no)
+%%% total(policy.insuree, yes)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Person relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% type(person, class)
+% attribute(person, person.dob)
+
+% type(person.dob, attributerelation)
+% domain(person.dob, person)
+% codomain(person.dob, date)
+% unique(person.dob, yes)
+% total(person.dob, yes)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Claim relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
+type(claim, class)
+
+%%%%%%%%%%%%%%%%%%%%%%% Claim type-generic %%%%%%%%%%%%%%%%%%%%%%%
+%attribute(claim, claim.patient)
+attribute(claim, claim.patient_dob)
+%%% attribute(claim, claim.quarter_enrolled_stanford_2024_2025)
+attribute(claim, claim.date_service_received)
+attribute(claim, claim.service_type)
+attribute(claim, claim.precertification_received)
+%%% attribute(claim, claim.waived_cardinal_care)
+attribute(claim, claim.location_service_received)
+attribute(claim, claim.service_available_at_tier_one_or_two_location)
+
+% type(claim.patient, attributerelation)
+% domain(claim.patient, claim)
+% codomain(claim.patient, person)
+% unique(claim.patient, yes)
+% total(claim.patient, yes)
+
+type(claim.patient_dob, attributerelation)
+domain(claim.patient_dob, claim)
+codomain(claim.patient_dob, date)
+unique(claim.patient_dob, yes)
+total(claim.patient_dob, yes)
+changestyle(claim.patient_dob,datestyle)
+
+
+%%% type(claim.quarter_enrolled_stanford_2024_2025, attributerelation)
+%%% domain(claim.quarter_enrolled_stanford_2024_2025, claim)
+%%% codomain(claim.quarter_enrolled_stanford_2024_2025, quarter_2023_2024)
+%%% unique(claim.quarter_enrolled_stanford_2024_2025, yes)
+%%% total(claim.quarter_enrolled_stanford_2024_2025, no)
+
+type(claim.date_service_received, attributerelation)
+domain(claim.date_service_received, claim)
+codomain(claim.date_service_received, date)
+unique(claim.date_service_received, yes)
+total(claim.date_service_received, yes)
+changestyle(claim.date_service_received,datestyle)
+
+type(claim.service_type, attributerelation)
+domain(claim.service_type, claim)
+codomain(claim.service_type, cardinal_care_2024_2025_service)
+unique(claim.service_type, yes)
+total(claim.service_type, yes)
+changestyle(claim.service_type,selector)
+
+type(claim.precertification_received, attributerelation)
+domain(claim.precertification_received, claim)
+codomain(claim.precertification_received, boolean)
+unique(claim.precertification_received, yes)
+total(claim.precertification_received, yes)
+changestyle(claim.precertification_received,selector)
+
+%%% type(claim.waived_cardinal_care, attributerelation)
+%%% domain(claim.waived_cardinal_care, claim)
+%%% codomain(claim.waived_cardinal_care, boolean)
+%%% unique(claim.waived_cardinal_care, yes)
+%%% total(claim.waived_cardinal_care, yes)
+
+type(claim.location_service_received, attributerelation)
+domain(claim.location_service_received, claim)
+codomain(claim.location_service_received, cardinal_care_2024_2025_location)
+unique(claim.location_service_received, yes)
+total(claim.location_service_received, yes)
+changestyle(claim.location_service_received,selector)
+
+type(claim.service_available_at_tier_one_or_two_location, attributerelation)
+domain(claim.service_available_at_tier_one_or_two_location, claim)
+codomain(claim.service_available_at_tier_one_or_two_location, boolean)
+unique(claim.service_available_at_tier_one_or_two_location, yes)
+total(claim.service_available_at_tier_one_or_two_location, yes)
+changestyle(claim.service_available_at_tier_one_or_two_location,selector)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+type(boolean,class)
+type(person,class)
+type(product,class)
+type(date,class)
+type(number,class)
+
+type(quarter_2024_2025, class)
+type(cardinal_care_2024_2025_location, class)
+type(cardinal_care_2024_2025_service, class)
+% attribute(vaccineclaim, claim.immunization_for_disease)
+% type(claim.immunization_for_disease, attributerelation)
+% domain(claim.immunization_for_disease, claim)
+% codomain(claim.immunization_for_disease, disease_type)
+% unique(claim.immunization_for_disease, yes)
+% total(claim.immunization_for_disease, no)
+
+attribute(claim, claim.reason_for_immunization)
+
+type(claim.reason_for_immunization, attributerelation)
+domain(claim.reason_for_immunization, claim)
+codomain(claim.reason_for_immunization, immunization_reason)
+unique(claim.reason_for_immunization, yes)
+total(claim.reason_for_immunization, no)
+changestyle(claim.reason_for_immunization,selector)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+type(disease_type, class)
+type(immunization_reason, class)
+type(covid_vaccine_coverage, class)
+superclass(covid_vaccine_coverage, claim)
+attribute(covid_vaccine_coverage, claim.patient_is_immunocompromised)
+attribute(covid_vaccine_coverage, claim.covid19_vaccine_brand)
+attribute(covid_vaccine_coverage, claim.covid19_vaccination)
+
+
+type(claim.patient_is_immunocompromised, attributerelation)
+domain(claim.patient_is_immunocompromised, claim)
+codomain(claim.patient_is_immunocompromised, boolean)
+unique(claim.patient_is_immunocompromised, yes)
+total(claim.patient_is_immunocompromised, no)
+changestyle(claim.patient_is_immunocompromised,selector)
+
+type(claim.covid19_vaccine_brand, attributerelation)
+domain(claim.covid19_vaccine_brand, claim)
+codomain(claim.covid19_vaccine_brand, vaccine_brand)
+unique(claim.covid19_vaccine_brand, yes)
+total(claim.covid19_vaccine_brand, no)
+changestyle(claim.covid19_vaccine_brand,selector)
+
+type(claim.covid19_vaccination, attributerelation)
+domain(claim.covid19_vaccination, claim)
+codomain(claim.covid19_vaccination, covid19_vaccination)
+unique(claim.covid19_vaccination, no)
+total(claim.covid19_vaccination, no)
+changestyle(claim.covid19_vaccination,table)
+
+%%%% Functional classes %%%%
+
+type(covid19_vaccination,class)
+functional(covid19_vaccination, covid19_vaccination_event)
+attribute(covid19_vaccination, covid19_vaccination.enter_custom_id)
+attribute(covid19_vaccination, covid19_vaccination.brand)
+attribute(covid19_vaccination, covid19_vaccination.version)
+
+type(covid19_vaccination.enter_custom_id, attributerelation)
+domain(covid19_vaccination.enter_custom_id, covid19_vaccination)
+codomain(covid19_vaccination.enter_custom_id, number)
+unique(covid19_vaccination.enter_custom_id, yes)
+total(covid19_vaccination.enter_custom_id, yes)
+changestyle(covid19_vaccination.enter_custom_id,numberstyle)
+
+type(covid19_vaccination.brand, attributerelation)
+domain(covid19_vaccination.brand, covid19_vaccination)
+codomain(covid19_vaccination.brand, vaccine_brand)
+unique(covid19_vaccination.brand, yes)
+total(covid19_vaccination.brand, yes)
+changestyle(covid19_vaccination.brand,selector)
+
+type(covid19_vaccination.version, attributerelation)
+domain(covid19_vaccination.version, covid19_vaccination)
+codomain(covid19_vaccination.version, covid19_vaccine_version)
+unique(covid19_vaccination.version, yes)
+total(covid19_vaccination.version, yes)
+changestyle(covid19_vaccination.version,selector)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+type(vaccine_brand, class)

@@ -1,0 +1,438 @@
+infectious_disease_for_which_cdc_acip_recommends_immunization(covid19_disease)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Referenced in the superfolder benefit rules file
+
+%% COVID-19 vaccine
+below_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
+    patient_age_bracket_for_covid19_vaccination(Claim, Age, AgeBracket) &
+    claim.patient_is_immunocompromised(Claim, ImmStatus) & 
+    claim.covid19_vaccine_brand(Claim, Brand) &
+    covid19_dose_counts(Claim, NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand) &
+    max_allowed_doses_covid19_vaccine(ImmStatus, AgeBracket, Brand, MaxDoses, dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)) &
+    less(NumUpdatedOfBrand, MaxDoses) &
+    ~already_begun_another_updated_2024_2025_covid19_vaccination_series(Claim)
+
+patient_age_bracket_for_covid19_vaccination(Claim, Age, 6_months_to_4_years) :-
+    patient_geq_6_months_old_at_time_of_service(Claim) &
+    leq(Age, 4)
+
+patient_age_bracket_for_covid19_vaccination(Claim, Age, 5_to_11_years) :-
+    leq(5, Age) &
+    leq(Age, 11)
+
+patient_age_bracket_for_covid19_vaccination(Claim, Age, 12_years_and_older) :-
+    leq(12, Age)
+
+covid19_dose_counts(Claim, NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand) :-
+    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, moderna, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldModerna) &
+    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, pfizer_biontech, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldPfizer) &
+    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, novavax, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldNovavax) &
+    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, j_n_j, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldJnJ) &
+    claim.covid19_vaccine_brand(Claim, Brand) &
+    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, Brand, updated_2024_2025)), NumUpdatedOfBrand)
+
+already_begun_another_updated_2024_2025_covid19_vaccination_series(Claim) :-
+    claim.covid19_vaccine_brand(Claim, Brand1) &
+    claim.covid19_vaccination(Claim, covid19_vaccination_event(I, Brand2, updated_2024_2025)) &
+    distinct(Brand1, Brand2)
+
+
+%%% Covid19 Maximums - Not Immunocompromised %%%
+% dose_counts format: dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)
+% For ages [6 months, 4 years], 
+    % If unvaccinated, 2 doses Moderna or 3 doses Pfizer-BioNTech  
+max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, moderna, 2, dose_counts(0, 0, 0, 0))
+max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, pfizer_biontech, 3, dose_counts(0, 0, 0, 0))
+
+    % If vaccinated
+        % with >= 1 doses old Moderna, then 1 dose new Moderna
+max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, moderna, 1, dose_counts(NumOldModerna, _, _, _)) :-
+    leq(1, NumOldModerna)
+
+        % with 1 dose old Pfizer-BioNTech, then 2 doses new Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, pfizer_biontech, 2, dose_counts(_, 1, _, _))
+
+        % with >=2 doses old Pfizer-BioNTech, then 1 dose new Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, pfizer_biontech, 1, dose_counts(_, NumOldPfizer, _, _)) :-
+    leq(2, NumOldPfizer)
+
+% For ages [5 years, 11 years], regardless of vaccination history,
+    % 1 dose Moderna or Pfizer-BioNTech 
+max_allowed_doses_covid19_vaccine(no, 5_to_11_years, moderna, 1, dose_counts(_, _, _, _))
+max_allowed_doses_covid19_vaccine(no, 5_to_11_years, pfizer_biontech, 1, dose_counts(_, _, _, _))
+
+% For ages >= 12 years,
+    % If unvaccinated, 1 dose Moderna, 2 doses Novavax, or 1 dose Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(no, 12_years_and_older, moderna, 1, dose_counts(0, 0, 0, 0))
+max_allowed_doses_covid19_vaccine(no, 12_years_and_older, novavax, 2, dose_counts(0, 0, 0, 0))
+max_allowed_doses_covid19_vaccine(no, 12_years_and_older, pfizer_biontech, 1, dose_counts(0, 0, 0, 0))
+
+    % If vaccinated at all, 1 dose Moderna, Novavax, or Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(no, 12_years_and_older, Brand, 1, DoseCounts) :-
+    distinct(DoseCounts, dose_counts(0, 0, 0, 0)) &
+    member(Brand, [moderna, novavax, pfizer_biontech])
+
+
+%%% Covid19 Maximimums - Immunocompromised %%%
+% For ages [6 months, 4 years], 
+    % If unvaccinated, 3 doses Moderna or Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, moderna, 3, dose_counts(0, 0, 0, 0))
+max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, pfizer_biontech, 3, dose_counts(0, 0, 0, 0))
+    
+    % If vaccinated,
+        % With 1 dose old Moderna, then 2 doses new Moderna
+max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, moderna, 2, dose_counts(1, _, _, _))
+        % With >= 2 doses old Moderna, then 1 dose new Moderna
+max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, moderna, 1, dose_counts(NumOldModerna, _, _, _)) :-
+    leq(2, NumOldModerna)
+        % With 1 dose old Pfizer-BioNTech, then 2 doses new Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, pfizer_biontech, 2, dose_counts(_, 1, _, _))
+        % With >= 2 doses old Pfizer-BioNTech, then 1 dose new Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, pfizer_biontech, 1, dose_counts(_, NumOldPfizer, _, _)) :-
+    leq(2, NumOldPfizer)
+
+
+% For ages [5 years, 11 years], 
+    % If unvaccinated, 3 doses Moderna or Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, moderna, 3, dose_counts(0, 0, 0, 0))
+max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, pfizer_biontech, 3, dose_counts(0, 0, 0, 0))
+
+    % If vaccinated,
+        % With 1 dose old Moderna, then 2 doses new Moderna
+max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, moderna, 2, dose_counts(1, _, _, _))
+        % With 2 doses old Moderna, then 1 dose new Moderna
+max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, moderna, 1, dose_counts(2, _, _, _))
+        % With 1 dose old Pfizer-BioNTech, then 2 doses new Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, pfizer_biontech, 2, dose_counts(_, 1, _, _))
+        % With 2 doses old Pfizer-BioNTech, then 1 dose new Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, pfizer_biontech, 1, dose_counts(_, 2, _, _))
+        % With 3 or more doses any old mRNA vaccine (i.e. Moderna or Pfizer-BioNTech), then 1 dose new Moderna or Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, Brand, 1, dose_counts(NumOldModerna, NumOldPfizer, _, _)) :-
+    evaluate(plus(NumOldModerna, NumOldPfizer), NumOldmrna) &
+    leq(3, NumOldmrna) &
+    member(Brand, [moderna, pfizer_biontech])
+
+% For ages >= 12 years, 
+    % If unvaccinated, 3 doses Moderna or Pfizer-BioNTech, or 2 doses Novavax
+max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, moderna, 3, dose_counts(0, 0, 0, 0))
+max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, novavax, 2, dose_counts(0, 0, 0, 0))
+max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, pfizer_biontech, 3, dose_counts(0, 0, 0, 0))
+
+    % If vaccinated,
+        % With 1 dose old Moderna, then 2 doses new Moderna
+max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, moderna, 2, dose_counts(1, _, _, _))
+        % With 2 doses old Moderna, then 1 dose new Moderna
+max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, moderna, 1, dose_counts(2, _, _, _))
+        % With 1 dose old Pfizer-BioNTech, then 2 doses new Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, pfizer_biontech, 2, dose_counts(_, 1,  _, _))
+        % With 2 doses old Pfizer-BioNTech, then 1 dose new Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, pfizer_biontech, 1, dose_counts(_, 2, _, _))
+        % With 3 or more doses any old mRNA vaccine (i.e. Moderna or Pfizer-BioNTech), or >= 1 doses old Novavax or J&J,
+            % then 1 dose Moderna, Novavax, or Pfizer-BioNTech
+max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, Brand, 1, dose_counts(NumOldModerna, NumOldPfizer, _, _)) :-
+    evaluate(plus(NumOldModerna, NumOldPfizer), NumOldmrna) &
+    leq(3, NumOldmrna) &
+    member(Brand, [moderna, novavax, pfizer_biontech])
+
+max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, Brand, 1, dose_counts(_, _, NumOldNovavax, NumOldJnJ)) :-
+    evaluate(plus(NumOldNovavax, NumOldJnJ), NumOldNonmrna) &
+    leq(1, NumOldNonmrna) &
+    member(Brand, [moderna, novavax, pfizer_biontech])
+    
+
+% Note: Only doing 2024 guidelines, since we won't be using 2023 guidelines in the final service if we don't make the 2023-2024 policy available
+below_2023_cdc_acip_age_guideline_max(Claim) :-
+    below_2024_cdc_acip_age_guideline_max(Claim)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eligible for service - additional eligibility requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% Preventive Care Immunizations
+covered_under_cardinal_care_24_25_benefit(C, preventive_care_immunizations_benefit) :-
+    claim.service_type(C, preventive_care_immunization) &
+    is_immunization_for_preventive_care(C) &
+    % claim.immunization_for_disease(C, Disease) &
+    infectious_disease_for_which_cdc_acip_recommends_immunization(Disease)
+
+is_immunization_for_preventive_care(C) :-
+    claim.reason_for_immunization(C, R) &
+    member(R, [
+        preventive_care,
+        recommended_as_preventive_care
+    ]) % Other options: required_for_employment, required_for_travel, other
+
+% Note on policy wording interpretation: I am reading the policy as saying that the condition is on the CDC ACIP's recommendation as to which infectious diseases be vaccinated against, not which vaccines be used
+% Important Note: Not strictly necessary to check infectious_disease_for_which_cdc_acip_recommends_immunization, since we're only specifying coverages for immunizations for which the CDC ACIP recommends immunization, and each immunization is now split out into its own coverage
+    % But keeping it for now, since it's a relevant condition and I think it should be included in explanations.
+    % The infectious_disease_for_which_cdc_acip_recommends_immunization relation is defined in the respective immunization coverage files
+    % Removed the claim.immunization_for_disease subgoal from covered_under_cardinal_care_24_25_benefit since we don't need to specify it on a per-claim basis anymore
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% Preventive Care Immunizations
+% Preventive care is a larger category of benefits, including female contraceptives
+% Note: CPB 0035 concerns Influenza Vaccines, but just points to the CDC ACIP guidelines
+is_preventive_care_service(preventive_care_immunization)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% beyond_limits(Claim) :-
+%     claim.service_type(Claim, preventive_care_immunization) &
+%     claim.date_service_received(Claim, Date) &
+%     date_between_dates_incl(Date, 2025_01_01, 2025_12_31) & 
+%     ~below_2025_cdc_acip_age_guideline_max(Claim)
+
+
+beyond_limits(Claim) :-
+    claim.service_type(Claim, preventive_care_immunization) &
+    claim.date_service_received(Claim, Date) &
+    date_between_dates_incl(Date, 2024_01_01, 2024_12_31) & 
+    ~below_2024_cdc_acip_age_guideline_max(Claim)
+
+% beyond_limits(Claim) :-
+%     claim.service_type(Claim, preventive_care_immunization) &
+%     claim.date_service_received(Claim, Date) &
+%     date_between_dates_incl(Date, 2023_01_01, 2023_12_31) & 
+%     ~below_2023_cdc_acip_age_guideline_max(Claim)
+
+%% CDC ACIP Guidelines
+% below_2025_cdc_acip_age_guideline_max(C) :-
+%   % claim.immunization_for_disease(C, D) & % Should remain commented out
+%     claim.patient(C, P) &
+%     age_at_time_of_service(C, P, A) &
+%     below_2025_cdc_acip_age_guideline_max_by_age(A, C) % Definition specified in the respective immunization coverage file
+
+
+below_2024_cdc_acip_age_guideline_max(C) :-
+    % claim.immunization_for_disease(C, D) & % Should remain commented out
+    patient_age_at_time_of_service(C, A) &
+    below_2024_cdc_acip_age_guideline_max_by_age(A, C)
+
+% Note: Only encoding 2024 and 2025 guidelines, since we won't be using 2023 guidelines in the final service if we don't make the 2023-2024 policy available
+% below_2023_cdc_acip_age_guideline_max(Claim) :-
+%     below_2024_cdc_acip_age_guideline_max(Claim)
+
+%%% Disease-specific guidelines are in the respective immunization coverage files
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Helper functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+patient_geq_6_months_old_at_time_of_service(Claim) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    claim.patient_dob(Claim, PatientDOB) & 
+    n_months_diff(PatientDOB, ServiceDate, N) &
+    leq(6, N)
+
+n_months_diff(EarlierDate, LaterDate, N) :-
+    evaluate(parsedate(EarlierDate),[EY,EM,ED]) & 
+    evaluate(parsedate(LaterDate),[LY,LM,LD]) &
+    evaluate(times(minus(LY, EY), 12), MonthsFromYear) & 
+    not_yet_day_of_month_delta(ED, LD, Delta) &
+    evaluate(plus(MonthsFromYear, minus(LM, EM), Delta), N)
+
+not_yet_day_of_month_delta(D1, D2, 0) :-
+    leq(D1, D2)
+
+not_yet_day_of_month_delta(D1, D2, -1) :-
+    less(D2, D1)
+% covers(Policy, C) :-
+%     policy.type(Policy, aetna_cardinal_care_2023_2024) &
+%     covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024)
+
+
+%covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024) :-
+covered(C) :-
+    % policy_in_effect(C, Policy) &
+    service_received_at_valid_provider(C) &
+    meets_additional_eligibility_requirements_if_present(C) &
+    medically_necessary_service(C) &
+    precertified_if_necessary(C) &
+    ~beyond_limits(C) &
+    claim.exclusions(C, nil)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Policy in effect
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Does not currently capture conditions on withdrawal/leaves of absence, coverage on another Stanford-offered plan, or special extensions on coverage dates
+
+% Whether the policy was in effect when the service was received
+% policy_in_effect(C, Policy) :-
+%     claim.patient(C, Patient) &
+%     claim.waived_cardinal_care(C, no) &
+%     policy_in_effect_for_claim(Policy, C)
+
+
+% Student enrolled in Autumn 2024
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, autumn_quarter_2024) &
+%     date_between_dates_incl(ServiceDate, 2024_09_01, 2025_08_31)
+
+
+% Student enrolled in Winter 2025
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, winter_quarter_2025) &
+%     date_between_dates_incl(ServiceDate, 2025_01_01, 2025_08_31)
+
+% Student enrolled in Spring 2025
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, spring_quarter_2025) &
+%     date_between_dates_incl(ServiceDate, 2025_04_01, 2025_08_31)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Received from a valid provider
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Encoding does not currently capture the cases where treatment began out-of-network before the policy began, or when the care is emergency or urgent care and received from an out-of-network provider
+
+service_received_at_valid_provider(C) :-
+    claim.location_service_received(C, Location) &
+    member(Location, [
+        stanford_health_care,
+        menlo_medical_clinic,
+        sutter_health_palo_alto_medical_foundation,
+        tier_two_in_network
+    ])
+
+service_received_at_valid_provider(C) :-
+    claim.location_service_received(C, other) &
+    claim.service_available_at_tier_one_or_two_location(C, no)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eligible for service - additional eligibility requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+meets_additional_eligibility_requirements_if_present(C) :-
+    covered_under_cardinal_care_24_25_benefit(C, B)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+medically_necessary_service(C) :-
+    claim.service_type(C, ServiceType) &
+    is_preventive_care_service(ServiceType)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    requires_precertification(ServiceType) & 
+    claim.precertification_received(C, yes)
+
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    ~requires_precertification(ServiceType)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Important Note: Loaded from other, benefit-specific rulesets
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% General exclusions 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Important Note: Formerly loaded from exclusion.hrf. Now encoded in world.hdf.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Helper functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+patient_age_at_time_of_service(Claim, Age) :-
+    claim.patient_dob(Claim, PatientDOB) &
+    claim.date_service_received(Claim, ServiceDate) &
+    patient_age_on_date(PatientDOB, ServiceDate, Age)
+
+patient_age_on_date(PatientDOB, Date, Age) :-
+    evaluate(parsedate(Date),[Year,Month,Day]) &
+    evaluate(parsedate(PatientDOB),[PatientDOBYear,PatientDOBMonth,PatientDOBDay]) &
+    evaluate(minus(Year,PatientDOBYear), YearDiff) &
+    not_yet_birthday_delta(Month,Day, PatientDOBMonth, PatientDOBDay, Delta) &
+    evaluate(plus(YearDiff, Delta), Age)
+
+age_at_time_of_service(Claim, Person, Age) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    age_on_date(Person, ServiceDate, Age)
+
+age_on_date(Person, Date, Age) :-
+    person.dob(Person, DOB) &
+    evaluate(parsedate(Date),[Year,Month,Day]) &
+    evaluate(parsedate(DOB),[DOBYear,DOBMonth,DOBDay]) &
+    evaluate(minus(Year,DOBYear), YearDiff) &
+    not_yet_birthday_delta(Month,Day, DOBMonth, DOBDay, Delta) &
+    evaluate(plus(YearDiff, Delta), Age)
+
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, -1) :-
+    less(Month, DOBMonth)
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, -1) :-
+    same(Month, DOBMonth) &
+    less(Day, DOBDay)
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, 0) :-
+    less(DOBMonth, Month)
+
+not_yet_birthday_delta(Month, Day, FOBMonth, DOBDay, 0) :-
+    same(Month, DOBMonth) &
+    leq(DOBDay, Day)
+
+
+date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
+    symleq(BeginDateRange, Date) &
+    symleq(Date, EndDateRange)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% general definitions and predefined relations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+claim.birthdate(C,D) :- claim.patient(C,P) & person.dob(P,D)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+overlap(XS,XE,YS,YE) :-
+  evaluate(stringmin(YS,XE),YS) &
+  evaluate(stringmin(XS,YE),XS)
+
+datetimetotimestamp(DATE,TIME,STAMP) :-
+  evaluate(parsedate(DATE),[Y,M,D]) &
+  evaluate(parsetime(TIME),[H,N]) &
+  evaluate(maketimestamp(Y,M,D,H,N,0),STAMP)
+
+parsedate(DATE) :=
+  map(readstring,tail(matches(stringify(DATE),"(....)_(..)_(..)")))
+
+parsetime(TIME) :=
+  map(readstring,tail(matches(stringify(TIME),"(..)_(..)")))
+
+head(X!L) := X
+tail(X!L) := L
+
+%%% number relations, e.g. less, leq
+%%% string relations, e.g. stringappend
+%%% date relations, e.g. dateplus
+%%% and so forth...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
