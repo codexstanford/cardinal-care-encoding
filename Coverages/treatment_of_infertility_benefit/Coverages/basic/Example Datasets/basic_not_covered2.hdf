@@ -34,8 +34,8 @@ claim.patient_has_partner_with_male_reproductive_organs(claim1, no)
 claim.age_of_patients_female_partner(claim1, 0)
 claim.num_cycles_donor_insemination(claim1, 0)
 claim.num_months_unprotected_intercourse(claim1, 0)
-claim.abnormal_semen_analysis_on_date(claim1, abnormal_semen_analysis(0, 2024_07_01))
-claim.abnormal_semen_analysis_on_date(claim1, abnormal_semen_analysis(1, 2024_07_14))
+claim.abnormal_semen_analyses(claim1, [abnormal_semen_analysis(2024_07_01), abnormal_semen_analysis(2024_07_14)])
+
 
 %% General Exclusions %% 
 % Imported from no_exclusion_claim.hdf

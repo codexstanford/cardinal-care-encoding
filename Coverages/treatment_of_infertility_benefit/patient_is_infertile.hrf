@@ -70,14 +70,14 @@ meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
 patient_is_infertile(C) :-
     claim.patient_has_male_reproductive_organs(C, yes) &
     claim.patient_has_partner_with_female_reproductive_organs(C, no) &
-    claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(_, Date1)) &
-    claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(_, Date2)) & 
+    claim.abnormal_semen_analyses(C, Analyses) &
+    choose_2_with_indices_from_list_no_repeats(Analyses, abnormal_semen_analysis(Date1), _, abnormal_semen_analysis(Date2), _) &
     get_timestamp_from_date(Date1, TS1) &
     get_timestamp_from_date(Date2, TS2) &
-    evaluate(minus(TS2,TS1), TimeDiff) &
+    evaluate(abs(minus(TS2,TS1)), TimeDiff) &
     evaluate(times(14, 24, 60, 60, 1000), NUM_MS_IN_TWO_WEEKS) &
     leq(NUM_MS_IN_TWO_WEEKS, TimeDiff)
-    
+
 
 % Person with gender dysphoria
 patient_is_infertile(C) :-
