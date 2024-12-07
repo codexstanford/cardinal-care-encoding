@@ -1,5 +1,6 @@
 ---
 metadata:
     - ../../../../Cardinal Care Core/cardinal_care_core.metadata
+    - ../../preventive_care_immunizations.metadata
     - flu_vaccine.metadata
 ---

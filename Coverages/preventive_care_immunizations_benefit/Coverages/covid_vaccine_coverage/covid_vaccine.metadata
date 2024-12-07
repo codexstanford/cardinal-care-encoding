@@ -1,9 +1,3 @@
----
-metadata:
-    - ../../preventive_care_immunizations.metadata
-    - ../../../../Cardinal Care Core/cardinal_care_core.metadata
----
-
 type(covid_vaccine_coverage, class)
 superclass(covid_vaccine_coverage, claim)
 attribute(covid_vaccine_coverage, claim.patient_is_immunocompromised)

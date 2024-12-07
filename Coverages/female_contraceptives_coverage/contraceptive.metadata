@@ -1,8 +1,3 @@
----
-metadata:
-    - ../../Cardinal Care Core/cardinal_care_core.metadata
----
-
 type(female_contraceptives_coverage, class)
 superclass(female_contraceptives_coverage, claim)
 attribute(female_contraceptives_coverage, claim.type_of_contraceptive_counseling)
