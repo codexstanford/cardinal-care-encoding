@@ -37,7 +37,7 @@ meets_no_voluntary_sterilization_req(C) :-
 patient_meets_day_3_fsh_level_criteria(C) :-
     patient_age_at_time_of_service(C, Age) &
     less(Age, 40) &
-    most_recent_day_3_fsh_test(C, fsh_test(_, Level, _, _)) &
+    most_recent_day_3_fsh_test(C, fsh_test(Level, _, _)) &
     less(Level, 19)
 
 % If over 40, care about all tests performed after age 40
@@ -46,8 +46,10 @@ patient_meets_day_3_fsh_level_criteria(C) :-
 patient_meets_day_3_fsh_level_criteria(C) :-
     patient_age_at_time_of_service(C, Age) &
     leq(40, Age) &
-    claim.day_3_fsh_test_after_age_40(C, _) &
-    countofall(T, claim.day_3_fsh_test_after_age_40(C, fsh_test(T, Level, _, _)) & leq(19, Level), 0)
+    claim.day_3_fsh_tests_after_age_40(C, Tests) &
+    evaluate(length(Tests), NumTests) &
+    leq(1, NumTests) &
+    ~exists_test_with_level_at_least_19(Tests)
 
 % N/A if male
 patient_meets_day_3_fsh_level_criteria(C) :-

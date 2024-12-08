@@ -1,26 +1,18 @@
-attribute(claim, claim.day_3_fsh_test)
+attribute(claim, claim.day_3_fsh_tests)
 
-type(claim.day_3_fsh_test, attributerelation)
-domain(claim.day_3_fsh_test, claim)
-codomain(claim.day_3_fsh_test, fsh_test_obj)
-unique(claim.day_3_fsh_test, no)
-total(claim.day_3_fsh_test, no)
-changestyle(claim.day_3_fsh_test, table) 
+type(claim.day_3_fsh_tests, attributerelation)
+domain(claim.day_3_fsh_tests, claim)
+codomain(claim.day_3_fsh_tests, fsh_test_obj)
+unique(claim.day_3_fsh_tests, no)
+total(claim.day_3_fsh_tests, no)
+changestyle(claim.day_3_fsh_tests, table) 
 
 %%%% Functional classes %%%%
 type(fsh_test_obj,class)
 functional(fsh_test_obj, fsh_test)
-attribute(fsh_test_obj, fsh_test.enter_custom_id)
 attribute(fsh_test_obj, fsh_test.fsh_level)
 attribute(fsh_test_obj, fsh_test.date)
 attribute(fsh_test_obj, fsh_test.time)
-
-type(fsh_test.enter_custom_id, attributerelation)
-domain(fsh_test.enter_custom_id, fsh_test_obj)
-codomain(fsh_test.enter_custom_id, number)
-unique(fsh_test.enter_custom_id, yes)
-total(fsh_test.enter_custom_id, yes)
-changestyle(fsh_test.enter_custom_id,numberstyle)
 
 type(fsh_test.fsh_level, attributerelation)
 domain(fsh_test.fsh_level, fsh_test_obj)
