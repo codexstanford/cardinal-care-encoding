@@ -1,7 +1,7 @@
 %%%%%%%%%%% Preventive Care Immunizations Benefit %%%%%%%%%%%
 
-berlitz(claim.2024_2025_influenza_vaccination(C, influenza_vaccination_event(_, DATE)),
-        "the patient in $C$ received a 2024-2025 formulation of the flu vaccine on $DATE$")
+berlitz(claim.2024_2025_flu_vaccine_history(C, Vaccines),
+        "the patient in $C$ received the 2024-2025 formulation of the flu vaccine on the following dates: $Vaccines$")
 
 berlitz(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024(C, yes),
         "the patient in $C$ had received at least two tri- or quadrivalent doses of the flu vaccine before July 2024")

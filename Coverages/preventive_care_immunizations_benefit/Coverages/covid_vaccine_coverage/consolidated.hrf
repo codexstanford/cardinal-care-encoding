@@ -28,16 +28,21 @@ patient_age_bracket_for_covid19_vaccination(Claim, Age, 12_years_and_older) :-
     leq(12, Age)
 
 covid19_dose_counts(Claim, NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand) :-
-    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, moderna, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldModerna) &
-    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, pfizer_biontech, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldPfizer) &
-    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, novavax, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldNovavax) &
-    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, j_n_j, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldJnJ) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumOldModerna) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumOldPfizer) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, NumOldNovavax) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, j_n_j, NumOldJnJ) &
     claim.covid19_vaccine_brand(Claim, Brand) &
-    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, Brand, updated_2024_2025)), NumUpdatedOfBrand)
+    countofall(I, choose_1_with_index_from_list(Vaccines, covid19_vaccination_event(Brand, updated_2024_2025), I), NumUpdatedOfBrand)
+
+num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumUpdatedOfBrand) :-
+    countofall(I, choose_1_with_index_from_list(Vaccines, covid19_vaccination_event(Brand, UpdatedStatus), I) & distinct(UpdatedStatus, updated_2024_2025), NumUpdatedOfBrand)
 
 already_begun_another_updated_2024_2025_covid19_vaccination_series(Claim) :-
     claim.covid19_vaccine_brand(Claim, Brand1) &
-    claim.covid19_vaccination(Claim, covid19_vaccination_event(I, Brand2, updated_2024_2025)) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    member(covid19_vaccination_event(Brand2, updated_2024_2025), Vaccines) &
     distinct(Brand1, Brand2)
 
 
@@ -402,37 +407,34 @@ not_yet_birthday_delta(Month, Day, FOBMonth, DOBDay, 0) :-
 date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
     symleq(BeginDateRange, Date) &
     symleq(Date, EndDateRange)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% general definitions and predefined relations
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-claim.birthdate(C,D) :- claim.patient(C,P) & person.dob(P,D)
+%%%%% Relations to faciliate choosing elements from lists that may have repeats
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Generates all pairs (unordered) of elements from a list, counting identical elements at different positions as distinct
+choose_2_with_indices_from_list_no_repeats(L, E1, I1, E2, I2) :-
+    choose_2_with_indices_from_sublist_no_repeats(0, L, E1, I1, E2, I2)
 
-overlap(XS,XE,YS,YE) :-
-  evaluate(stringmin(YS,XE),YS) &
-  evaluate(stringmin(XS,YE),XS)
 
-datetimetotimestamp(DATE,TIME,STAMP) :-
-  evaluate(parsedate(DATE),[Y,M,D]) &
-  evaluate(parsetime(TIME),[H,N]) &
-  evaluate(maketimestamp(Y,M,D,H,N,0),STAMP)
+% Case 1: The first element is the head
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, H, NumBefore, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E2, I2)
 
-parsedate(DATE) :=
-  map(readstring,tail(matches(stringify(DATE),"(....)_(..)_(..)")))
+% Case 2: The first element is in the tail
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, E1, I1, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_2_with_indices_from_sublist_no_repeats(NewNumBefore, T, E1, I1, E2, I2)
 
-parsetime(TIME) :=
-  map(readstring,tail(matches(stringify(TIME),"(..)_(..)")))
 
-head(X!L) := X
-tail(X!L) := L
+% Entry point
+choose_1_with_index_from_list(L, E, I) :-
+    choose_1_with_index_from_sublist(0, L, E, I)
 
-%%% number relations, e.g. less, leq
-%%% string relations, e.g. stringappend
-%%% date relations, e.g. dateplus
-%%% and so forth...
+% Case 1: The element is the head
+choose_1_with_index_from_sublist(NumBefore, H!T, H, NumBefore)
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Case 2: The element is in the tail
+choose_1_with_index_from_sublist(NumBefore, H!T, E, I) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E, I)
+

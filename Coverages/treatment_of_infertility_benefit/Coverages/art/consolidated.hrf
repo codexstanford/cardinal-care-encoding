@@ -28,17 +28,19 @@ meets_fertility_preservation_eligibility_requirements(C) :-
 eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
     claim.will_be_retrieving_eggs_for_use(C, yes) &
     less(Age, 40) &
-    most_recent_day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) &
+    most_recent_day_3_fsh_test(C, fsh_test(Level, Date, Time)) &
     less(Level, 19) &
-    meets_fsh_test_recency_req(C, fsh_test(Index, Level, Date, Time))
+    meets_fsh_test_recency_req(C, fsh_test(Level, Date, Time))
 
 % If 40 or over, care about all prior tests since became 40 (This is inferred from the "Comprehensive infertility services" FSH level reqs, and the Note 4 text "Check benefit plan descriptions")
 % Another practical assumption: There must be at least one test after age 40
 eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
     claim.will_be_retrieving_eggs_for_use(C, yes) &
     leq(40, Age) &
-    claim.day_3_fsh_test_after_age_40(C, _) &
-    countofall(T, claim.day_3_fsh_test_after_age_40(C, fsh_test(T, Level, _, _)) & leq(19, Level), 0)
+    claim.day_3_fsh_tests_after_age_40(C, Tests) &
+    evaluate(length(Tests), NumTests) &
+    leq(1, NumTests) &
+    ~exists_test_with_level_at_least_19(Tests)
 
 % Source: Note 5 from CPB 0327 on 7/31/2024: https://www.aetna.com/cpb/medical/data/300_399/0327.html
 % Additional (more generous) eligibility requirements if a woman has premature ovarian failure
@@ -46,7 +48,7 @@ eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
     claim.will_be_retrieving_eggs_for_use(C, yes) &
     leq(40, Age) &
     claim.patient_has_premature_ovarian_failure(C, yes) &
-    most_recent_day_3_fsh_test(C, fsh_test(_, Level, _, _)) &
+    most_recent_day_3_fsh_test(C, fsh_test(Level, _, _)) &
     less(Level, 19)
 
 
@@ -57,7 +59,7 @@ eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, _) :-
 % If 39 or over, test must be in the last six months
 % Bug Note: same datetime bugginess as in the NUM_MS_IN_TWO_WEEKS case
 % Could be fixed by implementing date_n_months_before(ServiceDate, 6, DateSixMonthsBefore), but requires some function finickiness I would rather sort out with Mike
-meets_fsh_test_recency_req(C, fsh_test(_, _, TestDate, TestTime)) :-
+meets_fsh_test_recency_req(C, fsh_test(_, TestDate, TestTime)) :-
     patient_age_at_time_of_service(C, Age) &
     leq(39, Age) &
     claim.date_service_received(C, ServiceDate) &
@@ -178,19 +180,35 @@ beyond_limits(Claim) :-
 get_timestamp_from_date(DATE,STAMP) :-
   evaluate(parsedate(DATE),[Y,M,D]) &
   evaluate(maketimestamp(Y,M,D,0,0,0),STAMP)
-% If multiple tests have the same datetime, then we can't decide which was most recent and this is not satisfied.
-most_recent_day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) :-
-    claim.day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) &
-    countofall(T, claim.day_3_fsh_test(C, fsh_test(T, _, Date2, Time2)) & distinct(Index, T) & leq_datetime(Date, Time, Date2, Time2), 0)
+% If multiple tests have the same date andtime, then we can't decide which was most recent and this is not satisfied.
+most_recent_day_3_fsh_test(C, fsh_test(Level, Date, Time)) :-
+    claim.day_3_fsh_tests(C, Tests) &
+    choose_1_with_index_from_list(Tests, fsh_test(Level, Date, Time), I1) &
+    countofall(I2, choose_1_with_index_from_list(Tests, fsh_test(_, Date2, Time2), I2) & distinct(I1, I2) & leq_datetime(Date, Time, Date2, Time2), 0)
 
 % Gets day 3 fsh tests that have been performed since the patient became 40 years old
-claim.day_3_fsh_test_after_age_40(C, fsh_test(Index, Level, Date, Time)) :-
+claim.day_3_fsh_tests_after_age_40(C, Tests) :-
     claim.patient_dob(C, DOB) &
     evaluate(parsedate(DOB), [Y, M, D]) &
     evaluate(maketimestamp(plus(Y, 40), M, D, 0, 0, 0), FortiethBirthdayTS) &
-    claim.day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) &
+    claim.day_3_fsh_tests(C, AllTests) &
+    get_all_tests_since_timestamp(FortiethBirthdayTS, AllTests, Tests)
+
+get_all_tests_since_timestamp(_, [], [])
+get_all_tests_since_timestamp(TS, fsh_test(Level, Date, Time)!T, fsh_test(Level, Date, Time)!Rest) :-
     datetimetotimestamp(Date, Time, TestTS) &
-    leq(FortiethBirthdayTS, TestTS)
+    leq(TS, TestTS) &
+    get_all_tests_since_timestamp(TS, T, Rest)
+
+get_all_tests_since_timestamp(TS, fsh_test(Level, Date, Time)!T, Rest) :-
+    datetimetotimestamp(Date, Time, TestTS) &
+    ~leq(TS, TestTS) &
+    get_all_tests_since_timestamp(TS, T, Rest)
+
+
+exists_test_with_level_at_least_19(Tests) :-
+    member(fsh_test(Level, _, _), Tests) &
+    leq(19, Level)
 
 leq_datetime(Date1, Time1, Date2, Time2) :-
     datetimetotimestamp(Date1, Time1, TS1) &
@@ -353,37 +371,34 @@ not_yet_birthday_delta(Month, Day, FOBMonth, DOBDay, 0) :-
 date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
     symleq(BeginDateRange, Date) &
     symleq(Date, EndDateRange)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% general definitions and predefined relations
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-claim.birthdate(C,D) :- claim.patient(C,P) & person.dob(P,D)
+%%%%% Relations to faciliate choosing elements from lists that may have repeats
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Generates all pairs (unordered) of elements from a list, counting identical elements at different positions as distinct
+choose_2_with_indices_from_list_no_repeats(L, E1, I1, E2, I2) :-
+    choose_2_with_indices_from_sublist_no_repeats(0, L, E1, I1, E2, I2)
 
-overlap(XS,XE,YS,YE) :-
-  evaluate(stringmin(YS,XE),YS) &
-  evaluate(stringmin(XS,YE),XS)
 
-datetimetotimestamp(DATE,TIME,STAMP) :-
-  evaluate(parsedate(DATE),[Y,M,D]) &
-  evaluate(parsetime(TIME),[H,N]) &
-  evaluate(maketimestamp(Y,M,D,H,N,0),STAMP)
+% Case 1: The first element is the head
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, H, NumBefore, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E2, I2)
 
-parsedate(DATE) :=
-  map(readstring,tail(matches(stringify(DATE),"(....)_(..)_(..)")))
+% Case 2: The first element is in the tail
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, E1, I1, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_2_with_indices_from_sublist_no_repeats(NewNumBefore, T, E1, I1, E2, I2)
 
-parsetime(TIME) :=
-  map(readstring,tail(matches(stringify(TIME),"(..)_(..)")))
 
-head(X!L) := X
-tail(X!L) := L
+% Entry point
+choose_1_with_index_from_list(L, E, I) :-
+    choose_1_with_index_from_sublist(0, L, E, I)
 
-%%% number relations, e.g. less, leq
-%%% string relations, e.g. stringappend
-%%% date relations, e.g. dateplus
-%%% and so forth...
+% Case 1: The element is the head
+choose_1_with_index_from_sublist(NumBefore, H!T, H, NumBefore)
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Case 2: The element is in the tail
+choose_1_with_index_from_sublist(NumBefore, H!T, E, I) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E, I)
+

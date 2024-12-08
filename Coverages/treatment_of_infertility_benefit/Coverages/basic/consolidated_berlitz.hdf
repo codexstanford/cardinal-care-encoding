@@ -51,8 +51,8 @@ berlitz(claim.num_months_unprotected_intercourse(C, N),
         "the patient in $C$ has tried to conceive for $N$ months of unprotected timed intercourse")
 
 
-berlitz(claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(I, D)),
-        "an abnormal semen analysis on $D$ is listed in $C$")
+berlitz(claim.abnormal_semen_analyses(C, Analyses),
+        "claim $C$ has lists the abnormal semen analyses $Analyses$")
 
 
 berlitz(claim.patient_diagnosed_with_gender_dysphoria(C, yes),

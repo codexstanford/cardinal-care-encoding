@@ -142,14 +142,14 @@ meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
 patient_is_infertile(C) :-
     claim.patient_has_male_reproductive_organs(C, yes) &
     claim.patient_has_partner_with_female_reproductive_organs(C, no) &
-    claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(_, Date1)) &
-    claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(_, Date2)) & 
+    claim.abnormal_semen_analyses(C, Analyses) &
+    choose_2_with_indices_from_list_no_repeats(Analyses, abnormal_semen_analysis(Date1), _, abnormal_semen_analysis(Date2), _) &
     get_timestamp_from_date(Date1, TS1) &
     get_timestamp_from_date(Date2, TS2) &
-    evaluate(minus(TS2,TS1), TimeDiff) &
+    evaluate(abs(minus(TS2,TS1)), TimeDiff) &
     evaluate(times(14, 24, 60, 60, 1000), NUM_MS_IN_TWO_WEEKS) &
     leq(NUM_MS_IN_TWO_WEEKS, TimeDiff)
-    
+
 
 % Person with gender dysphoria
 patient_is_infertile(C) :-
@@ -311,37 +311,34 @@ not_yet_birthday_delta(Month, Day, FOBMonth, DOBDay, 0) :-
 date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
     symleq(BeginDateRange, Date) &
     symleq(Date, EndDateRange)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% general definitions and predefined relations
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-claim.birthdate(C,D) :- claim.patient(C,P) & person.dob(P,D)
+%%%%% Relations to faciliate choosing elements from lists that may have repeats
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Generates all pairs (unordered) of elements from a list, counting identical elements at different positions as distinct
+choose_2_with_indices_from_list_no_repeats(L, E1, I1, E2, I2) :-
+    choose_2_with_indices_from_sublist_no_repeats(0, L, E1, I1, E2, I2)
 
-overlap(XS,XE,YS,YE) :-
-  evaluate(stringmin(YS,XE),YS) &
-  evaluate(stringmin(XS,YE),XS)
 
-datetimetotimestamp(DATE,TIME,STAMP) :-
-  evaluate(parsedate(DATE),[Y,M,D]) &
-  evaluate(parsetime(TIME),[H,N]) &
-  evaluate(maketimestamp(Y,M,D,H,N,0),STAMP)
+% Case 1: The first element is the head
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, H, NumBefore, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E2, I2)
 
-parsedate(DATE) :=
-  map(readstring,tail(matches(stringify(DATE),"(....)_(..)_(..)")))
+% Case 2: The first element is in the tail
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, E1, I1, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_2_with_indices_from_sublist_no_repeats(NewNumBefore, T, E1, I1, E2, I2)
 
-parsetime(TIME) :=
-  map(readstring,tail(matches(stringify(TIME),"(..)_(..)")))
 
-head(X!L) := X
-tail(X!L) := L
+% Entry point
+choose_1_with_index_from_list(L, E, I) :-
+    choose_1_with_index_from_sublist(0, L, E, I)
 
-%%% number relations, e.g. less, leq
-%%% string relations, e.g. stringappend
-%%% date relations, e.g. dateplus
-%%% and so forth...
+% Case 1: The element is the head
+choose_1_with_index_from_sublist(NumBefore, H!T, H, NumBefore)
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Case 2: The element is in the tail
+choose_1_with_index_from_sublist(NumBefore, H!T, E, I) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E, I)
+

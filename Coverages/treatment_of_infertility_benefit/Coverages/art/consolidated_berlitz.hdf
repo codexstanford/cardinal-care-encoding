@@ -72,18 +72,18 @@ berlitz(get_timestamp_from_date(D, S),
         "the timestamp for $D$ is $S$")
 %%%%%%%%%%%%%%%%%% For III, IV, V, and VI %%%%%%%%%%%%%%%%%%
 
-berlitz(claim.day_3_fsh_test(C, fsh_test(I, L, DATE, TIME)),
-        "day 3 FSH test number $I$ in $C$ was on $DATE$ at $TIME$ and was $L$ mIU/ML")
+berlitz(claim.day_3_fsh_tests(C, Tests),
+        "claim $C$ specifies list of day 3 FSH tests as: $Tests$")
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Defined Relations 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-berlitz(most_recent_day_3_fsh_test(C, fsh_test(I, L, DATE, TIME)),
+berlitz(most_recent_day_3_fsh_test(C, fsh_test(L, DATE, TIME)),
         "the most recent day 3 FSH test in $C$ was on $DATE$ at $TIME$ and was $L$ mIU/ML")
 
-berlitz(claim.day_3_fsh_test_after_age_40(C, fsh_test(I, L, DATE, TIME)),
-        "a day 3 FSH test in $C$ taken after the age of 40 was on $DATE$ at $TIME$ and was $L$ mIU/ML")
+berlitz(claim.day_3_fsh_tests_after_age_40(C, Tests),
+        "claim $C$ specifies the following list of day 3 FSH tests taken after the age of 40: $Tests$")
 
 berlitz(leq_datetime(DT1, DT2),
         "$DT1$ is on or before $DT2$")

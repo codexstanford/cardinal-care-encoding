@@ -29,7 +29,7 @@ meets_no_voluntary_sterilization_req(C) :-
 patient_meets_day_3_fsh_level_criteria(C) :-
     patient_age_at_time_of_service(C, Age) &
     less(Age, 40) &
-    most_recent_day_3_fsh_test(C, fsh_test(_, Level, _, _)) &
+    most_recent_day_3_fsh_test(C, fsh_test(Level, _, _)) &
     less(Level, 19)
 
 % If over 40, care about all tests performed after age 40
@@ -38,8 +38,10 @@ patient_meets_day_3_fsh_level_criteria(C) :-
 patient_meets_day_3_fsh_level_criteria(C) :-
     patient_age_at_time_of_service(C, Age) &
     leq(40, Age) &
-    claim.day_3_fsh_test_after_age_40(C, _) &
-    countofall(T, claim.day_3_fsh_test_after_age_40(C, fsh_test(T, Level, _, _)) & leq(19, Level), 0)
+    claim.day_3_fsh_tests_after_age_40(C, Tests) &
+    evaluate(length(Tests), NumTests) &
+    leq(1, NumTests) &
+    ~exists_test_with_level_at_least_19(Tests)
 
 % N/A if male
 patient_meets_day_3_fsh_level_criteria(C) :-
@@ -216,31 +218,47 @@ meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
 patient_is_infertile(C) :-
     claim.patient_has_male_reproductive_organs(C, yes) &
     claim.patient_has_partner_with_female_reproductive_organs(C, no) &
-    claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(_, Date1)) &
-    claim.abnormal_semen_analysis_on_date(C, abnormal_semen_analysis(_, Date2)) & 
+    claim.abnormal_semen_analyses(C, Analyses) &
+    choose_2_with_indices_from_list_no_repeats(Analyses, abnormal_semen_analysis(Date1), _, abnormal_semen_analysis(Date2), _) &
     get_timestamp_from_date(Date1, TS1) &
     get_timestamp_from_date(Date2, TS2) &
-    evaluate(minus(TS2,TS1), TimeDiff) &
+    evaluate(abs(minus(TS2,TS1)), TimeDiff) &
     evaluate(times(14, 24, 60, 60, 1000), NUM_MS_IN_TWO_WEEKS) &
     leq(NUM_MS_IN_TWO_WEEKS, TimeDiff)
-    
+
 
 % Person with gender dysphoria
 patient_is_infertile(C) :-
     claim.patient_diagnosed_with_gender_dysphoria(C, yes)
-% If multiple tests have the same datetime, then we can't decide which was most recent and this is not satisfied.
-most_recent_day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) :-
-    claim.day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) &
-    countofall(T, claim.day_3_fsh_test(C, fsh_test(T, _, Date2, Time2)) & distinct(Index, T) & leq_datetime(Date, Time, Date2, Time2), 0)
+% If multiple tests have the same date andtime, then we can't decide which was most recent and this is not satisfied.
+most_recent_day_3_fsh_test(C, fsh_test(Level, Date, Time)) :-
+    claim.day_3_fsh_tests(C, Tests) &
+    choose_1_with_index_from_list(Tests, fsh_test(Level, Date, Time), I1) &
+    countofall(I2, choose_1_with_index_from_list(Tests, fsh_test(_, Date2, Time2), I2) & distinct(I1, I2) & leq_datetime(Date, Time, Date2, Time2), 0)
 
 % Gets day 3 fsh tests that have been performed since the patient became 40 years old
-claim.day_3_fsh_test_after_age_40(C, fsh_test(Index, Level, Date, Time)) :-
+claim.day_3_fsh_tests_after_age_40(C, Tests) :-
     claim.patient_dob(C, DOB) &
     evaluate(parsedate(DOB), [Y, M, D]) &
     evaluate(maketimestamp(plus(Y, 40), M, D, 0, 0, 0), FortiethBirthdayTS) &
-    claim.day_3_fsh_test(C, fsh_test(Index, Level, Date, Time)) &
+    claim.day_3_fsh_tests(C, AllTests) &
+    get_all_tests_since_timestamp(FortiethBirthdayTS, AllTests, Tests)
+
+get_all_tests_since_timestamp(_, [], [])
+get_all_tests_since_timestamp(TS, fsh_test(Level, Date, Time)!T, fsh_test(Level, Date, Time)!Rest) :-
     datetimetotimestamp(Date, Time, TestTS) &
-    leq(FortiethBirthdayTS, TestTS)
+    leq(TS, TestTS) &
+    get_all_tests_since_timestamp(TS, T, Rest)
+
+get_all_tests_since_timestamp(TS, fsh_test(Level, Date, Time)!T, Rest) :-
+    datetimetotimestamp(Date, Time, TestTS) &
+    ~leq(TS, TestTS) &
+    get_all_tests_since_timestamp(TS, T, Rest)
+
+
+exists_test_with_level_at_least_19(Tests) :-
+    member(fsh_test(Level, _, _), Tests) &
+    leq(19, Level)
 
 leq_datetime(Date1, Time1, Date2, Time2) :-
     datetimetotimestamp(Date1, Time1, TS1) &
@@ -403,39 +421,34 @@ not_yet_birthday_delta(Month, Day, FOBMonth, DOBDay, 0) :-
 date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
     symleq(BeginDateRange, Date) &
     symleq(Date, EndDateRange)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% general definitions and predefined relations
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-claim.birthdate(C,D) :- claim.patient(C,P) & person.dob(P,D)
+%%%%% Relations to faciliate choosing elements from lists that may have repeats
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Generates all pairs (unordered) of elements from a list, counting identical elements at different positions as distinct
+choose_2_with_indices_from_list_no_repeats(L, E1, I1, E2, I2) :-
+    choose_2_with_indices_from_sublist_no_repeats(0, L, E1, I1, E2, I2)
 
-overlap(XS,XE,YS,YE) :-
-  evaluate(stringmin(YS,XE),YS) &
-  evaluate(stringmin(XS,YE),XS)
 
-datetimetotimestamp(DATE,TIME,STAMP) :-
-  evaluate(parsedate(DATE),[Y,M,D]) &
-  evaluate(parsetime(TIME),[H,N]) &
-  evaluate(maketimestamp(Y,M,D,H,N,0),STAMP)
+% Case 1: The first element is the head
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, H, NumBefore, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E2, I2)
 
-parsedate(DATE) :=
-  map(readstring,tail(matches(stringify(DATE),"(....)_(..)_(..)")))
+% Case 2: The first element is in the tail
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, E1, I1, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_2_with_indices_from_sublist_no_repeats(NewNumBefore, T, E1, I1, E2, I2)
 
-parsetime(TIME) :=
-  map(readstring,tail(matches(stringify(TIME),"(..)_(..)")))
 
-head(X!L) := X
-tail(X!L) := L
+% Entry point
+choose_1_with_index_from_list(L, E, I) :-
+    choose_1_with_index_from_sublist(0, L, E, I)
 
-less(X, Y) :- leq(X, Y) & distinct(X, Y)
+% Case 1: The element is the head
+choose_1_with_index_from_sublist(NumBefore, H!T, H, NumBefore)
 
-%%% number relations, e.g. less, greater
-%%% string relations, e.g. stringappend
-%%% date relations, e.g. dateplus
-%%% and so forth...
+% Case 2: The element is in the tail
+choose_1_with_index_from_sublist(NumBefore, H!T, E, I) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E, I)
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
