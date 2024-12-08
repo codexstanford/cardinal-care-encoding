@@ -9,10 +9,8 @@ data:
 berlitz(claim.covid19_vaccine_brand(C, BRAND),
         "the brand of the Covid-19 vaccine received during the immunization in $C$ is $BRAND$")
 
-berlitz(claim.covid19_vaccination(C, covid19_vaccination_event(_, BRAND, not_updated)),
-        "the patient in $C$ received a $BRAND$ Covid-19 vaccine on that was not the updated 2024-2025 formulation")
-berlitz(claim.covid19_vaccination(C, covid19_vaccination_event(_, BRAND, updated_2024_2025)),
-        "the patient in $C$ received a $BRAND$ Covid-19 vaccine on that was the updated 2024-2025 formulation")
+berlitz(claim.covid19_vaccine_history(C, Vaccines),
+        "the patient in $C$ had the following Covid-19 vaccine history: $Vaccines$")
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Defined Relations 

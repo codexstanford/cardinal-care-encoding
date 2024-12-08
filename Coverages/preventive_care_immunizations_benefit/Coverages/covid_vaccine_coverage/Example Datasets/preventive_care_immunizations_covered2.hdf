@@ -41,10 +41,7 @@ claim.reason_for_immunization(claim1, preventive_care)
 claim.patient_is_immunocompromised(claim1, yes)
 claim.covid19_vaccine_brand(claim1, moderna)
 
-claim.covid19_vaccination(claim1, covid19_vaccination_event(0, moderna, updated_2024_2025))
-claim.covid19_vaccination(claim1, covid19_vaccination_event(1, moderna, updated_2024_2025))
-% Uncomment this to test the case where the patient has received a third updated moderna vaccine
-% claim.covid19_vaccination(claim1, covid19_vaccination_event(2, moderna, updated_2024_2025))
+claim.covid19_vaccine_history(claim1, [covid19_vaccination_event(moderna, updated_2024_2025), covid19_vaccination_event(moderna, updated_2024_2025)])
 
 %% General Exclusions %% 
 % Imported from no_exclusion_claim.hdf

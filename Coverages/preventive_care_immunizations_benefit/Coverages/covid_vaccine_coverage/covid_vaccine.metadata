@@ -2,7 +2,7 @@ type(covid_vaccine_coverage, class)
 superclass(covid_vaccine_coverage, claim)
 attribute(covid_vaccine_coverage, claim.patient_is_immunocompromised)
 attribute(covid_vaccine_coverage, claim.covid19_vaccine_brand)
-attribute(covid_vaccine_coverage, claim.covid19_vaccination)
+attribute(covid_vaccine_coverage, claim.covid19_vaccine_history)
 
 
 type(claim.patient_is_immunocompromised, attributerelation)
@@ -19,27 +19,19 @@ unique(claim.covid19_vaccine_brand, yes)
 total(claim.covid19_vaccine_brand, no)
 changestyle(claim.covid19_vaccine_brand,selector)
 
-type(claim.covid19_vaccination, attributerelation)
-domain(claim.covid19_vaccination, claim)
-codomain(claim.covid19_vaccination, covid19_vaccination)
-unique(claim.covid19_vaccination, no)
-total(claim.covid19_vaccination, no)
-changestyle(claim.covid19_vaccination,table)
+type(claim.covid19_vaccine_history, attributerelation)
+domain(claim.covid19_vaccine_history, claim)
+codomain(claim.covid19_vaccine_history, covid19_vaccination)
+unique(claim.covid19_vaccine_history, no)
+total(claim.covid19_vaccine_history, no)
+changestyle(claim.covid19_vaccine_history,table)
 
 %%%% Functional classes %%%%
 
 type(covid19_vaccination,class)
 functional(covid19_vaccination, covid19_vaccination_event)
-attribute(covid19_vaccination, covid19_vaccination.enter_custom_id)
 attribute(covid19_vaccination, covid19_vaccination.brand)
 attribute(covid19_vaccination, covid19_vaccination.version)
-
-type(covid19_vaccination.enter_custom_id, attributerelation)
-domain(covid19_vaccination.enter_custom_id, covid19_vaccination)
-codomain(covid19_vaccination.enter_custom_id, number)
-unique(covid19_vaccination.enter_custom_id, yes)
-total(covid19_vaccination.enter_custom_id, yes)
-changestyle(covid19_vaccination.enter_custom_id,numberstyle)
 
 type(covid19_vaccination.brand, attributerelation)
 domain(covid19_vaccination.brand, covid19_vaccination)

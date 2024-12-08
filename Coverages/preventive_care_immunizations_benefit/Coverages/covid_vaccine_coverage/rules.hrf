@@ -35,16 +35,21 @@ patient_age_bracket_for_covid19_vaccination(Claim, Age, 12_years_and_older) :-
     leq(12, Age)
 
 covid19_dose_counts(Claim, NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand) :-
-    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, moderna, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldModerna) &
-    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, pfizer_biontech, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldPfizer) &
-    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, novavax, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldNovavax) &
-    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, j_n_j, UpdatedStatus)) & distinct(UpdatedStatus, updated_2024_2025), NumOldJnJ) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumOldModerna) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumOldPfizer) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, NumOldNovavax) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, j_n_j, NumOldJnJ) &
     claim.covid19_vaccine_brand(Claim, Brand) &
-    countofall(I, claim.covid19_vaccination(Claim, covid19_vaccination_event(I, Brand, updated_2024_2025)), NumUpdatedOfBrand)
+    countofall(I, choose_1_with_index_from_list(Vaccines, covid19_vaccination_event(Brand, updated_2024_2025), I), NumUpdatedOfBrand)
+
+num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumUpdatedOfBrand) :-
+    countofall(I, choose_1_with_index_from_list(Vaccines, covid19_vaccination_event(Brand, UpdatedStatus), I) & distinct(UpdatedStatus, updated_2024_2025), NumUpdatedOfBrand)
 
 already_begun_another_updated_2024_2025_covid19_vaccination_series(Claim) :-
     claim.covid19_vaccine_brand(Claim, Brand1) &
-    claim.covid19_vaccination(Claim, covid19_vaccination_event(I, Brand2, updated_2024_2025)) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    member(covid19_vaccination_event(Brand2, updated_2024_2025), Vaccines) &
     distinct(Brand1, Brand2)
 
 
