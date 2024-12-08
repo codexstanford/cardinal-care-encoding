@@ -3,4 +3,5 @@ metadata:
     - ../../../../Cardinal Care Core/cardinal_care_core.metadata
     - ../../preventive_care_immunizations.metadata
     - covid_vaccine.metadata
+    - ../../../../Cardinal Care Core/exclusions.metadata
 ---

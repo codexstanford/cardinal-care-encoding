@@ -1,3 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%% General Exclusions %%%%%%%%%%%%%%%%%%%%%%%
 attribute(claim, claim.exclusions)
+
+type(claim.exclusions, attributerelation)
+domain(claim.exclusions, claim)
+codomain(claim.exclusions, general_exclusion)
+unique(claim.exclusions, yes)
+total(claim.exclusions, yes)
 changestyle(claim.exclusions, checkboxfield)
+

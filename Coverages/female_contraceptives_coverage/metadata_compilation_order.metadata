@@ -2,4 +2,5 @@
 metadata:
     - ../../Cardinal Care Core/cardinal_care_core.metadata
     - contraceptive.metadata
+    - ../../Cardinal Care Core/exclusions.metadata
 ---

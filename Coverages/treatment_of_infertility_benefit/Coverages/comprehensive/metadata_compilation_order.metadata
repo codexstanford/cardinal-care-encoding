@@ -5,4 +5,5 @@ metadata:
     - ../../patient_is_infertile.metadata
     - ../../non-basic.metadata
     - comprehensive_infertility.metadata
+    - ../../../../Cardinal Care Core/exclusions.metadata
 ---

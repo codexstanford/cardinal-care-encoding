@@ -32,15 +32,15 @@
 type(claim, class)
 
 %%%%%%%%%%%%%%%%%%%%%%% Claim type-generic %%%%%%%%%%%%%%%%%%%%%%%
-%attribute(claim, claim.patient)
-attribute(claim, claim.patient_dob)
-%%% attribute(claim, claim.quarter_enrolled_stanford_2024_2025)
-attribute(claim, claim.date_service_received)
-attribute(claim, claim.service_type)
-attribute(claim, claim.precertification_received)
-%%% attribute(claim, claim.waived_cardinal_care)
-attribute(claim, claim.location_service_received)
-attribute(claim, claim.service_available_at_tier_one_or_two_location)
+%attribute(art_treatment_of_infertility_coverage, claim.patient)
+attribute(art_treatment_of_infertility_coverage, claim.patient_dob)
+%%% attribute(art_treatment_of_infertility_coverage, claim.quarter_enrolled_stanford_2024_2025)
+attribute(art_treatment_of_infertility_coverage, claim.date_service_received)
+attribute(art_treatment_of_infertility_coverage, claim.service_type)
+attribute(art_treatment_of_infertility_coverage, claim.precertification_received)
+%%% attribute(art_treatment_of_infertility_coverage, claim.waived_cardinal_care)
+attribute(art_treatment_of_infertility_coverage, claim.location_service_received)
+attribute(art_treatment_of_infertility_coverage, claim.service_available_at_tier_one_or_two_location)
 
 % type(claim.patient, attributerelation)
 % domain(claim.patient, claim)
@@ -117,7 +117,7 @@ type(quarter_2024_2025, class)
 type(cardinal_care_2024_2025_location, class)
 type(cardinal_care_2024_2025_service, class)
 
-attribute(claim, claim.day_3_fsh_tests)
+attribute(art_treatment_of_infertility_coverage, claim.day_3_fsh_tests)
 
 type(claim.day_3_fsh_tests, attributerelation)
 domain(claim.day_3_fsh_tests, claim)
@@ -153,17 +153,17 @@ codomain(fsh_test.time, time)
 unique(fsh_test.time, yes)
 total(fsh_test.time, yes)
 changestyle(fsh_test.time,timestyle)
-type(art_infertility_coverage, class)
-superclass(art_infertility_coverage, claim)
+type(art_treatment_of_infertility_coverage, class)
+superclass(art_treatment_of_infertility_coverage, claim)
 
-attribute(art_infertility_coverage, claim.num_cycles_oral_or_injectable_ovulation_induction) % ART services
-attribute(art_infertility_coverage, claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_only_effective_treatment) % ART services
-attribute(art_infertility_coverage, claim.service_is_ivf_with_embryo_transfer) % ART services
-attribute(art_infertility_coverage, claim.patient_is_believed_to_be_fertile) % ART services
-attribute(art_infertility_coverage, claim.planned_service) % ART services
-attribute(art_infertility_coverage, claim.will_be_retrieving_eggs_for_use) % ART services
-attribute(art_infertility_coverage, claim.patient_has_premature_ovarian_failure) % ART services
-attribute(art_infertility_coverage, claim.num_other_covered_art_services) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.num_cycles_oral_or_injectable_ovulation_induction) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_only_effective_treatment) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.service_is_ivf_with_embryo_transfer) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.patient_is_believed_to_be_fertile) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.planned_service) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.will_be_retrieving_eggs_for_use) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.patient_has_premature_ovarian_failure) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.num_other_covered_art_services) % ART services
 
 type(claim.num_cycles_oral_or_injectable_ovulation_induction, attributerelation)
 domain(claim.num_cycles_oral_or_injectable_ovulation_induction, claim)
@@ -226,3 +226,12 @@ changestyle(claim.num_other_covered_art_services, numberstyle)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 type(cardinal_care_2024_2025_infertility_causing_service, class)
+%%%%%%%%%%%%%%%%%%%%%%% General Exclusions %%%%%%%%%%%%%%%%%%%%%%%
+attribute(art_treatment_of_infertility_coverage, claim.exclusions)
+
+type(claim.exclusions, attributerelation)
+domain(claim.exclusions, claim)
+codomain(claim.exclusions, general_exclusion)
+unique(claim.exclusions, yes)
+total(claim.exclusions, yes)
+changestyle(claim.exclusions, checkboxfield)

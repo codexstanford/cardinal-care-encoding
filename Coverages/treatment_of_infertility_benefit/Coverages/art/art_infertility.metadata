@@ -1,14 +1,14 @@
-type(art_infertility_coverage, class)
-superclass(art_infertility_coverage, claim)
+type(art_treatment_of_infertility_coverage, class)
+superclass(art_treatment_of_infertility_coverage, claim)
 
-attribute(art_infertility_coverage, claim.num_cycles_oral_or_injectable_ovulation_induction) % ART services
-attribute(art_infertility_coverage, claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_only_effective_treatment) % ART services
-attribute(art_infertility_coverage, claim.service_is_ivf_with_embryo_transfer) % ART services
-attribute(art_infertility_coverage, claim.patient_is_believed_to_be_fertile) % ART services
-attribute(art_infertility_coverage, claim.planned_service) % ART services
-attribute(art_infertility_coverage, claim.will_be_retrieving_eggs_for_use) % ART services
-attribute(art_infertility_coverage, claim.patient_has_premature_ovarian_failure) % ART services
-attribute(art_infertility_coverage, claim.num_other_covered_art_services) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.num_cycles_oral_or_injectable_ovulation_induction) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_only_effective_treatment) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.service_is_ivf_with_embryo_transfer) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.patient_is_believed_to_be_fertile) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.planned_service) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.will_be_retrieving_eggs_for_use) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.patient_has_premature_ovarian_failure) % ART services
+attribute(art_treatment_of_infertility_coverage, claim.num_other_covered_art_services) % ART services
 
 type(claim.num_cycles_oral_or_injectable_ovulation_induction, attributerelation)
 domain(claim.num_cycles_oral_or_injectable_ovulation_induction, claim)

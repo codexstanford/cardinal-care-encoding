@@ -32,15 +32,15 @@
 type(claim, class)
 
 %%%%%%%%%%%%%%%%%%%%%%% Claim type-generic %%%%%%%%%%%%%%%%%%%%%%%
-%attribute(claim, claim.patient)
-attribute(claim, claim.patient_dob)
-%%% attribute(claim, claim.quarter_enrolled_stanford_2024_2025)
-attribute(claim, claim.date_service_received)
-attribute(claim, claim.service_type)
-attribute(claim, claim.precertification_received)
-%%% attribute(claim, claim.waived_cardinal_care)
-attribute(claim, claim.location_service_received)
-attribute(claim, claim.service_available_at_tier_one_or_two_location)
+%attribute(covid_vaccine_coverage, claim.patient)
+attribute(covid_vaccine_coverage, claim.patient_dob)
+%%% attribute(covid_vaccine_coverage, claim.quarter_enrolled_stanford_2024_2025)
+attribute(covid_vaccine_coverage, claim.date_service_received)
+attribute(covid_vaccine_coverage, claim.service_type)
+attribute(covid_vaccine_coverage, claim.precertification_received)
+%%% attribute(covid_vaccine_coverage, claim.waived_cardinal_care)
+attribute(covid_vaccine_coverage, claim.location_service_received)
+attribute(covid_vaccine_coverage, claim.service_available_at_tier_one_or_two_location)
 
 % type(claim.patient, attributerelation)
 % domain(claim.patient, claim)
@@ -123,7 +123,7 @@ type(cardinal_care_2024_2025_service, class)
 % unique(claim.immunization_for_disease, yes)
 % total(claim.immunization_for_disease, no)
 
-attribute(claim, claim.reason_for_immunization)
+attribute(covid_vaccine_coverage, claim.reason_for_immunization)
 
 type(claim.reason_for_immunization, attributerelation)
 domain(claim.reason_for_immunization, claim)
@@ -192,3 +192,12 @@ changestyle(covid19_vaccination.version,selector)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 type(vaccine_brand, class)
+%%%%%%%%%%%%%%%%%%%%%%% General Exclusions %%%%%%%%%%%%%%%%%%%%%%%
+attribute(covid_vaccine_coverage, claim.exclusions)
+
+type(claim.exclusions, attributerelation)
+domain(claim.exclusions, claim)
+codomain(claim.exclusions, general_exclusion)
+unique(claim.exclusions, yes)
+total(claim.exclusions, yes)
+changestyle(claim.exclusions, checkboxfield)
