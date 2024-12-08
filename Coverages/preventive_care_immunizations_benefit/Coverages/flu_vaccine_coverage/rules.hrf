@@ -18,24 +18,26 @@ infectious_disease_for_which_cdc_acip_recommends_immunization(influenza_disease)
 % For ages >= 9 years, one dose annually (unless received first dose before turning 9, and needed multiple doses. That case is handled above.)
 below_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
     leq(9, Age) &
-    countofall(I, claim.2024_2025_influenza_vaccination(Claim, influenza_vaccination_event(I, _)), 0)
+    claim.2024_2025_flu_vaccine_history(Claim, Vaccines) &
+    evaluate(length(Vaccines), 0)
 
 % For ages [6 months, 9 years), depends on number of doses received in prior seasons
 below_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
     patient_geq_6_months_old_at_time_of_service(Claim) &
     less(Age, 9) &
     max_doses_flu_vaccine_allowed_for_child_6_months_through_9_years(Claim, MaxDoses) &
-    countofall(I, claim.2024_2025_influenza_vaccination(Claim, influenza_vaccination_event(I, _)), ReceivedDoses) &
+    claim.2024_2025_flu_vaccine_history(Claim, Vaccines) &
+    evaluate(length(Vaccines), ReceivedDoses) &
     less(ReceivedDoses, MaxDoses)
 
 % If child aged 9 hasn't received any doses of 2024-2025 yet, then 1 is allowed
 below_2024_cdc_acip_age_guideline_max_by_age(9, Claim) :-
-    countofall(I, claim.2024_2025_influenza_vaccination(Claim, influenza_vaccination_event(I, _)), 0)
+    claim.2024_2025_flu_vaccine_history(Claim, Vaccines) &
+    evaluate(length(Vaccines), 0)
 
 % If child aged 9 had received precisely one dose when they were 8 and they were allowed to receive two doses, then another is allowed
 below_2024_cdc_acip_age_guideline_max_by_age(9, Claim) :-
-    countofall(I, claim.2024_2025_influenza_vaccination(Claim, influenza_vaccination_event(I, _)), 1) &
-    claim.2024_2025_influenza_vaccination(Claim, influenza_vaccination_event(_, VaccinationDate)) & 
+    claim.2024_2025_flu_vaccine_history(Claim, [influenza_vaccination_event(VaccinationDate)]) &
     claim.patient_dob(Claim, PatientDOB) &
     patient_age_on_date(PatientDOB, VaccinationDate, 8) &
     max_doses_flu_vaccine_allowed_for_child_6_months_through_9_years(Claim, 2)

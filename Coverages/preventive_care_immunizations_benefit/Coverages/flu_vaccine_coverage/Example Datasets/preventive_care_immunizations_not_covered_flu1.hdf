@@ -34,8 +34,7 @@ claim.service_available_at_tier_one_or_two_location(claim1, yes)
 claim.reason_for_immunization(claim1, preventive_care)
 
 % Influenza vaccine-specific
-claim.2024_2025_influenza_vaccination(claim1, influenza_vaccination_event(0, 2024_10_14))
-claim.2024_2025_influenza_vaccination(claim1, influenza_vaccination_event(2, 2024_08_15))
+claim.2024_2025_flu_vaccine_history(claim1, [influenza_vaccination_event(2024_10_14), influenza_vaccination_event(2024_08_15)])
 claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024(claim1, no)
 
 %% General Exclusions %% 
