@@ -24,7 +24,7 @@ parsetime(TIME) :=
 head(X!L) := X
 tail(X!L) := L
 
-%%% number relations, e.g. less, leq
+%%% number relations, e.g. less, greater
 %%% string relations, e.g. stringappend
 %%% date relations, e.g. dateplus
 %%% and so forth...
