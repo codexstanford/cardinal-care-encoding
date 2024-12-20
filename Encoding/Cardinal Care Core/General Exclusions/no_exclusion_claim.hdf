@@ -1,0 +1,6 @@
+% General Exclusions %
+
+claim.exclusions(claim1, [])
+
+% Per-exclusion attribute format example - not currently used %
+% claim.reception_of_service_or_supplies_resulted_from_service_in_armed_forces(claim1, no)
