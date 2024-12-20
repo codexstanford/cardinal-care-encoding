@@ -1,0 +1,9 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Base Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(claims.exclusions(C, nil),
+        "no general exclusions apply to $C$")
+
+berlitz(claims.exclusions(C, ExclusionsList),
+        "the general exclusions that apply to $C$ are $ExclusionsList$")
