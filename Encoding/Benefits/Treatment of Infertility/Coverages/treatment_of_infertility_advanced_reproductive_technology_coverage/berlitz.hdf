@@ -1,7 +1,7 @@
 ---
 data:
-    - ../../treatment_of_infertility_benefit_berlitz.hdf
-    - ../../non-basic_berlitz.hdf
+    - ../../berlitz.hdf
+    - ../../Non-basic Infertility Coverages/berlitz.hdf
 ---
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

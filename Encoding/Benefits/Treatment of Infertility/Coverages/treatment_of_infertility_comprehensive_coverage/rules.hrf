@@ -1,8 +1,8 @@
 ---
 rules:
-    - ../../treatment_of_infertility_benefit.hrf
-    - ../../patient_is_infertile.hrf
-    - ../../non-basic.hrf
+    - ../../rules.hrf
+    - ../../patient_is_infertile Definition/rules.hrf
+    - ../../Non-basic Infertility Coverages/rules.hrf
 ---
 
 

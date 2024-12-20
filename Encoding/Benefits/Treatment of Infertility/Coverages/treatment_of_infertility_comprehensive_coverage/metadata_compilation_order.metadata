@@ -1,9 +1,9 @@
 ---
 metadata:
-    - ../../../../Cardinal Care Core/cardinal_care_core.metadata
-    - ../../treatment_of_infertility.metadata
-    - ../../patient_is_infertile.metadata
-    - ../../non-basic.metadata
-    - comprehensive_infertility.metadata
-    - ../../../../Cardinal Care Core/exclusions.metadata
+    - ../../../../Cardinal Care Core/metadata.metadata
+    - ../../metadata.metadata
+    - ../../patient_is_infertile Definition/metadata.metadata
+    - ../../Non-basic Infertility Coverages/metadata.metadata
+    - metadata.metadata
+    - ../../../../Cardinal Care Core/General Exclusions/metadata.metadata
 ---

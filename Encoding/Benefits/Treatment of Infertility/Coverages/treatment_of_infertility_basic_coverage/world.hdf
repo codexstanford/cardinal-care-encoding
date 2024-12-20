@@ -1,7 +1,7 @@
 ---
 data:
-    - ../../treatment_of_infertility_world.hdf
-    - ../../patient_is_infertile_world.hdf
+    - ../../world.hdf
+    - ../../patient_is_infertile Definition/world.hdf
 ---
 
 type(diagnose_and_evaluate_underlying_medical_cause_of_infertility, cardinal_care_2024_2025_service)

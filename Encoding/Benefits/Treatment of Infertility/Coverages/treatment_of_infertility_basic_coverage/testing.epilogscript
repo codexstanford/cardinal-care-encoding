@@ -1,3 +1,3 @@
-ruleset: basic_infertility.hrf
+ruleset: rules.hrf
 dataset: Example Datasets/
 query: covered(claim1)

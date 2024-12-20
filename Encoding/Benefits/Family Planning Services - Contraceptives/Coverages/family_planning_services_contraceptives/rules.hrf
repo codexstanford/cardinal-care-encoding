@@ -1,7 +1,7 @@
 ---
 rules:
-    - ../../Cardinal Care Core/cardinal_care_core.hrf
-    - ../../System-wide/library.hrf
+    - ../../../../Cardinal Care Core/rules.hrf
+    - ../../../../System-wide/rules.hrf
 ---
 
 

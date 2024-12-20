@@ -1,7 +1,7 @@
 ---
 rules:
-    - ../../treatment_of_infertility_benefit.hrf
-    - ../../patient_is_infertile.hrf
+    - ../../rules.hrf
+    - ../../patient_is_infertile Definition/rules.hrf
 ---
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,8 +1,8 @@
 ---
 data:
-    - ../../treatment_of_infertility_benefit_berlitz.hdf
-    - ../../patient_is_infertile_berlitz.hdf
-    - ../../non-basic_berlitz.hdf
+    - ../../berlitz.hdf
+    - ../../patient_is_infertile Definition/berlitz.hdf
+    - ../../Non-basic Infertility Coverages/berlitz.hdf
 ---
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

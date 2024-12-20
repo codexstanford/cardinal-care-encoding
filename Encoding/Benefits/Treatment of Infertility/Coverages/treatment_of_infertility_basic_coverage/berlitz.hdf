@@ -1,7 +1,7 @@
 ---
 data:
-    - ../../patient_is_infertile_berlitz.hdf
-    - ../../treatment_of_infertility_benefit_berlitz.hdf
+    - ../../patient_is_infertile Definition/berlitz.hdf
+    - ../../berlitz.hdf
 ---
 
 %%% I. Diagnose and Evaluate the Underlying Cause of Infertility

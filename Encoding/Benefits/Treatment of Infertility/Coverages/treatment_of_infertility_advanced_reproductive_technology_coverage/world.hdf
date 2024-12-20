@@ -1,7 +1,7 @@
 ---
 data:
-    - ../../treatment_of_infertility_world.hdf
-    - ../../non-basic_world.hdf
+    - ../../world.hdf
+    - ../../Non-basic Infertility Coverages/world.hdf
 ---
 
 type(ivf_for_fertility_preservation, cardinal_care_2024_2025_service)
