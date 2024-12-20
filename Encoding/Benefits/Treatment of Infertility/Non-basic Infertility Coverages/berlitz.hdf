@@ -11,7 +11,7 @@ berlitz(claim.day_3_fsh_tests(C, Tests),
 berlitz(most_recent_day_3_fsh_test(C, fsh_test(L, DATE, TIME)),
         "the most recent day 3 FSH test in $C$ was on $DATE$ at $TIME$ and was $L$ mIU/ML")
 
-berlitz(claim.day_3_fsh_tests_after_age_40(C, Tests),
+berlitz(day_3_fsh_tests_after_age_40_in_claim(C, Tests),
         "claim $C$ specifies the following list of day 3 FSH tests taken after the age of 40: $Tests$")
 
 berlitz(leq_datetime(DT1, DT2),

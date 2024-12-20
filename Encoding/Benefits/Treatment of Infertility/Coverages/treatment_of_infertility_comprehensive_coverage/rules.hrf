@@ -46,7 +46,7 @@ patient_meets_day_3_fsh_level_criteria(C) :-
 patient_meets_day_3_fsh_level_criteria(C) :-
     patient_age_at_time_of_service(C, Age) &
     leq(40, Age) &
-    claim.day_3_fsh_tests_after_age_40(C, Tests) &
+    day_3_fsh_tests_after_age_40_in_claim(C, Tests) &
     evaluate(length(Tests), NumTests) &
     leq(1, NumTests) &
     ~exists_test_with_level_at_least_19(Tests)
