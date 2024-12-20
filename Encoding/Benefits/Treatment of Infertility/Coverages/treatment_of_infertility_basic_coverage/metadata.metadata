@@ -1,2 +1,2 @@
-type(basic_treatment_of_infertility_coverage, class)
-superclass(basic_treatment_of_infertility_coverage, claim)
+type(treatment_of_infertility_basic_coverage, class)
+superclass(treatment_of_infertility_basic_coverage, claim)
