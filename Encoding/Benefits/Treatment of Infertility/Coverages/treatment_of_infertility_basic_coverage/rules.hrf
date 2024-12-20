@@ -1,0 +1,43 @@
+---
+rules:
+    - ../../rules.hrf
+    - ../../patient_is_infertile Definition/rules.hrf
+---
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eligible for service - additional eligibility requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% Treatment of Infertility
+%%%% Important question: how do we want to handle the explicit exclusions that don't actually apply to anything that is covered by the policy? E.g. page 65 of the Certificate of Coverage
+
+%% Basic infertility services
+covered_under_cardinal_care_24_25_benefit(C, treatment_of_infertility_benefit) :-
+    claim.service_type(C, ServiceType) & 
+    is_basic_infertility_service(ServiceType) &
+    patient_is_infertile(C)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+medically_necessary_service(C) :-
+    claim.service_type(C, diagnose_and_evaluate_underlying_medical_cause_of_infertility)
+
+medically_necessary_service(C) :-
+    claim.service_type(C, surgery_to_treat_underlying_medical_cause_of_infertility)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+is_basic_infertility_service(diagnose_and_evaluate_underlying_medical_cause_of_infertility)
+is_basic_infertility_service(surgery_to_treat_underlying_medical_cause_of_infertility)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% No limitations

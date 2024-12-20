@@ -1,0 +1,18 @@
+---
+data:
+    - ../../patient_is_infertile Definition/berlitz.hdf
+    - ../../berlitz.hdf
+---
+
+%%% I. Diagnose and Evaluate the Underlying Cause of Infertility
+
+%%% II. Surgery to Treat the Underlying Cause of Infertility
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Defined Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(is_basic_infertility_service(S),
+        "$S$ is a basic infertility service")

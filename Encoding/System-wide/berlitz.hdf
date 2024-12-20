@@ -1,0 +1,54 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% berlitz.hdf
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% person
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(person.dob(P, D), "the date of birth of $P$ is $D$")
+berlitz(person.parent(X,Y),"$Y$ is the parent of $X$")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% policy
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(policy.type(P, T),"$P$ is a $T$ product")
+berlitz(policy.insuree(P, I),"$I$ is the insuree on $P$")
+berlitz(policy.startdate(P,D),"$P$ starts on $D$")
+berlitz(policy.enddate(P,D),"$P$ ends on $D$")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% claim
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(claim.claimant(C,P),"the claimant of $C$ is $P$")
+berlitz(claim.date(C,D),"the date of $C$ is $D$")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% General Relations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(type(X,C),"$X$ is a $C$")
+berlitz(covered(C),"$C$ is covered by the user's policies")
+berlitz(covers(P,C),"$P$ covers $C$")
+
+berlitz(get_date_diff(D1,D2,Y),"there are $Y$ years from $D1$ to $D2$")
+berlitz(get_date_diff_in_months(D1,D2,M),"there are $M$ months from $D1$ to $D2$")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Epilog Relations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(same(X,Y),"$X$ is the same as $Y$")
+berlitz(distinct(X,Y),"$X$ is different from $Y$")
+berlitz(less(X,Y),"$X$ is less than $Y$")
+berlitz(leq(X,Y),"$X$ is less than or equal to $Y$")
+berlitz(symless(X,Y),"$X$ is less than $Y$")
+berlitz(symleq(X,Y),"$X$ is less than or equal to $Y$")
+
+berlitz(evaluate(minus(X,Y),Z),"$X$-$Y$ is $Z$")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

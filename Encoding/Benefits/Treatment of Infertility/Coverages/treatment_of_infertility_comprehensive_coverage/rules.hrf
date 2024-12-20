@@ -1,0 +1,121 @@
+---
+rules:
+    - ../../rules.hrf
+    - ../../patient_is_infertile Definition/rules.hrf
+    - ../../Non-basic Infertility Coverages/rules.hrf
+---
+
+
+%% Comprehensive infertility services
+covered_under_cardinal_care_24_25_benefit(C, treatment_of_infertility_benefit) :-
+    claim.service_type(C, ServiceType) & 
+    is_comprehensive_infertility_service(ServiceType) &
+    patient_is_infertile(C) &
+    meets_comprehensive_infertility_service_eligibility_requirements(C)
+
+meets_comprehensive_infertility_service_eligibility_requirements(C) :-
+    meets_no_voluntary_sterilization_req(C) &
+    claim.demonstrated_and_documented_condition_causing_infertility(C, Condition) &
+    ~member(Condition, [
+        natural_menopause,
+        natural_perimenopause,
+        natural_male_reproductive_aging,
+        other_natural_physiologic_process
+    ]) &
+    claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan(C, no) &
+    patient_meets_day_3_fsh_level_criteria(C)
+
+meets_no_voluntary_sterilization_req(C) :-
+    claim.patient_has_had_voluntary_sterilization(C, no)
+
+meets_no_voluntary_sterilization_req(C) :-
+    claim.patient_has_partner(C, yes) &
+    claim.patients_partner_has_had_voluntary_sterilization(C, no)
+
+% If under 40, only care about most recent test
+% Also a requirement for under 35, but is redundant here
+patient_meets_day_3_fsh_level_criteria(C) :-
+    patient_age_at_time_of_service(C, Age) &
+    less(Age, 40) &
+    most_recent_day_3_fsh_test(C, fsh_test(Level, _, _)) &
+    less(Level, 19)
+
+% If over 40, care about all tests performed after age 40
+% Practically, this almost certainly means "since you became 40". But this is technically an assumption.
+% Another practical assumption: There must be at least one test after age 40
+patient_meets_day_3_fsh_level_criteria(C) :-
+    patient_age_at_time_of_service(C, Age) &
+    leq(40, Age) &
+    claim.day_3_fsh_tests_after_age_40(C, Tests) &
+    evaluate(length(Tests), NumTests) &
+    leq(1, NumTests) &
+    ~exists_test_with_level_at_least_19(Tests)
+
+% N/A if male
+patient_meets_day_3_fsh_level_criteria(C) :-
+    claim.patient_has_male_reproductive_organs(C, yes)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+medically_necessary_service(C) :-
+    claim.service_type(C, ovulation_induction_cycle_with_menotropins) &
+    patient_age_at_time_of_service(C, Age) &
+    leq(Age, 37) &
+    meets_ovulation_induction_cpb_reqs(C)
+
+meets_ovulation_induction_cpb_reqs(C) :-
+    patient_age_at_time_of_service(C, Age) &
+    less(Age, 35) &
+    meets_ovulation_induction_reqs_under_35(C)
+
+
+meets_ovulation_induction_reqs_under_35(C) :-
+    claim.num_months_regular_intravaginal_inseminations(C, N) &
+    leq(12, N)
+
+meets_ovulation_induction_reqs_under_35(C) :-
+    claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
+    leq(4, N)
+
+meets_ovulation_induction_cpb_reqs(C) :-
+    patient_age_at_time_of_service(C, Age) &
+    leq(35, Age) &
+    meets_ovulation_induction_reqs_35_and_over(C)
+
+meets_ovulation_induction_reqs_under_35(C) :-
+    claim.num_months_regular_intravaginal_inseminations(C, N) &
+    leq(6, N)
+
+meets_ovulation_induction_reqs_35_and_over(C) :-
+    claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
+    leq(3, N)
+
+
+% Based on artificial inseminations being considered medically necessary from CPB 0327 section "Artificial Inseminations"
+medically_necessary_service(C) :-
+    claim.service_type(C, intrauterine_insemination)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+requires_precertification(ServiceType) :-
+    is_comprehensive_infertility_service(ServiceType)
+
+is_comprehensive_infertility_service(ovulation_induction_cycle_with_menotropins)
+is_comprehensive_infertility_service(intrauterine_insemination)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Note: later encodings will compute these from other claims, but right now we're only doing one claim at a time
+% Maximum six covered attempts at IUI in a policy year (between September 1 2023 and August 31 2024, in this case)
+beyond_limits(Claim) :-
+    claim.service_type(Claim, intrauterine_insemination) &
+    claim.num_other_covered_artificial_insemination_attempts(Claim, N) &
+    leq(6, N)

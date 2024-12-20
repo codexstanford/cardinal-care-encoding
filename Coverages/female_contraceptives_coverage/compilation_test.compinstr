@@ -1,6 +1,0 @@
-
-rules: female_contraceptive_claim.hrf
-metadata: metadata_compilation_order.metadata
-other: berlitz.hdf
-other: world.hdf
-prefix: compiled_
