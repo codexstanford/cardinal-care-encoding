@@ -1,0 +1,4 @@
+%%%%%%%% Other Services - Ambulance Service %%%%%%%%
+type(emergency_ambulance_service, cardinal_care_2024_2025_service)
+type(non_emergency_ambulance_service, cardinal_care_2024_2025_service)
+
