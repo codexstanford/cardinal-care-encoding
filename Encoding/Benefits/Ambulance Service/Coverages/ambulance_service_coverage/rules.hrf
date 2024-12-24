@@ -13,7 +13,7 @@ is_covered_emergency_ambulance_service(C) :-
 
 covered_under_cardinal_care_24_25_benefit(C, ambulance_service_benefit) :-
     claim.service_type(C, non_emergency_ambulance_service) &
-    non_emergency_transportation_is_precertified(C, yes) &
+    claim.non_emergency_transport_is_precertified(C, yes) &
     claim.non_emergency_transport_is_licensed(C, yes) &
     is_covered_type_of_non_emergency_transportation(C) &
     claim.non_emergency_transport_is_the_only_safe_means_of_transportation(C, yes)
