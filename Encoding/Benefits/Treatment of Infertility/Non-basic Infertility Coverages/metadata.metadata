@@ -1,7 +1,7 @@
-attribute(claim, claim.day_3_fsh_tests)
+attribute(replace_this_term, claim.day_3_fsh_tests)
 
 type(claim.day_3_fsh_tests, attributerelation)
-domain(claim.day_3_fsh_tests, claim)
+domain(claim.day_3_fsh_tests, replace_this_term)
 codomain(claim.day_3_fsh_tests, fsh_test_obj)
 unique(claim.day_3_fsh_tests, no)
 total(claim.day_3_fsh_tests, no)
