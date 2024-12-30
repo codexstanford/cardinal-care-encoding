@@ -2,7 +2,6 @@
 rules:
     - ../../rules.hrf
     - ../../../../Cardinal Care Core/rules.hrf
-    - ../../../../System-wide/rules.hrf
 ---
 
 
