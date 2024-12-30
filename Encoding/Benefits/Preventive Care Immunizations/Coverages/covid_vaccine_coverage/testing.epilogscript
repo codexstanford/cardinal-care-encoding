@@ -1,3 +1,3 @@
 ruleset: rules.hrf
 dataset: Example Datasets/
-query: covered(claim1)
+query: patient_age_at_time_of_service(claim1, 0)
