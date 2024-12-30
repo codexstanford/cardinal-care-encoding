@@ -1,0 +1,222 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Policy relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% type(policy, class)
+%%% attribute(policy, policy.type)
+%%% attribute(policy, policy.insuree)
+
+%%% type(policy.type, attributerelation)
+%%% domain(policy.type, policy)
+%%% codomain(policy.type, product)
+%%% unique(policy.type, yes)
+%%% total(policy.type, yes)
+
+%%% type(policy.insuree, attributerelation)
+%%% domain(policy.insuree, policy)
+%%% codomain(policy.insuree, person)
+%%% unique(policy.insuree, no)
+%%% total(policy.insuree, yes)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Person relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
+% type(person, class)
+% attribute(person, person.dob)
+
+% type(person.dob, attributerelation)
+% domain(person.dob, person)
+% codomain(person.dob, date)
+% unique(person.dob, yes)
+% total(person.dob, yes)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Claim relations %%%%%%%%%%%%%%%%%%%%%%%%%%%
+type(claim, class)
+
+%%%%%%%%%%%%%%%%%%%%%%% Claim type-generic %%%%%%%%%%%%%%%%%%%%%%%
+%attribute(replace_this_term, claim.patient)
+attribute(replace_this_term, claim.patient_dob)
+%%% attribute(replace_this_term, claim.quarter_enrolled_stanford_2024_2025)
+attribute(replace_this_term, claim.date_service_received)
+attribute(replace_this_term, claim.service_type)
+attribute(replace_this_term, claim.precertification_received)
+%%% attribute(replace_this_term, claim.waived_cardinal_care)
+attribute(replace_this_term, claim.location_service_received)
+attribute(replace_this_term, claim.service_available_at_tier_one_or_two_location)
+
+% type(claim.patient, attributerelation)
+% domain(claim.patient, replace_this_term)
+% codomain(claim.patient, person)
+% unique(claim.patient, yes)
+% total(claim.patient, yes)
+
+type(claim.patient_dob, attributerelation)
+domain(claim.patient_dob, replace_this_term)
+codomain(claim.patient_dob, date)
+unique(claim.patient_dob, yes)
+total(claim.patient_dob, yes)
+changestyle(claim.patient_dob,datestyle)
+
+
+%%% type(claim.quarter_enrolled_stanford_2024_2025, attributerelation)
+%%% domain(claim.quarter_enrolled_stanford_2024_2025, replace_this_term)
+%%% codomain(claim.quarter_enrolled_stanford_2024_2025, quarter_2023_2024)
+%%% unique(claim.quarter_enrolled_stanford_2024_2025, yes)
+%%% total(claim.quarter_enrolled_stanford_2024_2025, no)
+
+type(claim.date_service_received, attributerelation)
+domain(claim.date_service_received, replace_this_term)
+codomain(claim.date_service_received, date)
+unique(claim.date_service_received, yes)
+total(claim.date_service_received, yes)
+changestyle(claim.date_service_received,datestyle)
+
+type(claim.service_type, attributerelation)
+domain(claim.service_type, replace_this_term)
+codomain(claim.service_type, cardinal_care_2024_2025_service)
+unique(claim.service_type, yes)
+total(claim.service_type, yes)
+changestyle(claim.service_type,selector)
+
+type(claim.precertification_received, attributerelation)
+domain(claim.precertification_received, replace_this_term)
+codomain(claim.precertification_received, boolean)
+unique(claim.precertification_received, yes)
+total(claim.precertification_received, yes)
+changestyle(claim.precertification_received,selector)
+
+%%% type(claim.waived_cardinal_care, attributerelation)
+%%% domain(claim.waived_cardinal_care, replace_this_term)
+%%% codomain(claim.waived_cardinal_care, boolean)
+%%% unique(claim.waived_cardinal_care, yes)
+%%% total(claim.waived_cardinal_care, yes)
+
+type(claim.location_service_received, attributerelation)
+domain(claim.location_service_received, replace_this_term)
+codomain(claim.location_service_received, cardinal_care_2024_2025_location)
+unique(claim.location_service_received, yes)
+total(claim.location_service_received, yes)
+changestyle(claim.location_service_received,selector)
+
+type(claim.service_available_at_tier_one_or_two_location, attributerelation)
+domain(claim.service_available_at_tier_one_or_two_location, replace_this_term)
+codomain(claim.service_available_at_tier_one_or_two_location, boolean)
+unique(claim.service_available_at_tier_one_or_two_location, yes)
+total(claim.service_available_at_tier_one_or_two_location, yes)
+changestyle(claim.service_available_at_tier_one_or_two_location,selector)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+type(boolean,class)
+type(person,class)
+type(product,class)
+type(date,class)
+type(number,class)
+
+type(quarter_2024_2025, class)
+type(cardinal_care_2024_2025_location, class)
+type(cardinal_care_2024_2025_service, class)
+
+attribute(replace_this_term, claim.patient_has_male_reproductive_organs) % Also used in comprehensive infertility services, which imports this metadata file
+attribute(replace_this_term, claim.patient_has_female_reproductive_organs)
+attribute(replace_this_term, claim.patient_has_partner_with_male_reproductive_organs)
+attribute(replace_this_term, claim.patient_has_partner_with_female_reproductive_organs)
+attribute(replace_this_term, claim.age_of_patients_female_partner)
+attribute(replace_this_term, claim.num_cycles_donor_insemination)
+attribute(replace_this_term, claim.num_months_unprotected_intercourse)
+attribute(replace_this_term, claim.abnormal_semen_analyses)
+attribute(replace_this_term, claim.patient_diagnosed_with_gender_dysphoria)
+attribute(replace_this_term, claim.patient_has_partner) % Also used in comprehensive infertility services, which imports this metadata file
+
+type(claim.patient_has_male_reproductive_organs, attributerelation)
+domain(claim.patient_has_male_reproductive_organs, replace_this_term)
+codomain(claim.patient_has_male_reproductive_organs, boolean)
+unique(claim.patient_has_male_reproductive_organs, yes)
+total(claim.patient_has_male_reproductive_organs, yes)
+changestyle(claim.patient_has_male_reproductive_organs, selector)
+
+type(claim.patient_has_female_reproductive_organs, attributerelation)
+domain(claim.patient_has_female_reproductive_organs, replace_this_term)
+codomain(claim.patient_has_female_reproductive_organs, boolean)
+unique(claim.patient_has_female_reproductive_organs, yes)
+total(claim.patient_has_female_reproductive_organs, yes)
+changestyle(claim.patient_has_female_reproductive_organs, selector)
+
+type(claim.patient_has_partner_with_male_reproductive_organs, attributerelation)
+domain(claim.patient_has_partner_with_male_reproductive_organs, replace_this_term)
+codomain(claim.patient_has_partner_with_male_reproductive_organs, boolean)
+unique(claim.patient_has_partner_with_male_reproductive_organs, yes)
+total(claim.patient_has_partner_with_male_reproductive_organs, no)
+changestyle(claim.patient_has_partner_with_male_reproductive_organs, selector)
+
+type(claim.patient_has_partner_with_female_reproductive_organs, attributerelation)
+domain(claim.patient_has_partner_with_female_reproductive_organs, replace_this_term)
+codomain(claim.patient_has_partner_with_female_reproductive_organs, boolean)
+unique(claim.patient_has_partner_with_female_reproductive_organs, yes)
+total(claim.patient_has_partner_with_female_reproductive_organs, no)
+changestyle(claim.patient_has_partner_with_female_reproductive_organs, selector)
+
+type(claim.age_of_patients_female_partner, attributerelation)
+domain(claim.age_of_patients_female_partner, replace_this_term)
+codomain(claim.age_of_patients_female_partner, number)
+unique(claim.age_of_patients_female_partner, yes)
+total(claim.age_of_patients_female_partner, no)
+changestyle(claim.age_of_patients_female_partner, numberstyle)
+
+type(claim.num_cycles_donor_insemination, attributerelation)
+domain(claim.num_cycles_donor_insemination, replace_this_term)
+codomain(claim.num_cycles_donor_insemination, number)
+unique(claim.num_cycles_donor_insemination, yes)
+total(claim.num_cycles_donor_insemination, no)
+changestyle(claim.num_cycles_donor_insemination, numberstyle)
+
+type(claim.num_months_unprotected_intercourse, attributerelation)
+domain(claim.num_months_unprotected_intercourse, replace_this_term)
+codomain(claim.num_months_unprotected_intercourse, number)
+unique(claim.num_months_unprotected_intercourse, yes)
+total(claim.num_months_unprotected_intercourse, no)
+changestyle(claim.num_months_unprotected_intercourse, numberstyle)
+
+type(claim.abnormal_semen_analyses, attributerelation)
+domain(claim.abnormal_semen_analyses, replace_this_term)
+codomain(claim.abnormal_semen_analyses, abnormal_semen_analysis_obj)
+unique(claim.abnormal_semen_analyses, no)
+total(claim.abnormal_semen_analyses, no)
+changestyle(claim.abnormal_semen_analyses, table)
+
+type(claim.patient_diagnosed_with_gender_dysphoria, attributerelation)
+domain(claim.patient_diagnosed_with_gender_dysphoria, replace_this_term)
+codomain(claim.patient_diagnosed_with_gender_dysphoria, boolean)
+unique(claim.patient_diagnosed_with_gender_dysphoria, yes)
+total(claim.patient_diagnosed_with_gender_dysphoria, no)
+changestyle(claim.patient_diagnosed_with_gender_dysphoria, selector)
+
+type(claim.patient_has_partner, attributerelation)
+domain(claim.patient_has_partner, replace_this_term)
+codomain(claim.patient_has_partner, boolean)
+unique(claim.patient_has_partner, yes)
+total(claim.patient_has_partner, no)
+changestyle(claim.patient_has_partner, selector)
+
+%%%% Functional classes %%%%
+type(abnormal_semen_analysis_obj,class)
+functional(abnormal_semen_analysis_obj, abnormal_semen_analysis)
+attribute(abnormal_semen_analysis_obj, abnormal_semen_analysis_obj.date)
+
+type(abnormal_semen_analysis_obj.date, attributerelation)
+domain(abnormal_semen_analysis_obj.date, abnormal_semen_analysis_obj)
+codomain(abnormal_semen_analysis_obj.date, date)
+unique(abnormal_semen_analysis_obj.date, yes)
+total(abnormal_semen_analysis_obj.date, yes)
+changestyle(abnormal_semen_analysis_obj.date, datestyle)
+type(treatment_of_infertility_basic_coverage, class)
+superclass(treatment_of_infertility_basic_coverage, claim)
+%%%%%%%%%%%%%%%%%%%%%%% General Exclusions %%%%%%%%%%%%%%%%%%%%%%%
+attribute(replace_this_term, claim.exclusions)
+
+type(claim.exclusions, attributerelation)
+domain(claim.exclusions, replace_this_term)
+codomain(claim.exclusions, general_exclusion)
+unique(claim.exclusions, yes)
+total(claim.exclusions, yes)
+changestyle(claim.exclusions, checkboxfield)
