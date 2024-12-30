@@ -3,9 +3,9 @@ data:
     - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
 ---
 
-%%%%%% Covered example 1 %%%%%%
+%%%%%% Covered example 2 %%%%%%
 %%%%%% Covid Vaccine in 2024 %%%%%%
-%%%%%% Immunocompromised, age 12, pfizer %%%%%%
+%%%%%% Immunocompromised, age 12, moderna %%%%%%
 
 %%% Types %%%
 % type(policy1, policy)
@@ -36,7 +36,7 @@ claim.reason_for_immunization(claim1, preventive_care)
 
 % Covid vaccine-specific
 claim.patient_is_immunocompromised(claim1, yes)
-claim.covid19_vaccine_brand(claim1, pfizer_biontech)
+claim.covid19_vaccine_brand(claim1, moderna)
 
 claim.covid19_vaccine_history(claim1, [covid19_vaccination_event(moderna, updated_2024_2025), covid19_vaccination_event(moderna, updated_2024_2025)])
 

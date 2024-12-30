@@ -3,9 +3,9 @@ data:
     - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
 ---
 
-%%%%%% Covered example 1 %%%%%%
+%%%%%% Not covered example 7 %%%%%%
 %%%%%% Covid Vaccine in 2024 %%%%%%
-%%%%%% Immunocompromised, age 12, pfizer %%%%%%
+%%%%%% Immunocompromised, age 5, pfizer %%%%%%
 
 %%% Types %%%
 % type(policy1, policy)
