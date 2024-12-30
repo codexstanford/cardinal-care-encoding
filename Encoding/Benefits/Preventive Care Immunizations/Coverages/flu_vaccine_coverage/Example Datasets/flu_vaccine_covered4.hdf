@@ -3,10 +3,10 @@ data:
     - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
 ---
 
-%%%%%% Covered example 1 %%%%%%
+%%%%%% Covered example 4 %%%%%%
 %%%%%% Service: immunization %%%%%%
 %%%%%% Flu Vaccine in 2024 %%%%%%
-%%%%%% Received 1 dose when 8, allowed 2 %%%%%%
+%%%%%% Received 0 doses, getting 1 when 9, allowed 2 when 8 %%%%%%
 
 %%% Types %%%
 type(rta_bondonado, person)
@@ -34,7 +34,7 @@ claim.service_available_at_tier_one_or_two_location(claim1, yes)
 claim.reason_for_immunization(claim1, preventive_care)
 
 % Influenza vaccine-specific
-claim.2024_2025_flu_vaccine_history(claim1, [influenza_vaccination_event(2024_10_14)])
+claim.2024_2025_flu_vaccine_history(claim1, [])
 claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024(claim1, no)
 
 %% General Exclusions %% 

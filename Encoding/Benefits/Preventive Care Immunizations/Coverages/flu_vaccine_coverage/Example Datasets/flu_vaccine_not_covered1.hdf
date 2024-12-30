@@ -3,10 +3,10 @@ data:
     - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
 ---
 
-%%%%%% Covered example 1 %%%%%%
+%%%%%% Not covered example 1 %%%%%%
 %%%%%% Service: immunization %%%%%%
 %%%%%% Flu Vaccine in 2024 %%%%%%
-%%%%%% Vaccination would not be covered if the previous vaccine was received one day later, or if the patient had received at least two doses before July 2023 %%%%%%
+%%%%%% Already received 2 doses when 8 %%%%%%
 
 %%% Types %%%
 type(rta_bondonado, person)
