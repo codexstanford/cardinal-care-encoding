@@ -4,7 +4,7 @@ data:
 ---
 
 %%%%%% Covered example 1 %%%%%%
-%%%%%% Service: preventive_care_immunization %%%%%%
+%%%%%% Service: immunization %%%%%%
 %%%%%% Flu Vaccine in 2024 %%%%%%
 %%%%%% Vaccination would not be covered if the previous vaccine was received one day later, or if the patient had received at least two doses before July 2023 %%%%%%
 
@@ -22,7 +22,7 @@ type(claim1, claim)
 claim.patient_dob(claim1, 2015_10_15)
 % claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
 claim.date_service_received(claim1,2024_10_31)
-claim.service_type(claim1, preventive_care_immunization)
+claim.service_type(claim1, immunization)
 claim.precertification_received(claim1, no)
 claim.waived_cardinal_care(claim1, no)
 

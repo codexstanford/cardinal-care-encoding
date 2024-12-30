@@ -4,7 +4,7 @@ data:
 ---
 
 %%%%%% Covered example 2 %%%%%%
-%%%%%% Service: preventive_care_immunization %%%%%%
+%%%%%% Service: immunization %%%%%%
 %%%%%% Covid Vaccine in 2024 %%%%%%
 %%%%%% Immunocompromised %%%%%%
 %%%%%% Age 12 %%%%%%
@@ -26,7 +26,7 @@ policy.type(policy1, aetna_cardinal_care_2023_2024)
 % claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
 claim.date_service_received(claim1,2024_08_30)
 claim.patient_dob(claim1, 2011_08_31)
-claim.service_type(claim1, preventive_care_immunization)
+claim.service_type(claim1, immunization)
 claim.precertification_received(claim1, no)
 claim.waived_cardinal_care(claim1, no)
 

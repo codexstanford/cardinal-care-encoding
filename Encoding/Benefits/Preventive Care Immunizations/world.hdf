@@ -6,4 +6,4 @@ type(required_for_employment, immunization_reason)
 type(required_for_travel, immunization_reason)
 type(other, immunization_reason)
 
-type(preventive_care_immunization, cardinal_care_2024_2025_service)
+type(immunization, cardinal_care_2024_2025_service)

@@ -5,7 +5,7 @@
 
 %%%% Preventive Care Immunizations
 covered_under_cardinal_care_24_25_benefit(C, preventive_care_immunizations_benefit) :-
-    claim.service_type(C, preventive_care_immunization) &
+    claim.service_type(C, immunization) &
     is_immunization_for_preventive_care(C) &
     % claim.immunization_for_disease(C, Disease) &
     infectious_disease_for_which_cdc_acip_recommends_immunization(Disease)
@@ -30,27 +30,27 @@ is_immunization_for_preventive_care(C) :-
 %%%% Preventive Care Immunizations
 % Preventive care is a larger category of benefits, including female contraceptives
 % Note: CPB 0035 concerns Influenza Vaccines, but just points to the CDC ACIP guidelines
-is_preventive_care_service(preventive_care_immunization)
+is_preventive_care_service(immunization)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Limitations from Schedule of Benefits
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % beyond_limits(Claim) :-
-%     claim.service_type(Claim, preventive_care_immunization) &
+%     claim.service_type(Claim, immunization) &
 %     claim.date_service_received(Claim, Date) &
 %     date_between_dates_incl(Date, 2025_01_01, 2025_12_31) & 
 %     ~below_2025_cdc_acip_age_guideline_max(Claim)
 
 
 beyond_limits(Claim) :-
-    claim.service_type(Claim, preventive_care_immunization) &
+    claim.service_type(Claim, immunization) &
     claim.date_service_received(Claim, Date) &
     date_between_dates_incl(Date, 2024_01_01, 2024_12_31) & 
     ~below_2024_cdc_acip_age_guideline_max(Claim)
 
 % beyond_limits(Claim) :-
-%     claim.service_type(Claim, preventive_care_immunization) &
+%     claim.service_type(Claim, immunization) &
 %     claim.date_service_received(Claim, Date) &
 %     date_between_dates_incl(Date, 2023_01_01, 2023_12_31) & 
 %     ~below_2023_cdc_acip_age_guideline_max(Claim)
