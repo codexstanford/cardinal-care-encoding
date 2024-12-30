@@ -29,11 +29,6 @@ below_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
     evaluate(length(Vaccines), ReceivedDoses) & % TODO: Flip
     less(ReceivedDoses, MaxDoses) % TODO: Flip
 
-% If child aged 9 hasn't received any doses of 2024-2025 yet, then 1 is allowed
-below_2024_cdc_acip_age_guideline_max_by_age(9, Claim) :-
-    claim.2024_2025_flu_vaccine_history(Claim, Vaccines) &
-    evaluate(length(Vaccines), 0) % TODO: Flip
-
 % If child aged 9 had received precisely one dose when they were 8 and they were allowed to receive two doses, then another is allowed
 below_2024_cdc_acip_age_guideline_max_by_age(9, Claim) :-
     claim.2024_2025_flu_vaccine_history(Claim, [influenza_vaccination_event(VaccinationDate)]) &
