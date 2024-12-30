@@ -19,8 +19,8 @@ below_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
     claim.covid19_vaccine_brand(Claim, Brand) &
     covid19_dose_counts(Claim, NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand) &
     max_allowed_doses_covid19_vaccine(ImmStatus, AgeBracket, Brand, MaxDoses, dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)) &
-    less(NumUpdatedOfBrand, MaxDoses) &
-    ~already_begun_another_updated_2024_2025_covid19_vaccination_series(Claim)
+    less(NumUpdatedOfBrand, MaxDoses) & % TODO: Flip
+    ~already_begun_another_updated_2024_2025_covid19_vaccination_series(Claim) % TODO: Figure out how to flip
 
 patient_age_bracket_for_covid19_vaccination(Claim, Age, 6_months_to_4_years) :-
     patient_geq_6_months_old_at_time_of_service(Claim) &
