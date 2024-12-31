@@ -23,9 +23,9 @@ berlitz(patient_age_bracket_for_covid19_vaccination(C, A, B),
 berlitz(covid19_dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand),
         "the number of Covid 19 vaccine doses received by the patient in $C$ is $NumOldModerna$ out-of-date Moderna vaccines, $NumOldPfizer$ out-of-date Pfizer vaccines, $NumOldNovavax$ out-of-date Novavax vaccines, $NumOldJnJ$ out-of-date J&J vaccines, and $NumUpdatedOfBrand$ up-to-date vaccines of the same brand as administered during the service in $C$")
 
-berlitz(max_allowed_doses_covid19_vaccine(yes, B, T, N, dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)),
+berlitz(max_allowed_doses_covid19_vaccine(yes, B, T, N, old_dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)),
         "$N$ is the maximum number of doses of the $T$ Covid-19 vaccine that can be received by a moderately-to-severely immunocompromised patient in the age bracket $B$ who has received $NumOldModerna$ out-of-date Moderna vaccines, $NumOldPfizer$ out-of-date Pfizer vaccines, $NumOldNovavax$ out-of-date Novavax vaccines, and $NumOldJnJ$ out-of-date J&J vaccines")
-berlitz(max_allowed_doses_covid19_vaccine(no, B, T, N, dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)),
+berlitz(max_allowed_doses_covid19_vaccine(no, B, T, N, old_dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)),
         "$N$ is the maximum number of doses of the $T$ Covid-19 vaccine that can be received by a non-immunocompromised patient in the age bracket $B$ who has received $NumOldModerna$ out-of-date Moderna vaccines, $NumOldPfizer$ out-of-date Pfizer vaccines, $NumOldNovavax$ out-of-date Novavax vaccines, and $NumOldJnJ$ out-of-date J&J vaccines")
 
 berlitz(already_begun_another_updated_2024_2025_covid19_vaccination_series(C),
