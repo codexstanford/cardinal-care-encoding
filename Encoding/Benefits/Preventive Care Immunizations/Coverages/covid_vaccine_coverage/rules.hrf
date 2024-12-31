@@ -55,7 +55,7 @@ already_begun_another_updated_2024_2025_covid19_vaccination_series(Claim) :-
 %%% Covid19 Maximums - Not Immunocompromised %%%
 % dose_counts format: dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)
 % For ages [6 months, 4 years], 
-    % If unvaccinated, 2 doses Moderna or 3 doses Pfizer-BioNTech  
+    % If no old vaccines, 2 doses new Moderna or 3 doses new Pfizer-BioNTech  
 max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, moderna, 2, dose_counts(0, 0, 0, 0))
 max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, pfizer_biontech, 3, dose_counts(0, 0, 0, 0))
 
@@ -72,17 +72,17 @@ max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, pfizer_biontech, 1, d
     leq(2, NumOldPfizer)
 
 % For ages [5 years, 11 years], regardless of vaccination history,
-    % 1 dose Moderna or Pfizer-BioNTech 
+    % 1 dose new Moderna or new Pfizer-BioNTech 
 max_allowed_doses_covid19_vaccine(no, 5_to_11_years, moderna, 1, dose_counts(_, _, _, _))
 max_allowed_doses_covid19_vaccine(no, 5_to_11_years, pfizer_biontech, 1, dose_counts(_, _, _, _))
 
 % For ages >= 12 years,
-    % If unvaccinated, 1 dose Moderna, 2 doses Novavax, or 1 dose Pfizer-BioNTech
+    % If no old vaccines, 1 dose new Moderna, 2 doses new Novavax, or 1 dose new Pfizer-BioNTech
 max_allowed_doses_covid19_vaccine(no, 12_years_and_older, moderna, 1, dose_counts(0, 0, 0, 0))
 max_allowed_doses_covid19_vaccine(no, 12_years_and_older, novavax, 2, dose_counts(0, 0, 0, 0))
 max_allowed_doses_covid19_vaccine(no, 12_years_and_older, pfizer_biontech, 1, dose_counts(0, 0, 0, 0))
 
-    % If vaccinated at all, 1 dose Moderna, Novavax, or Pfizer-BioNTech
+    % If vaccinated at all, 1 dose new Moderna, new Novavax, or new Pfizer-BioNTech
 max_allowed_doses_covid19_vaccine(no, 12_years_and_older, Brand, 1, DoseCounts) :-
     distinct(DoseCounts, dose_counts(0, 0, 0, 0)) &
     member(Brand, [moderna, novavax, pfizer_biontech])
@@ -90,7 +90,7 @@ max_allowed_doses_covid19_vaccine(no, 12_years_and_older, Brand, 1, DoseCounts) 
 
 %%% Covid19 Maximimums - Immunocompromised %%%
 % For ages [6 months, 4 years], 
-    % If unvaccinated, 3 doses Moderna or Pfizer-BioNTech
+    % If no old vaccines, 3 doses new Moderna or new Pfizer-BioNTech
 max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, moderna, 3, dose_counts(0, 0, 0, 0))
 max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, pfizer_biontech, 3, dose_counts(0, 0, 0, 0))
     
@@ -108,7 +108,7 @@ max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, pfizer_biontech, 1, 
 
 
 % For ages [5 years, 11 years], 
-    % If unvaccinated, 3 doses Moderna or Pfizer-BioNTech
+    % If no old vaccines, 3 doses new Moderna or new Pfizer-BioNTech
 max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, moderna, 3, dose_counts(0, 0, 0, 0))
 max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, pfizer_biontech, 3, dose_counts(0, 0, 0, 0))
 
@@ -130,7 +130,7 @@ max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, Brand, 1, dose_counts(NumO
     member(Brand, [moderna, pfizer_biontech])
 
 % For ages >= 12 years, 
-    % If unvaccinated, 3 doses Moderna or Pfizer-BioNTech, or 2 doses Novavax
+    % If no old vaccines, 3 doses new Moderna or new Pfizer-BioNTech, or 2 doses new Novavax
 max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, moderna, 3, dose_counts(0, 0, 0, 0))
 max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, novavax, 2, dose_counts(0, 0, 0, 0))
 max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, pfizer_biontech, 3, dose_counts(0, 0, 0, 0))
@@ -148,13 +148,14 @@ max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, pfizer_biontech, 2, d
     less(NumOldModerna, 2) % If received >= 2 doses old moderna as well, the second-to-last rule in this section applies
         % With 2 doses old Pfizer-BioNTech, then 1 dose new Pfizer-BioNTech
 max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, pfizer_biontech, 1, dose_counts(_, 2, _, _))
-        % With 3 or more doses any old mRNA vaccine (i.e. Moderna or Pfizer-BioNTech), or >= 1 doses old Novavax or J&J,
-            % then 1 dose Moderna, Novavax, or Pfizer-BioNTech
+        % With 3 or more doses any old mRNA vaccine (i.e. Moderna or Pfizer-BioNTech), 
+            % then 1 dose new Moderna, new Novavax, or new Pfizer-BioNTech
 max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, Brand, 1, dose_counts(NumOldModerna, NumOldPfizer, _, _)) :-
     evaluate(plus(NumOldModerna, NumOldPfizer), NumOldmrna) &
     leq(3, NumOldmrna) &
     member(Brand, [moderna, novavax, pfizer_biontech])
-
+        % With >= 1 doses old Novavax or J&J,
+            % then 1 dose new Moderna, new Novavax, or new Pfizer-BioNTech
 max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, Brand, 1, dose_counts(_, _, NumOldNovavax, NumOldJnJ)) :-
     evaluate(plus(NumOldNovavax, NumOldJnJ), NumOldNonmrna) &
     leq(1, NumOldNonmrna) &
