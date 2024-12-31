@@ -4,11 +4,8 @@ data:
 ---
 
 %%%%%% Covered example 2 %%%%%%
-%%%%%% Service: immunization %%%%%%
 %%%%%% Covid Vaccine in 2024 %%%%%%
-%%%%%% Immunocompromised %%%%%%
-%%%%%% Age 12 %%%%%%
-%%%%%% Will not be covered if has received a third updated moderna vaccine %%%%%%
+%%%%%% Immunocompromised, age 12, moderna %%%%%%
 
 %%% Types %%%
 % type(policy1, policy)
@@ -41,6 +38,7 @@ claim.reason_for_immunization(claim1, preventive_care)
 claim.patient_is_immunocompromised(claim1, yes)
 claim.covid19_vaccine_brand(claim1, moderna)
 
+% Two new moderna
 claim.covid19_vaccine_history(claim1, [covid19_vaccination_event(moderna, updated_2024_2025), covid19_vaccination_event(moderna, updated_2024_2025)])
 
 %% General Exclusions %% 

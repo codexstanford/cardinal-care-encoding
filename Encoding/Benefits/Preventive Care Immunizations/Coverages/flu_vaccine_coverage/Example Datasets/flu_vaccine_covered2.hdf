@@ -1,0 +1,41 @@
+---
+data:
+    - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
+---
+
+%%%%%% Covered example 2 %%%%%%
+%%%%%% Service: immunization %%%%%%
+%%%%%% Flu Vaccine in 2024 %%%%%%
+%%%%%% At 6 months, 2 doses allowed, 1 received %%%%%%
+
+%%% Types %%%
+type(rta_bondonado, person)
+type(claim1, claim)
+
+
+%%% Person %%%
+% person.dob(rta_bondonado, 2015_10_15)
+
+%%% Claim %%%
+%% Service-generic %%
+% claim.patient(claim1, rta_bondonado)
+claim.patient_dob(claim1, 2024_04_14)
+% claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
+claim.date_service_received(claim1,2024_10_14)
+claim.service_type(claim1, immunization)
+claim.precertification_received(claim1, no)
+claim.waived_cardinal_care(claim1, no)
+
+claim.location_service_received(claim1, stanford_health_care)
+claim.service_available_at_tier_one_or_two_location(claim1, yes)
+
+%% Service-specific %%
+% claim.immunization_for_disease(claim1, influenza_disease)
+claim.reason_for_immunization(claim1, preventive_care)
+
+% Influenza vaccine-specific
+claim.2024_2025_flu_vaccine_history(claim1, [influenza_vaccination_event(2024_08_15)])
+claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024(claim1, no)
+
+%% General Exclusions %% 
+% Imported from no_exclusion_claim.hdf
