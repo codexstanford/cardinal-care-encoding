@@ -38,7 +38,11 @@ claim.reason_for_immunization(claim1, preventive_care)
 claim.patient_is_immunocompromised(claim1, yes)
 claim.covid19_vaccine_brand(claim1, novavax)
 
-claim.covid19_vaccine_history(claim1, [covid19_vaccination_event(moderna, updated_2024_2025), covid19_vaccination_event(moderna, updated_2024_2025)])
+% Three old mrna
+claim.covid19_vaccine_history(claim1, 
+        [covid19_vaccination_event(moderna, not_updated_2024_2025), 
+        covid19_vaccination_event(moderna, not_updated_2024_2025), 
+        covid19_vaccination_event(pfizer_biontech, not_updated_2024_2025)])
 
 %% General Exclusions %% 
 % Imported from no_exclusion_claim.hdf

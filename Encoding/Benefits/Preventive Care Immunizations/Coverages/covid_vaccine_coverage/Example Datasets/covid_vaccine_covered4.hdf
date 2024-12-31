@@ -38,7 +38,7 @@ claim.reason_for_immunization(claim1, preventive_care)
 claim.patient_is_immunocompromised(claim1, no)
 claim.covid19_vaccine_brand(claim1, pfizer_biontech)
 
-claim.covid19_vaccine_history(claim1, [covid19_vaccination_event(moderna, updated_2024_2025), covid19_vaccination_event(moderna, updated_2024_2025)])
+claim.covid19_vaccine_history(claim1, [])
 
 %% General Exclusions %% 
 % Imported from no_exclusion_claim.hdf
