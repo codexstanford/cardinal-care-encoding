@@ -166,8 +166,3 @@ max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, Brand, 1, old_dose_co
     leq(1, NumOldNonmrna) &
     member(Brand, [moderna, novavax, pfizer_biontech])
     
-
-% Note: Only doing 2024 guidelines, since we won't be using 2023 guidelines in the final service if we don't make the 2023-2024 policy available
-below_2023_cdc_acip_age_guideline_max(Claim) :-
-    below_2024_cdc_acip_age_guideline_max(Claim)
-
