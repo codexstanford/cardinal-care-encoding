@@ -28,7 +28,7 @@ claim.service_available_at_tier_one_or_two_location(claim1, yes)
 %% Claim type-specific %%
 claim.sex_of_patient_trying_to_conceive(claim1, female)
 
-claim.patient_diagnosed_with_gender_dysphoria(claim1, no)
+claim.patient_or_partner_diagnosed_with_gender_dysphoria(claim1, no)
 claim.sex_of_patients_partner(claim1, male)
 
 claim.num_cycles_donor_insemination(claim1, 0)
