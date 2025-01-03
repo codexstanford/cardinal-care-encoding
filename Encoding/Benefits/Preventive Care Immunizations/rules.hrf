@@ -60,16 +60,3 @@ patient_geq_6_months_old_at_time_of_service(Claim) :-
     claim.patient_dob(Claim, PatientDOB) & 
     n_months_diff(PatientDOB, ServiceDate, N) &
     leq(6, N)
-
-n_months_diff(EarlierDate, LaterDate, N) :-
-    evaluate(parsedate(EarlierDate),[EY,EM,ED]) & 
-    evaluate(parsedate(LaterDate),[LY,LM,LD]) &
-    evaluate(times(minus(LY, EY), 12), MonthsFromYear) & 
-    not_yet_day_of_month_delta(ED, LD, Delta) &
-    evaluate(plus(MonthsFromYear, minus(LM, EM), Delta), N)
-
-not_yet_day_of_month_delta(D1, D2, 0) :-
-    leq(D1, D2)
-
-not_yet_day_of_month_delta(D1, D2, -1) :-
-    less(D2, D1)
