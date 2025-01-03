@@ -65,7 +65,7 @@ patient_meets_day_3_fsh_level_criteria(C) :-
 
 % N/A if male
 patient_meets_day_3_fsh_level_criteria(C) :-
-    claim.patient_has_male_reproductive_organs(C, yes) % TODO
+    claim.sex_of_patient_trying_to_conceive(C, male)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
