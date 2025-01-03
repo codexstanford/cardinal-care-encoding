@@ -1,0 +1,6 @@
+type(male, biological_sex)
+type(female, biological_sex)
+
+type(male, partner_option)
+type(female, partner_option)
+type(no_partner, partner_option)
