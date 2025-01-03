@@ -251,6 +251,15 @@ berlitz(not_yet_birthday_delta(M, D, DOBM, DOBD, -1),
 berlitz(not_yet_birthday_delta(M, D, DOBM, DOBD, 0),
         "on the date $M$ $D$ it is not before the person's birthday")
 
+berlitz(n_months_diff(D1, D2, N),
+        "the number of months between $D1$ and $D2$ is $N$")
+
+% Note: D1 and D2 are integers. This Berlitz entry is meant to give context around this relation's usage, if not its formal definition.
+berlitz(not_yet_day_of_month_delta(D1, D2, 0),
+        "the day of the month in the first date is at least that of the second date")
+berlitz(not_yet_day_of_month_delta(D1, D2, -1),
+        "the day of the month in the first date is less than that of the second date")
+
 
 berlitz(is_preventive_care_service(S),
         "$S$ is a preventive care service")

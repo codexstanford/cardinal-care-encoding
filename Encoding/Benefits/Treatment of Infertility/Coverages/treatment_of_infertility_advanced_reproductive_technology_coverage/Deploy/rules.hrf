@@ -372,6 +372,28 @@ date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
     symleq(BeginDateRange, Date) &
     symleq(Date, EndDateRange)
 
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, Diff) &
+    less(Diff, N)
+
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, N) &
+    evaluate(parsedate(EarlierDate),[_,_,SameDay]) & 
+    evaluate(parsedate(LaterDate),[_,_,SameDay])
+
+n_months_diff(EarlierDate, LaterDate, N) :-
+    evaluate(parsedate(EarlierDate),[EY,EM,ED]) & 
+    evaluate(parsedate(LaterDate),[LY,LM,LD]) &
+    evaluate(times(minus(LY, EY), 12), MonthsFromYear) & 
+    not_yet_day_of_month_delta(ED, LD, Delta) &
+    evaluate(plus(MonthsFromYear, minus(LM, EM), Delta), N)
+
+not_yet_day_of_month_delta(D1, D2, 0) :-
+    leq(D1, D2)
+
+not_yet_day_of_month_delta(D1, D2, -1) :-
+    less(D2, D1)
+
 %%%%% Relations to faciliate choosing elements from lists that may have repeats
 
 % Generates all pairs (unordered) of elements from a list, counting identical elements at different positions as distinct

@@ -17,9 +17,9 @@ berlitz(patient_age_bracket_for_covid19_vaccination(C, A, B),
 berlitz(covid19_dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand),
         "the number of Covid 19 vaccine doses received by the patient in $C$ is $NumOldModerna$ out-of-date Moderna vaccines, $NumOldPfizer$ out-of-date Pfizer vaccines, $NumOldNovavax$ out-of-date Novavax vaccines, $NumOldJnJ$ out-of-date J&J vaccines, and $NumUpdatedOfBrand$ up-to-date vaccines of the same brand as administered during the service in $C$")
 
-berlitz(max_allowed_doses_covid19_vaccine(yes, B, T, N, dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)),
+berlitz(max_allowed_doses_covid19_vaccine(yes, B, T, N, old_dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)),
         "$N$ is the maximum number of doses of the $T$ Covid-19 vaccine that can be received by a moderately-to-severely immunocompromised patient in the age bracket $B$ who has received $NumOldModerna$ out-of-date Moderna vaccines, $NumOldPfizer$ out-of-date Pfizer vaccines, $NumOldNovavax$ out-of-date Novavax vaccines, and $NumOldJnJ$ out-of-date J&J vaccines")
-berlitz(max_allowed_doses_covid19_vaccine(no, B, T, N, dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)),
+berlitz(max_allowed_doses_covid19_vaccine(no, B, T, N, old_dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)),
         "$N$ is the maximum number of doses of the $T$ Covid-19 vaccine that can be received by a non-immunocompromised patient in the age bracket $B$ who has received $NumOldModerna$ out-of-date Moderna vaccines, $NumOldPfizer$ out-of-date Pfizer vaccines, $NumOldNovavax$ out-of-date Novavax vaccines, and $NumOldJnJ$ out-of-date J&J vaccines")
 
 berlitz(already_begun_another_updated_2024_2025_covid19_vaccination_series(C),
@@ -44,19 +44,13 @@ berlitz(is_immunization_for_preventive_care(C),
 berlitz(infectious_disease_for_which_cdc_acip_recommends_immunization(D),
         "$D$ is an infectious disease for which the CDC ACIP recommends immunization")
 
-berlitz(below_2025_cdc_acip_age_guideline_max(C),
-        "the patient in $C$ has not received the maximum number of vaccines of the type specified in $C$ for a person of their age based on the 2025 CDC ACIP guidelines")
-
         
-berlitz(below_2024_cdc_acip_age_guideline_max_by_age(A, C),
-        "the patient in $C$ has not received the maximum number of vaccines of the type specified in $C$ for a person of age $A$ based on the 2024 CDC ACIP guidelines")
+berlitz(meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(A, C),
+        "the patient in $C$ has already received the maximum number of vaccines of the type specified in $C$ for a person of age $A$ based on the 2024 CDC ACIP guidelines")
 
 
-berlitz(below_2024_cdc_acip_age_guideline_max(C),
-        "the patient in $C$ has not received the maximum number of vaccines of the type specified in $C$ for a person of their age based on the 2024 CDC ACIP guidelines")
-
-berlitz(below_2023_cdc_acip_age_guideline_max(C),
-        "the patient in $C$ has not received the maximum number of vaccines of the type specified in $C$ for a person of their age based on the 2023 CDC ACIP guidelines")
+berlitz(meets_or_exceeds_2024_cdc_acip_age_guideline_max(C),
+        "the patient in $C$ has already received the maximum number of vaccines of the type specified in $C$ for a person of their age based on the 2024 CDC ACIP guidelines")
 
 
 %%%%%%%%%%% Helper Relations %%%%%%%%%%%
@@ -64,16 +58,6 @@ berlitz(below_2023_cdc_acip_age_guideline_max(C),
 
 berlitz(patient_geq_6_months_old_at_time_of_service(C),
         "the patient in $C$ is at least 6 months old at the time of the service in the claim")
-
-
-berlitz(n_months_diff(D1, D2, N),
-        "the number of months between $D1$ and $D2$ is $N$")
-
-% Note: D1 and D2 are integers. This Berlitz entry is meant to give context around this relation's usage, if not its formal definition.
-berlitz(not_yet_day_of_month_delta(D1, D2, 0),
-        "the day of the month in the first date is at least that of the second date")
-berlitz(not_yet_day_of_month_delta(D1, D2, -1),
-        "the day of the month in the first date is less than that of the second date")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Base Relations 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -237,6 +221,15 @@ berlitz(not_yet_birthday_delta(M, D, DOBM, DOBD, -1),
         "on the date $M$ $D$ it is not yet the person's birthday")
 berlitz(not_yet_birthday_delta(M, D, DOBM, DOBD, 0),
         "on the date $M$ $D$ it is not before the person's birthday")
+
+berlitz(n_months_diff(D1, D2, N),
+        "the number of months between $D1$ and $D2$ is $N$")
+
+% Note: D1 and D2 are integers. This Berlitz entry is meant to give context around this relation's usage, if not its formal definition.
+berlitz(not_yet_day_of_month_delta(D1, D2, 0),
+        "the day of the month in the first date is at least that of the second date")
+berlitz(not_yet_day_of_month_delta(D1, D2, -1),
+        "the day of the month in the first date is less than that of the second date")
 
 
 berlitz(is_preventive_care_service(S),

@@ -74,8 +74,8 @@ get_timestamp_from_date(DATE,STAMP) :-
 
 % Female without a male partner
 patient_is_infertile(C) :-
-    claim.patient_has_female_reproductive_organs(C, yes) &
-    claim.patient_has_partner_with_male_reproductive_organs(C, no) &
+    claim.sex_of_patient_trying_to_conceive(C, female) &
+    ~claim.sex_of_patients_partner(C, male) &
     patient_age_at_time_of_service(C, Age) &
     meets_attempt_to_conceive_reqs_female_without_male_partner(C, Age)
 
@@ -94,8 +94,8 @@ meets_attempt_to_conceive_reqs_female_without_male_partner(C, PersonAge) :-
 
 % Female with a male partner
 patient_is_infertile(C) :-
-    claim.patient_has_female_reproductive_organs(C, yes) &
-    claim.patient_has_partner_with_male_reproductive_organs(C, yes) &
+    claim.sex_of_patient_trying_to_conceive(C, female) &
+    claim.sex_of_patients_partner(C, male) &
     patient_age_at_time_of_service(C, Age) &
     meets_attempt_to_conceive_reqs_female_with_male_partner(C, Age)
 
@@ -119,8 +119,8 @@ meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
 
 % Male with a female partner
 patient_is_infertile(C) :-
-    claim.patient_has_male_reproductive_organs(C, yes) &
-    claim.patient_has_partner_with_female_reproductive_organs(C, yes) &
+    claim.sex_of_patient_trying_to_conceive(C, male) &
+    claim.sex_of_patients_partner(C, female) &
     claim.age_of_patients_female_partner(C, PartnerAge) & 
     meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge)
 
@@ -140,8 +140,8 @@ meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
 % Male without a female partner
 % Bug Note: This is actually buggy because the policy would care about dates, not solar/sidereal time - should use a real datetime module for computing difference of two weeks
 patient_is_infertile(C) :-
-    claim.patient_has_male_reproductive_organs(C, yes) &
-    claim.patient_has_partner_with_female_reproductive_organs(C, no) &
+    claim.sex_of_patient_trying_to_conceive(C, male) &
+    ~claim.sex_of_patients_partner(C, female) &
     claim.abnormal_semen_analyses(C, Analyses) &
     choose_2_with_indices_from_list_no_repeats(Analyses, abnormal_semen_analysis(Date1), _, abnormal_semen_analysis(Date2), _) &
     get_timestamp_from_date(Date1, TS1) &
@@ -153,7 +153,7 @@ patient_is_infertile(C) :-
 
 % Person with gender dysphoria
 patient_is_infertile(C) :-
-    claim.patient_diagnosed_with_gender_dysphoria(C, yes)
+    claim.patient_or_partner_diagnosed_with_gender_dysphoria(C, yes)
 % covers(Policy, C) :-
 %     policy.type(Policy, aetna_cardinal_care_2023_2024) &
 %     covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024)
@@ -311,6 +311,28 @@ not_yet_birthday_delta(Month, Day, FOBMonth, DOBDay, 0) :-
 date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
     symleq(BeginDateRange, Date) &
     symleq(Date, EndDateRange)
+
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, Diff) &
+    less(Diff, N)
+
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, N) &
+    evaluate(parsedate(EarlierDate),[_,_,SameDay]) & 
+    evaluate(parsedate(LaterDate),[_,_,SameDay])
+
+n_months_diff(EarlierDate, LaterDate, N) :-
+    evaluate(parsedate(EarlierDate),[EY,EM,ED]) & 
+    evaluate(parsedate(LaterDate),[LY,LM,LD]) &
+    evaluate(times(minus(LY, EY), 12), MonthsFromYear) & 
+    not_yet_day_of_month_delta(ED, LD, Delta) &
+    evaluate(plus(MonthsFromYear, minus(LM, EM), Delta), N)
+
+not_yet_day_of_month_delta(D1, D2, 0) :-
+    leq(D1, D2)
+
+not_yet_day_of_month_delta(D1, D2, -1) :-
+    less(D2, D1)
 
 %%%%% Relations to faciliate choosing elements from lists that may have repeats
 
