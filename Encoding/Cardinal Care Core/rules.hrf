@@ -156,6 +156,15 @@ date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
     symleq(BeginDateRange, Date) &
     symleq(Date, EndDateRange)
 
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, Diff) &
+    less(Diff, N)
+
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, N) &
+    evaluate(parsedate(EarlierDate),[_,_,SameDay]) & 
+    evaluate(parsedate(LaterDate),[_,_,SameDay])
+
 n_months_diff(EarlierDate, LaterDate, N) :-
     evaluate(parsedate(EarlierDate),[EY,EM,ED]) & 
     evaluate(parsedate(LaterDate),[LY,LM,LD]) &
