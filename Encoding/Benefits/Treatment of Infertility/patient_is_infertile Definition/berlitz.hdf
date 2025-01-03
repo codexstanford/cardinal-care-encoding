@@ -5,26 +5,15 @@
 %%%%%%%%%%%%%%%%%% For I, II, III, and IV: information relevant to determining whether someone meets the definition of infertile %%%%%%%%%%%%%%%%%%
 
 
-berlitz(claim.patient_has_male_reproductive_organs(C, yes), 
-        "the patient in $C$ has male reproductive organs")
-berlitz(claim.patient_has_male_reproductive_organs(C, no), 
-        "the patient in $C$ does not have male reproductive organs")
+berlitz(claim.sex_of_patient_trying_to_conceive(C, S),
+        "the sex of the patient in $C$ is $S$")
 
-berlitz(claim.patient_has_female_reproductive_organs(C, yes), 
-        "the patient in $C$ has female reproductive organs")
-berlitz(claim.patient_has_female_reproductive_organs(C, no), 
-        "the patient in $C$ does not have female reproductive organs")
-
-berlitz(claim.patient_has_partner_with_male_reproductive_organs(C, yes), 
-        "the patient in $C$ has a partner with male reproductive organs")
-berlitz(claim.patient_has_partner_with_male_reproductive_organs(C, no),
-        "the patient in $C$ does not have a partner with male reproductive organs")
-
-
-berlitz(claim.patient_has_partner_with_female_reproductive_organs(C, yes),
-        "the patient in $C$ has a partner with female reproductive organs")
-berlitz(claim.patient_has_partner_with_female_reproductive_organs(C, no),
-        "the patient in $C$ does not have a partner with female reproductive organs")
+berlitz(claim.sex_of_patients_partner(C, no_partner),
+        "the patient in $C$ does not have a partner")
+berlitz(claim.sex_of_patients_partner(C, male),
+        "the patient in $C$ has a male partner")
+berlitz(claim.sex_of_patients_partner(C, female),
+        "the patient in $C$ has a female partner")
 
 
 berlitz(claim.age_of_patients_female_partner(C, A), 
@@ -43,10 +32,10 @@ berlitz(claim.abnormal_semen_analyses(C, Analyses),
         "claim $C$ has lists the abnormal semen analyses $Analyses$")
 
 
-berlitz(claim.patient_diagnosed_with_gender_dysphoria(C, yes),
-        "the patient in $C$ has been diagnosed with gender dysphoria")
-berlitz(claim.patient_diagnosed_with_gender_dysphoria(C, no), 
-        "the patient in $C$ has not been diagnosed with gender dysphoria")
+berlitz(claim.patient_or_partner_diagnosed_with_gender_dysphoria(C, yes),
+        "the patient in $C$ or their partner has been clinically diagnosed with gender dysphoria")
+berlitz(claim.patient_or_partner_diagnosed_with_gender_dysphoria(C, no), 
+        "the patient in $C$ or their partner has not been clinically diagnosed with gender dysphoria")
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Defined Relations 

@@ -1,0 +1,38 @@
+---
+data:
+    - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
+---
+
+%%%%%% Covered example 8 %%%%%%
+%%%%%% Service: diagnose_and_evaluate_underlying_medical_cause_of_infertility %%%%%%
+%%%%%% Patient: Patient or partner has gender dysphoria %%%%%%
+
+%%% Types %%%
+type(petra_maldonado, person)
+type(claim1, claim)
+
+
+%%% Claim %%%
+% claim.patient(claim1, petra_maldonado)
+% claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
+claim.patient_dob(claim1, 1999_06_25)
+claim.date_service_received(claim1,2024_08_10)
+claim.service_type(claim1, diagnose_and_evaluate_underlying_medical_cause_of_infertility)
+claim.precertification_received(claim1, no)
+
+
+claim.location_service_received(claim1, stanford_health_care)
+claim.service_available_at_tier_one_or_two_location(claim1, yes)
+
+%% Claim type-specific %%
+claim.sex_of_patient_trying_to_conceive(claim1, male)
+claim.sex_of_patients_partner(claim1, female)
+claim.age_of_patients_female_partner(claim1, 25)
+
+claim.patient_or_partner_diagnosed_with_gender_dysphoria(claim1, yes)
+
+claim.num_cycles_donor_insemination(claim1, 0)
+claim.num_months_unprotected_intercourse(claim1, 0)
+
+%% General Exclusions %% 
+% Imported from no_exclusion_claim.hdf

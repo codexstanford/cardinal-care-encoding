@@ -32,13 +32,3 @@ berlitz(meets_or_exceeds_2024_cdc_acip_age_guideline_max(C),
 
 berlitz(patient_geq_6_months_old_at_time_of_service(C),
         "the patient in $C$ is at least 6 months old at the time of the service in the claim")
-
-
-berlitz(n_months_diff(D1, D2, N),
-        "the number of months between $D1$ and $D2$ is $N$")
-
-% Note: D1 and D2 are integers. This Berlitz entry is meant to give context around this relation's usage, if not its formal definition.
-berlitz(not_yet_day_of_month_delta(D1, D2, 0),
-        "the day of the month in the first date is at least that of the second date")
-berlitz(not_yet_day_of_month_delta(D1, D2, -1),
-        "the day of the month in the first date is less than that of the second date")

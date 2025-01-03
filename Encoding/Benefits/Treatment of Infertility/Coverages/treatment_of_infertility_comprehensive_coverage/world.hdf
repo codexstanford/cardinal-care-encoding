@@ -1,8 +1,8 @@
 ---
 data:
-    - ../../treatment_of_infertility_world.hdf
-    - ../../patient_is_infertile_world.hdf
-    - ../../non-basic_world.hdf
+    - ../../world.hdf
+    - ../../patient_is_infertile Definition/world.hdf
+    - ../../Non-basic Infertility Services/world.hdf
 ---
 
 type(ovulation_induction_cycle_with_menotropins, cardinal_care_2024_2025_service)
