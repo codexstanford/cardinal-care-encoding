@@ -2,7 +2,7 @@
 rules:
     - ../../rules.hrf
     - ../../patient_is_infertile Definition/rules.hrf
-    - ../../Non-basic Infertility Coverages/rules.hrf
+    - ../../Non-basic Infertility Services/rules.hrf
 ---
 
 

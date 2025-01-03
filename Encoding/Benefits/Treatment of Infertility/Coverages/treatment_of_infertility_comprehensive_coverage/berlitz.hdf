@@ -2,7 +2,7 @@
 data:
     - ../../berlitz.hdf
     - ../../patient_is_infertile Definition/berlitz.hdf
-    - ../../Non-basic Infertility Coverages/berlitz.hdf
+    - ../../Non-basic Infertility Services/berlitz.hdf
 ---
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
