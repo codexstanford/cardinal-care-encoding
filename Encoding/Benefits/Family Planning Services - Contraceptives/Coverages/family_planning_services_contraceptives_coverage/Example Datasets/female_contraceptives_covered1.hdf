@@ -13,7 +13,7 @@ type(claim1, claim)
 
 %%% Claim %%%
 %% Service-generic %%
-claim.patient_dob(claim1, 1999_06_25)
+claim.patient_dob(claim1, 1999_06_01)
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, female_contraceptive_counseling)
 claim.precertification_received(claim1, no)
