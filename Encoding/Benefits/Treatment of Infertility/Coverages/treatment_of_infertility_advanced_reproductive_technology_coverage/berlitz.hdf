@@ -18,11 +18,6 @@ berlitz(claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_
 berlitz(claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_only_effective_treatment(C, no), 
         "for the patient in $C$, intravaginal, intrauterine, or intracervical inseminations would have been expected to be effective, or IVF would not have been expected to be the only effective treatment for infertility")
 
-berlitz(claim.service_is_ivf_with_embryo_transfer(C, yes), 
-        "the IVF procedure in $C$ is IVF with embryo transfer")
-berlitz(claim.service_is_ivf_with_embryo_transfer(C, no), 
-        "the IVF procedure in $C$ is not IVF with embryo transfer")
-
 %%% VI. Cryopreservation for Fertility Preservation
 
 %%%%%%%%%%%%%%%%%% For V, and VI %%%%%%%%%%%%%%%%%%
