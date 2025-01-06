@@ -1,2 +1,4 @@
-# Ensure text files always use CRLF line endings
-* text eol=crlf
+# Ensure epilog files always use CRLF line endings
+*.metadata text eol=crlf
+*.hdf text eol=crlf
+*.hrf text eol=crlf
