@@ -1,4 +1,6 @@
 # Ensure epilog files always use CRLF line endings
+*.epilogscript text eol=crlf
+*.epilogbuild text eol=crlf
 *.metadata text eol=crlf
 *.hdf text eol=crlf
 *.hrf text eol=crlf
