@@ -73,7 +73,7 @@ meets_fsh_test_recency_req(C, fsh_test(_, TestDate, TestTime)) :-
     leq(39, Age) &
     claim.date_service_received(C, ServiceDate) &
     get_timestamp_from_date(ServiceDate, ServiceDateTS) &
-    evaluate(times(365, 24, 60, 60, 1000), NUM_MS_IN_SIX_MONTHS) &
+    evaluate(times(365, 24, 60, 60, 1000, 0.5), NUM_MS_IN_SIX_MONTHS) &
     evaluate(minus(ServiceDateTS, NUM_MS_IN_SIX_MONTHS), SixMonthsBeforeTS) &
     datetimetotimestamp(TestDate, TestTime, TestDateTimeTS) &
     leq(SixMonthsBeforeTS, TestDateTimeTS)
