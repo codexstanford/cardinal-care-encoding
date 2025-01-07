@@ -141,7 +141,7 @@ meets_less_invasive_prior_treatment_reqs(C) :-
     claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_only_effective_treatment(C, yes)
 
 meets_less_invasive_prior_treatment_reqs(C) :-
-    meets_egg_sperm_contact_trial_reqs(C) &
+    meets_cpb_egg_sperm_contact_trial_reqs(C) &
     meets_ovulation_induction_trial_reqs(C)
 
 % Three cycles if under 38, none necessary if 38 or over

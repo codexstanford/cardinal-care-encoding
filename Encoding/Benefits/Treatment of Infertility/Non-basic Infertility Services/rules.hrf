@@ -1,30 +1,30 @@
 %%% Egg-sperm contact requirements %%% 
 
 % For ages under 35
-meets_egg_sperm_contact_trial_reqs(C) :-
+meets_cpb_egg_sperm_contact_trial_reqs(C) :-
     patient_age_at_time_of_service(C, Age) &
     less(Age, 35) &
-    meets_egg_sperm_contact_trial_reqs_under_35(C)
+    meets_cpb_egg_sperm_contact_trial_reqs_under_35(C)
 
-meets_egg_sperm_contact_trial_reqs_under_35(C) :-
+meets_cpb_egg_sperm_contact_trial_reqs_under_35(C) :-
     claim.num_months_regular_intravaginal_inseminations(C, N) &
     leq(12, N)
 
-meets_egg_sperm_contact_trial_reqs_under_35(C) :-
+meets_cpb_egg_sperm_contact_trial_reqs_under_35(C) :-
     claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
     leq(4, N)
 
 % For ages 35 and over
-meets_egg_sperm_contact_trial_reqs(C) :-
+meets_cpb_egg_sperm_contact_trial_reqs(C) :-
     patient_age_at_time_of_service(C, Age) &
     leq(35, Age) &
-    meets_egg_sperm_contact_trial_reqs_35_and_over(C)
+    meets_cpb_egg_sperm_contact_trial_reqs_35_and_over(C)
 
-meets_egg_sperm_contact_trial_reqs_35_and_over(C) :-
+meets_cpb_egg_sperm_contact_trial_reqs_35_and_over(C) :-
     claim.num_months_regular_intravaginal_inseminations(C, N) &
     leq(6, N)
 
-meets_egg_sperm_contact_trial_reqs_35_and_over(C) :-
+meets_cpb_egg_sperm_contact_trial_reqs_35_and_over(C) :-
     claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
     leq(3, N)
 
