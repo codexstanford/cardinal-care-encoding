@@ -3,11 +3,12 @@ data:
     - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
 ---
 
-%%%%%% Covered example 1 %%%%%%
+%%%%%% Covered example 5 %%%%%%
 
 %%%%%% Service: cryopreservation_for_fertility_preservation %%%%%%
-%%%%%% Patient: Age 34 %%%%%%
-%%%%%% Case: Will not be retrieving her own eggs for use, single test at level 19 in last 6 months %%%%%%
+%%%%%% Patient: Age 40 %%%%%%
+%%%%%% Case: Will be retrieving her own eggs for use, age 40, no POF %%%%%%
+%%%%%% FSH Tests: single test below level 19 since age 40 in last 6 months %%%%%%
 
 %%% Types %%%
 type(rta_bondonado, person)
@@ -16,7 +17,7 @@ type(claim1, claim)
 %%% Claim %%%
 % claim.patient(claim1, rta_bondonado)
 % claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
-claim.patient_dob(claim1, 1990_06_01)
+claim.patient_dob(claim1, 1984_06_01)
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, cryopreservation_for_fertility_preservation)
 claim.precertification_received(claim1, yes)
@@ -29,14 +30,14 @@ claim.service_available_at_tier_one_or_two_location(claim1, yes)
 claim.sex_of_patient_trying_to_conceive(claim1, female)
 
 claim.patient_is_believed_to_be_fertile(claim1, yes)
-claim.patient_has_premature_ovarian_failure(claim1, yes)
+claim.patient_has_premature_ovarian_failure(claim1, no)
 
 
-claim.day_3_fsh_tests(claim1, [fsh_test(19, 2024_07_01, 12_00)])
+claim.day_3_fsh_tests(claim1, [fsh_test(18, 2024_07_01, 12_00)])
 
 claim.planned_service(claim1, chemotherapy)
 
-claim.will_be_retrieving_eggs_for_use(claim1, no)
+claim.will_be_retrieving_eggs_for_use(claim1, yes)
 claim.num_other_covered_art_services(claim1, 0)
 
 %% General Exclusions %% 

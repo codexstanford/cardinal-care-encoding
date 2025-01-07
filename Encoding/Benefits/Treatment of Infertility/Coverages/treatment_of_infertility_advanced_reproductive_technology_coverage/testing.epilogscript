@@ -1,4 +1,3 @@
 ruleset: rules.hrf
-dataset: Example Datasets/art_services_covered0.hdf
+dataset: Example Datasets/
 query: covered(claim1)
-dotrace: true
