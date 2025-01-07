@@ -67,16 +67,13 @@ eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
     meets_fsh_test_recency_req(C, fsh_test(Level, Date, Time))
 
 
+% Source: Note 4 from CPB 0327 on 1/4/2025: https://www.aetna.com/cpb/medical/data/300_399/0327.html
 % If 39 or over, test must be in the last six months
 meets_fsh_test_recency_req(C, fsh_test(_, TestDate, TestTime)) :-
     patient_age_at_time_of_service(C, Age) &
     leq(39, Age) &
     claim.date_service_received(C, ServiceDate) &
-    get_timestamp_from_date(ServiceDate, ServiceDateTS) &
-    evaluate(times(365, 24, 60, 60, 1000, 0.5), NUM_MS_IN_SIX_MONTHS) &
-    evaluate(minus(ServiceDateTS, NUM_MS_IN_SIX_MONTHS), SixMonthsBeforeTS) &
-    datetimetotimestamp(TestDate, TestTime, TestDateTimeTS) &
-    leq(SixMonthsBeforeTS, TestDateTimeTS)
+    leq_n_months_diff(TestDate, ServiceDate, 6)
 
 % If under 39, no recency requirement
 meets_fsh_test_recency_req(C, _) :-
@@ -137,7 +134,7 @@ meets_ivf_cpb_reqs(C) :-
     meets_less_invasive_prior_treatment_reqs(C) &
     younger_than_40_or_has_provided_evidence_not_menopausal(C)
 
-% Source: E.3.b and Note 2 from CPB 0327 on 1/4/2025: https://www.aetna.com/cpb/medical/data/300_399/0327.html
+% Source: E.3.a, E.3.b and Note 2 from CPB 0327 on 1/4/2025: https://www.aetna.com/cpb/medical/data/300_399/0327.html
 % Rounds of less invasive prior treatment are not necessary if only IVF expected to be effective
 % Note: They list some examples of such individuals, but don't seem to be comprehensive
 meets_less_invasive_prior_treatment_reqs(C) :-
