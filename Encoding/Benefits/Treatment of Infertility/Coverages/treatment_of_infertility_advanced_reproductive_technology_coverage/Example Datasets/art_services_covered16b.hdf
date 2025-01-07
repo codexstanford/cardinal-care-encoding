@@ -41,7 +41,7 @@ claim.will_be_retrieving_eggs_for_use(claim1, no)
 claim.num_other_covered_art_services(claim1, 0)
 
 claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_only_effective_treatment(claim1, no)
-claim.num_months_regular_intravaginal_inseminations(claim1, 0)
+claim.num_months_frequent_unprotected_heterosexual_intercourse(claim1, 0)
 claim.num_cycles_timed_intrauterine_intracervical_inseminations(claim1, 3)
 claim.num_cycles_oral_or_injectable_ovulation_induction(claim1, 3)
 

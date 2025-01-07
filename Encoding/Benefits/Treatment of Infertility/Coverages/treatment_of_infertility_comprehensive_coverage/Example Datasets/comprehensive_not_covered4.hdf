@@ -32,7 +32,7 @@ claim.sex_of_patients_partner(claim1, female)
 claim.patient_or_partner_diagnosed_with_gender_dysphoria(claim1, no)
 
 claim.num_cycles_donor_insemination(claim1, 0)
-claim.num_months_unprotected_intercourse(claim1, 11)
+claim.num_months_frequent_unprotected_heterosexual_intercourse(claim1, 11)
 
 claim.num_other_covered_artificial_insemination_attempts(claim1, 0)
 claim.patient_has_had_voluntary_sterilization(claim1, yes)

@@ -7,7 +7,7 @@ meets_cpb_egg_sperm_contact_trial_reqs(C) :-
     meets_cpb_egg_sperm_contact_trial_reqs_under_35(C)
 
 meets_cpb_egg_sperm_contact_trial_reqs_under_35(C) :-
-    claim.num_months_regular_intravaginal_inseminations(C, N) &
+    claim.num_months_frequent_unprotected_heterosexual_intercourse(C, N) &
     leq(12, N)
 
 meets_cpb_egg_sperm_contact_trial_reqs_under_35(C) :-
@@ -21,7 +21,7 @@ meets_cpb_egg_sperm_contact_trial_reqs(C) :-
     meets_cpb_egg_sperm_contact_trial_reqs_35_and_over(C)
 
 meets_cpb_egg_sperm_contact_trial_reqs_35_and_over(C) :-
-    claim.num_months_regular_intravaginal_inseminations(C, N) &
+    claim.num_months_frequent_unprotected_heterosexual_intercourse(C, N) &
     leq(6, N)
 
 meets_cpb_egg_sperm_contact_trial_reqs_35_and_over(C) :-

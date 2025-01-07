@@ -1,4 +1,4 @@
-%% General definition of infertility
+%% General definition of infertility from 2023-2024 Certificate of Coverage Glossary
 
 % Female without a male partner
 patient_is_infertile(C) :-
@@ -31,13 +31,13 @@ patient_is_infertile(C) :-
 % Under 35
 meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
     less(PersonAge, 35) &
-    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    claim.num_months_frequent_unprotected_heterosexual_intercourse(C, NumMonths) &
     leq(12, NumMonths)
 
 % 35 or over
 meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
     leq(35, PersonAge) &
-    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    claim.num_months_frequent_unprotected_heterosexual_intercourse(C, NumMonths) &
     leq(6, NumMonths)
 
 % Can also have tried donor insemination
@@ -55,13 +55,13 @@ patient_is_infertile(C) :-
 % Female partner under 35
 meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
     less(PartnerAge, 35) &
-    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    claim.num_months_frequent_unprotected_heterosexual_intercourse(C, NumMonths) &
     leq(12, NumMonths)
 
 % Female partner 35 or over
 meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
     leq(35, PartnerAge) &
-    claim.num_months_unprotected_intercourse(C, NumMonths) &
+    claim.num_months_frequent_unprotected_heterosexual_intercourse(C, NumMonths) &
     leq(6, NumMonths)
 
 

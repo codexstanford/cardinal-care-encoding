@@ -32,7 +32,7 @@ claim.patient_or_partner_diagnosed_with_gender_dysphoria(claim1, no)
 
 claim.num_cycles_donor_insemination(claim1, 0)
 % Any fewer months and it won't be covered
-claim.num_months_unprotected_intercourse(claim1, 12)
+claim.num_months_frequent_unprotected_heterosexual_intercourse(claim1, 12)
 
 %% General Exclusions %% 
 % Imported from no_exclusion_claim.hdf

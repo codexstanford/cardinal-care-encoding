@@ -39,7 +39,7 @@ claim.planned_service(claim1, chemotherapy)
 claim.will_be_retrieving_eggs_for_use(claim1, no)
 claim.num_other_covered_art_services(claim1, 0)
 
-claim.num_months_regular_intravaginal_inseminations(claim1, 12)
+claim.num_months_frequent_unprotected_heterosexual_intercourse(claim1, 12)
 
 %% General Exclusions %% 
 % Imported from no_exclusion_claim.hdf

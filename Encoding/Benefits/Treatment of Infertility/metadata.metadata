@@ -1,0 +1,8 @@
+attribute(replace_this_term, claim.num_months_frequent_unprotected_heterosexual_intercourse)
+
+type(claim.num_months_frequent_unprotected_heterosexual_intercourse, attributerelation)
+domain(claim.num_months_frequent_unprotected_heterosexual_intercourse, replace_this_term)
+codomain(claim.num_months_frequent_unprotected_heterosexual_intercourse, number)
+unique(claim.num_months_frequent_unprotected_heterosexual_intercourse, yes)
+total(claim.num_months_frequent_unprotected_heterosexual_intercourse, no)
+changestyle(claim.num_months_frequent_unprotected_heterosexual_intercourse, numberstyle)

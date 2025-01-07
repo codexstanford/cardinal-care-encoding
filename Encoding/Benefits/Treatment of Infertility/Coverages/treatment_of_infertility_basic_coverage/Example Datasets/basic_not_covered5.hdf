@@ -32,7 +32,7 @@ claim.age_of_patients_female_partner(claim1, 25)
 claim.patient_or_partner_diagnosed_with_gender_dysphoria(claim1, no)
 
 claim.num_cycles_donor_insemination(claim1, 11)
-claim.num_months_unprotected_intercourse(claim1, 0)
+claim.num_months_frequent_unprotected_heterosexual_intercourse(claim1, 0)
 
 %% General Exclusions %% 
 % Imported from no_exclusion_claim.hdf
