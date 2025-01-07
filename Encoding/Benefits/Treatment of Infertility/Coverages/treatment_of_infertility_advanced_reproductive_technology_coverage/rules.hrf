@@ -49,7 +49,7 @@ eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
 eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, Age) :-
     claim.will_be_retrieving_eggs_for_use(C, yes) &
     leq(40, Age) &
-    day_3_fsh_tests_after_age_40_in_claim(C, Tests) &
+    day_3_fsh_tests_since_age_40_in_claim(C, Tests) &
     evaluate(length(Tests), NumTests) &
     leq(1, NumTests) &
     ~exists_test_with_level_at_least_19(Tests) &
@@ -110,7 +110,7 @@ younger_than_40_or_has_provided_evidence_not_menopausal(C) :-
 younger_than_40_or_has_provided_evidence_not_menopausal(C) :-
     patient_age_at_time_of_service(C, Age) &
     leq(40, Age) &
-    day_3_fsh_tests_after_age_40_in_claim(C, Tests) &
+    day_3_fsh_tests_since_age_40_in_claim(C, Tests) &
     evaluate(length(Tests), NumTests) &
     leq(1, NumTests) &
     ~exists_test_with_level_at_least_19(Tests)

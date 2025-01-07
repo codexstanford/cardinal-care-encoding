@@ -80,6 +80,7 @@ meets_policy_wording_table_reqs_egg_sperm_contact_female_35_or_over_with_male_pa
     claim.num_cycles_donor_insemination(C, N) &
     leq(6, N)
 
+
 %% Female 35 or over without a male partner %%
 meets_policy_wording_table_reqs(C) :-
     claim.sex_of_patient_trying_to_conceive(C, female) &
@@ -105,7 +106,7 @@ meets_day_3_fsh_level_criteria_female_35_or_over(C) :-
 meets_day_3_fsh_level_criteria_female_35_or_over(C) :-
     patient_age_at_time_of_service(C, Age) &
     leq(40, Age) &
-    day_3_fsh_tests_after_age_40_in_claim(C, Tests) &
+    day_3_fsh_tests_since_age_40_in_claim(C, Tests) &
     evaluate(length(Tests), NumTests) &
     leq(1, NumTests) &
     ~exists_test_with_level_at_least_19(Tests)
