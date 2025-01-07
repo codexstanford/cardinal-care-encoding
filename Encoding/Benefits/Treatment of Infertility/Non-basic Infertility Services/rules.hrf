@@ -31,8 +31,6 @@ meets_cpb_egg_sperm_contact_trial_reqs_35_and_over(C) :-
 
 
 %%% FSH Test handling %%%
-
-
 % If multiple tests have the same date and time, then we can't decide which was most recent and this is not satisfied.
 most_recent_day_3_fsh_test(C, fsh_test(Level, Date, Time)) :-
     claim.day_3_fsh_tests(C, Tests) &
