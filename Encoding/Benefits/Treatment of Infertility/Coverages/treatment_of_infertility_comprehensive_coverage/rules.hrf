@@ -76,35 +76,7 @@ medically_necessary_service(C) :-
     claim.service_type(C, ovulation_induction_cycle_with_menotropins) &
     patient_age_at_time_of_service(C, Age) &
     leq(Age, 37) &
-    meets_ovulation_induction_cpb_reqs(C)
-
-meets_ovulation_induction_cpb_reqs(C) :-
-    patient_age_at_time_of_service(C, Age) &
-    less(Age, 35) &
-    meets_ovulation_induction_reqs_under_35(C)
-
-
-meets_ovulation_induction_reqs_under_35(C) :-
-    claim.num_months_regular_intravaginal_inseminations(C, N) &
-    leq(12, N)
-
-meets_ovulation_induction_reqs_under_35(C) :-
-    claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
-    leq(4, N)
-
-meets_ovulation_induction_cpb_reqs(C) :-
-    patient_age_at_time_of_service(C, Age) &
-    leq(35, Age) &
-    meets_ovulation_induction_reqs_35_and_over(C)
-
-meets_ovulation_induction_reqs_under_35(C) :-
-    claim.num_months_regular_intravaginal_inseminations(C, N) &
-    leq(6, N)
-
-meets_ovulation_induction_reqs_35_and_over(C) :-
-    claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
-    leq(3, N)
-
+    meets_egg_sperm_contact_trial_reqs(C)
 
 % Based on artificial inseminations being considered medically necessary from CPB 0327 section "Artificial Inseminations"
 medically_necessary_service(C) :-

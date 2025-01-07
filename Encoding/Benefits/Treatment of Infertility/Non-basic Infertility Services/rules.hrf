@@ -1,4 +1,39 @@
-% If multiple tests have the same date andtime, then we can't decide which was most recent and this is not satisfied.
+%%% Egg-sperm contact requirements %%% 
+
+% For ages under 35
+meets_egg_sperm_contact_trial_reqs(C) :-
+    patient_age_at_time_of_service(C, Age) &
+    less(Age, 35) &
+    meets_egg_sperm_contact_trial_reqs_under_35(C)
+
+meets_egg_sperm_contact_trial_reqs_under_35(C) :-
+    claim.num_months_regular_intravaginal_inseminations(C, N) &
+    leq(12, N)
+
+meets_egg_sperm_contact_trial_reqs_under_35(C) :-
+    claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
+    leq(4, N)
+
+% For ages 35 and over
+meets_egg_sperm_contact_trial_reqs(C) :-
+    patient_age_at_time_of_service(C, Age) &
+    leq(35, Age) &
+    meets_egg_sperm_contact_trial_reqs_35_and_over(C)
+
+meets_egg_sperm_contact_trial_reqs_35_and_over(C) :-
+    claim.num_months_regular_intravaginal_inseminations(C, N) &
+    leq(6, N)
+
+meets_egg_sperm_contact_trial_reqs_35_and_over(C) :-
+    claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
+    leq(3, N)
+
+
+
+%%% FSH Test handling %%%
+
+
+% If multiple tests have the same date and time, then we can't decide which was most recent and this is not satisfied.
 most_recent_day_3_fsh_test(C, fsh_test(Level, Date, Time)) :-
     claim.day_3_fsh_tests(C, Tests) &
     choose_1_with_index_from_list(Tests, fsh_test(Level, Date, Time), I1) &
