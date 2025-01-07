@@ -1,7 +1,7 @@
 ---
 rules:
     - ../../rules.hrf
-    - ../../Non-basic Infertility Coverages/rules.hrf
+    - ../../Non-basic Infertility Services/rules.hrf
 ---
 
 

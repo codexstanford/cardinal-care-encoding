@@ -1,0 +1,321 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eligible for service - additional eligibility requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% Family Planning Services - Female Contraceptives 
+
+%% Counseling services
+covered_under_cardinal_care_24_25_benefit(C, family_planning_services_contraceptives_benefit) :-
+    claim.service_type(C, female_contraceptive_counseling) &
+    is_covered_type_of_contraceptive_counseling(C) &
+    is_group_or_individual_counseling(C)
+
+is_covered_type_of_contraceptive_counseling(C) :-
+    claim.type_of_contraceptive_counseling(C, T) &
+    member(T, [
+        methods,
+        management_of_side_effects,
+        adherence
+    ])
+
+is_group_or_individual_counseling(C) :-
+    claim.counseling_setting(C, S) &
+    member(S, [
+        individual, 
+        group
+    ])
+
+
+%% Contraceptives (drugs or devices) - includes OTC prescribed by provider, and follow-up care
+% Note on interpretation: "prescribed by your provider" could modify either the OTC, or all prior 
+covered_under_cardinal_care_24_25_benefit(C, family_planning_services_contraceptives_benefit) :-
+    claim.service_type(C, female_contraceptive_drugs_or_devices_and_follow_up_care) &
+    claim.type_of_female_contraceptive_method_provided(C, Type) & 
+    fda_approved_female_contraceptive_method(Type) &
+    female_contraceptive_method_is_prescribed_if_otc(C) &
+    valid_mode_of_providing_female_contraceptive_method(C)
+
+    
+female_contraceptive_method_is_prescribed_if_otc(C) :-
+    claim.type_of_female_contraceptive_method_provided(C, Method) &
+    ~otc_female_contraceptive_method(Method)
+
+female_contraceptive_method_is_prescribed_if_otc(C) :-
+    claim.type_of_female_contraceptive_method_provided(C, Method) &
+    otc_female_contraceptive_method(Method) &
+    claim.otc_female_contraceptive_method_is_prescribed_by_provider(C, yes)
+
+otc_female_contraceptive_method(the_mini_pill_progestin_norgestrel)
+otc_female_contraceptive_method(male_condom)
+otc_female_contraceptive_method(sponge_with_spermicide)
+otc_female_contraceptive_method(female_condom)
+otc_female_contraceptive_method(spermicide_otc)
+otc_female_contraceptive_method(levonorgestrel_1_5_mg)
+
+valid_mode_of_providing_female_contraceptive_method(C) :-
+    claim.mode_of_providing_service(C, Mode) &
+    member(Mode, [
+        provided_by,
+        administered_by,
+        removed_by,
+        provided_related_service,
+        provided_related_supplies,
+        provided_follow_up_care
+    ])
+
+fda_approved_female_contraceptive_method(sterilization_surgery_for_women)
+fda_approved_female_contraceptive_method(iud_without_hormone)
+fda_approved_female_contraceptive_method(iud_with_progestin)
+fda_approved_female_contraceptive_method(implantable_rod)
+fda_approved_female_contraceptive_method(contraceptive_injection_shot)
+fda_approved_female_contraceptive_method(the_pill_estrogen_and_progestin)
+fda_approved_female_contraceptive_method(the_pill_estrogen_and_progestin_extended_continuous)
+fda_approved_female_contraceptive_method(the_mini_pill_progestin)
+fda_approved_female_contraceptive_method(the_mini_pill_progestin_norgestrel)
+fda_approved_female_contraceptive_method(patch_transdermal)
+fda_approved_female_contraceptive_method(vaginal_contraceptive_ring)
+fda_approved_female_contraceptive_method(male_condom)
+fda_approved_female_contraceptive_method(diaphragm_with_spermicide)
+fda_approved_female_contraceptive_method(sponge_with_spermicide)
+fda_approved_female_contraceptive_method(cervical_cap_with_spermicide)
+fda_approved_female_contraceptive_method(female_condom)
+fda_approved_female_contraceptive_method(spermicide_otc)
+fda_approved_female_contraceptive_method(spermicide_prescription)
+fda_approved_female_contraceptive_method(levonorgestrel_1_5_mg)
+fda_approved_female_contraceptive_method(ulipristal_acetate)
+
+
+%% Voluntary sterilization
+% Note on interpretation: follow-up care is not quite explicitly covered given the wording, but intuitively it should be. Trying very hard to avoid a false positive here.
+covered_under_cardinal_care_24_25_benefit(C, family_planning_services_contraceptives_benefit) :-
+    claim.service_type(C, female_voluntary_sterilization) &
+    claim.type_of_female_voluntary_sterilization_procedure_service_or_supplies(C, Procedure) &
+    member(Procedure, [
+        tubal_ligation,
+        sterilization_implants,
+        related_services,
+        related_supplies        
+    ])
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Preventive care is a larger category of benefits, including immunizations
+is_preventive_care_service(ServiceType) :-
+    female_contraceptives_service(ServiceType)
+
+% Is a service under the female contraceptives benefit
+female_contraceptives_service(female_contraceptive_counseling)
+female_contraceptives_service(female_contraceptive_drugs_or_devices_and_follow_up_care)
+female_contraceptives_service(female_voluntary_sterilization)
+% covers(Policy, C) :-
+%     policy.type(Policy, aetna_cardinal_care_2023_2024) &
+%     covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024)
+
+
+%covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024) :-
+covered(C) :-
+    % policy_in_effect(C, Policy) &
+    service_received_at_valid_provider(C) &
+    meets_additional_eligibility_requirements_if_present(C) &
+    medically_necessary_service(C) &
+    precertified_if_necessary(C) &
+    ~beyond_limits(C) &
+    claim.exclusions(C, nil)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Policy in effect
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Does not currently capture conditions on withdrawal/leaves of absence, coverage on another Stanford-offered plan, or special extensions on coverage dates
+
+% Whether the policy was in effect when the service was received
+% policy_in_effect(C, Policy) :-
+%     claim.patient(C, Patient) &
+%     claim.waived_cardinal_care(C, no) &
+%     policy_in_effect_for_claim(Policy, C)
+
+
+% Student enrolled in Autumn 2024
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, autumn_quarter_2024) &
+%     date_between_dates_incl(ServiceDate, 2024_09_01, 2025_08_31)
+
+
+% Student enrolled in Winter 2025
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, winter_quarter_2025) &
+%     date_between_dates_incl(ServiceDate, 2025_01_01, 2025_08_31)
+
+% Student enrolled in Spring 2025
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, spring_quarter_2025) &
+%     date_between_dates_incl(ServiceDate, 2025_04_01, 2025_08_31)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Received from a valid provider
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Encoding does not currently capture the cases where treatment began out-of-network before the policy began, or when the care is emergency or urgent care and received from an out-of-network provider
+
+service_received_at_valid_provider(C) :-
+    claim.location_service_received(C, Location) &
+    member(Location, [
+        stanford_health_care,
+        menlo_medical_clinic,
+        sutter_health_palo_alto_medical_foundation,
+        tier_two_in_network
+    ])
+
+service_received_at_valid_provider(C) :-
+    claim.location_service_received(C, other) &
+    claim.service_available_at_tier_one_or_two_location(C, no)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eligible for service - additional eligibility requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+meets_additional_eligibility_requirements_if_present(C) :-
+    covered_under_cardinal_care_24_25_benefit(C, B)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+medically_necessary_service(C) :-
+    claim.service_type(C, ServiceType) &
+    is_preventive_care_service(ServiceType)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    requires_precertification(ServiceType) & 
+    claim.precertification_received(C, yes)
+
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    ~requires_precertification(ServiceType)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Important Note: Loaded from other, benefit-specific rulesets
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% General exclusions 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Important Note: Formerly loaded from exclusion.hrf. Now encoded in world.hdf.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Helper functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+patient_age_at_time_of_service(Claim, Age) :-
+    claim.patient_dob(Claim, PatientDOB) &
+    claim.date_service_received(Claim, ServiceDate) &
+    patient_age_on_date(PatientDOB, ServiceDate, Age)
+
+patient_age_on_date(PatientDOB, Date, Age) :-
+    evaluate(parsedate(Date),[Year,Month,Day]) &
+    evaluate(parsedate(PatientDOB),[PatientDOBYear,PatientDOBMonth,PatientDOBDay]) &
+    evaluate(minus(Year,PatientDOBYear), YearDiff) &
+    not_yet_birthday_delta(Month,Day, PatientDOBMonth, PatientDOBDay, Delta) &
+    evaluate(plus(YearDiff, Delta), Age)
+
+age_at_time_of_service(Claim, Person, Age) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    age_on_date(Person, ServiceDate, Age)
+
+age_on_date(Person, Date, Age) :-
+    person.dob(Person, DOB) &
+    evaluate(parsedate(Date),[Year,Month,Day]) &
+    evaluate(parsedate(DOB),[DOBYear,DOBMonth,DOBDay]) &
+    evaluate(minus(Year,DOBYear), YearDiff) &
+    not_yet_birthday_delta(Month,Day, DOBMonth, DOBDay, Delta) &
+    evaluate(plus(YearDiff, Delta), Age)
+
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, -1) :-
+    less(Month, DOBMonth)
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, -1) :-
+    same(Month, DOBMonth) &
+    less(Day, DOBDay)
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, 0) :-
+    less(DOBMonth, Month)
+
+not_yet_birthday_delta(Month, Day, FOBMonth, DOBDay, 0) :-
+    same(Month, DOBMonth) &
+    leq(DOBDay, Day)
+
+
+date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
+    symleq(BeginDateRange, Date) &
+    symleq(Date, EndDateRange)
+
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, Diff) &
+    less(Diff, N)
+
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, N) &
+    evaluate(parsedate(EarlierDate),[_,_,SameDay]) & 
+    evaluate(parsedate(LaterDate),[_,_,SameDay])
+
+n_months_diff(EarlierDate, LaterDate, N) :-
+    evaluate(parsedate(EarlierDate),[EY,EM,ED]) & 
+    evaluate(parsedate(LaterDate),[LY,LM,LD]) &
+    evaluate(times(minus(LY, EY), 12), MonthsFromYear) & 
+    not_yet_day_of_month_delta(ED, LD, Delta) &
+    evaluate(plus(MonthsFromYear, minus(LM, EM), Delta), N)
+
+not_yet_day_of_month_delta(D1, D2, 0) :-
+    leq(D1, D2)
+
+not_yet_day_of_month_delta(D1, D2, -1) :-
+    less(D2, D1)
+
+%%%%% Relations to faciliate choosing elements from lists that may have repeats
+
+% Generates all pairs (unordered) of elements from a list, counting identical elements at different positions as distinct
+choose_2_with_indices_from_list_no_repeats(L, E1, I1, E2, I2) :-
+    choose_2_with_indices_from_sublist_no_repeats(0, L, E1, I1, E2, I2)
+
+
+% Case 1: The first element is the head
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, H, NumBefore, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E2, I2)
+
+% Case 2: The first element is in the tail
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, E1, I1, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_2_with_indices_from_sublist_no_repeats(NewNumBefore, T, E1, I1, E2, I2)
+
+
+% Entry point
+choose_1_with_index_from_list(L, E, I) :-
+    choose_1_with_index_from_sublist(0, L, E, I)
+
+% Case 1: The element is the head
+choose_1_with_index_from_sublist(NumBefore, H!T, H, NumBefore)
+
+% Case 2: The element is in the tail
+choose_1_with_index_from_sublist(NumBefore, H!T, E, I) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E, I)

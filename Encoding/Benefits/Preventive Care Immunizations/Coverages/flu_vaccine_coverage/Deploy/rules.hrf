@@ -1,0 +1,319 @@
+infectious_disease_for_which_cdc_acip_recommends_immunization(influenza_disease)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Referenced in the superfolder benefit rules file
+
+%% Influenza vaccine
+% No vaccine coverage for children less than 6 months old
+meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(0, Claim) :-
+    ~patient_geq_6_months_old_at_time_of_service(Claim)
+
+% For ages >= 9 years, one dose annually (unless received first dose when 8, and needed two doses at the time.)
+meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
+    leq(9, Age) &
+    claim.2024_2025_flu_vaccine_history(Claim, Vaccines) &
+    max_doses_flu_vaccine_allowed_9_years_and_up(Claim, MaxDoses) &
+    evaluate(length(Vaccines), ReceivedDoses) &
+    leq(MaxDoses, ReceivedDoses)
+
+% If child aged 9 had received precisely one dose when they were 8 and they were allowed to receive two doses, then another is allowed.
+max_doses_flu_vaccine_allowed_9_years_and_up(Claim, 2) :-
+    claim.2024_2025_flu_vaccine_history(Claim, [influenza_vaccination_event(VaccinationDate)]) &
+    claim.patient_dob(Claim, PatientDOB) &
+    patient_age_on_date(PatientDOB, VaccinationDate, 8) &
+    max_doses_flu_vaccine_allowed_for_child_6_months_to_9_years(Claim, 2)
+
+% Otherwise, they can only receive one dose
+max_doses_flu_vaccine_allowed_9_years_and_up(Claim, 1) :-
+    ~max_doses_flu_vaccine_allowed_9_years_and_up(Claim, 2)
+    
+% For ages [6 months, 9 years), depends on number of doses received in prior seasons
+meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
+    patient_geq_6_months_old_at_time_of_service(Claim) &
+    less(Age, 9) &
+    max_doses_flu_vaccine_allowed_for_child_6_months_to_9_years(Claim, MaxDoses) &
+    claim.2024_2025_flu_vaccine_history(Claim, Vaccines) &
+    evaluate(length(Vaccines), ReceivedDoses) &
+    leq(MaxDoses, ReceivedDoses)
+
+    % 1 dose if child had previously received >= 2 doses of tri- or quadrivalent flu vaccine >= 4 weeks apart before July 2024
+    % 2 doses >= 4 weeks apart if not, or if child's vaccination history is unknown
+max_doses_flu_vaccine_allowed_for_child_6_months_to_9_years(Claim, 1) :-
+    claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024(Claim, yes)
+
+% Intentional negation as failure, as this holds both when claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024 is unknown and when it is no
+max_doses_flu_vaccine_allowed_for_child_6_months_to_9_years(Claim, 2) :-
+    ~claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_2024(Claim, yes)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eligible for service - additional eligibility requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% Preventive Care Immunizations
+covered_under_cardinal_care_24_25_benefit(C, preventive_care_immunizations_benefit) :-
+    claim.service_type(C, immunization) &
+    is_immunization_for_preventive_care(C) &
+    % claim.immunization_for_disease(C, Disease) &
+    infectious_disease_for_which_cdc_acip_recommends_immunization(Disease)
+
+is_immunization_for_preventive_care(C) :-
+    claim.reason_for_immunization(C, R) &
+    member(R, [
+        preventive_care,
+        recommended_as_preventive_care
+    ]) % Other options: required_for_employment, required_for_travel, other
+
+% Note on policy wording interpretation: I am reading the policy as saying that the condition is on the CDC ACIP's recommendation as to which infectious diseases be vaccinated against, not which vaccines be used
+% Important Note: Not strictly necessary to check infectious_disease_for_which_cdc_acip_recommends_immunization, since we're only specifying coverages for immunizations for which the CDC ACIP recommends immunization, and each immunization is now split out into its own coverage
+    % But keeping it for now, since it's a relevant condition and I think it should be included in explanations.
+    % The infectious_disease_for_which_cdc_acip_recommends_immunization relation is defined in the respective immunization coverage files
+    % Removed the claim.immunization_for_disease subgoal from covered_under_cardinal_care_24_25_benefit since we don't need to specify it on a per-claim basis anymore
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% Preventive Care Immunizations
+% Preventive care is a larger category of benefits, including female contraceptives
+% Note: CPB 0035 concerns Influenza Vaccines, but just points to the CDC ACIP guidelines
+is_preventive_care_service(immunization)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+beyond_limits(Claim) :-
+    claim.service_type(Claim, immunization) &
+    claim.date_service_received(Claim, Date) &
+    date_between_dates_incl(Date, 2024_01_01, 2024_12_31) & 
+    meets_or_exceeds_2024_cdc_acip_age_guideline_max(Claim)
+
+
+%% CDC ACIP Guidelines
+meets_or_exceeds_2024_cdc_acip_age_guideline_max(C) :-
+    % claim.immunization_for_disease(C, D) & % Should remain commented out
+    patient_age_at_time_of_service(C, A) &
+    meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(A, C)
+
+%%% Disease-specific guidelines are in the respective immunization coverage files
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Helper functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+patient_geq_6_months_old_at_time_of_service(Claim) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    claim.patient_dob(Claim, PatientDOB) & 
+    n_months_diff(PatientDOB, ServiceDate, N) &
+    leq(6, N)
+% covers(Policy, C) :-
+%     policy.type(Policy, aetna_cardinal_care_2023_2024) &
+%     covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024)
+
+
+%covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024) :-
+covered(C) :-
+    % policy_in_effect(C, Policy) &
+    service_received_at_valid_provider(C) &
+    meets_additional_eligibility_requirements_if_present(C) &
+    medically_necessary_service(C) &
+    precertified_if_necessary(C) &
+    ~beyond_limits(C) &
+    claim.exclusions(C, nil)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Policy in effect
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Does not currently capture conditions on withdrawal/leaves of absence, coverage on another Stanford-offered plan, or special extensions on coverage dates
+
+% Whether the policy was in effect when the service was received
+% policy_in_effect(C, Policy) :-
+%     claim.patient(C, Patient) &
+%     claim.waived_cardinal_care(C, no) &
+%     policy_in_effect_for_claim(Policy, C)
+
+
+% Student enrolled in Autumn 2024
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, autumn_quarter_2024) &
+%     date_between_dates_incl(ServiceDate, 2024_09_01, 2025_08_31)
+
+
+% Student enrolled in Winter 2025
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, winter_quarter_2025) &
+%     date_between_dates_incl(ServiceDate, 2025_01_01, 2025_08_31)
+
+% Student enrolled in Spring 2025
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, spring_quarter_2025) &
+%     date_between_dates_incl(ServiceDate, 2025_04_01, 2025_08_31)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Received from a valid provider
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Encoding does not currently capture the cases where treatment began out-of-network before the policy began, or when the care is emergency or urgent care and received from an out-of-network provider
+
+service_received_at_valid_provider(C) :-
+    claim.location_service_received(C, Location) &
+    member(Location, [
+        stanford_health_care,
+        menlo_medical_clinic,
+        sutter_health_palo_alto_medical_foundation,
+        tier_two_in_network
+    ])
+
+service_received_at_valid_provider(C) :-
+    claim.location_service_received(C, other) &
+    claim.service_available_at_tier_one_or_two_location(C, no)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eligible for service - additional eligibility requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+meets_additional_eligibility_requirements_if_present(C) :-
+    covered_under_cardinal_care_24_25_benefit(C, B)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+medically_necessary_service(C) :-
+    claim.service_type(C, ServiceType) &
+    is_preventive_care_service(ServiceType)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    requires_precertification(ServiceType) & 
+    claim.precertification_received(C, yes)
+
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    ~requires_precertification(ServiceType)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Important Note: Loaded from other, benefit-specific rulesets
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% General exclusions 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Important Note: Formerly loaded from exclusion.hrf. Now encoded in world.hdf.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Helper functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+patient_age_at_time_of_service(Claim, Age) :-
+    claim.patient_dob(Claim, PatientDOB) &
+    claim.date_service_received(Claim, ServiceDate) &
+    patient_age_on_date(PatientDOB, ServiceDate, Age)
+
+patient_age_on_date(PatientDOB, Date, Age) :-
+    evaluate(parsedate(Date),[Year,Month,Day]) &
+    evaluate(parsedate(PatientDOB),[PatientDOBYear,PatientDOBMonth,PatientDOBDay]) &
+    evaluate(minus(Year,PatientDOBYear), YearDiff) &
+    not_yet_birthday_delta(Month,Day, PatientDOBMonth, PatientDOBDay, Delta) &
+    evaluate(plus(YearDiff, Delta), Age)
+
+age_at_time_of_service(Claim, Person, Age) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    age_on_date(Person, ServiceDate, Age)
+
+age_on_date(Person, Date, Age) :-
+    person.dob(Person, DOB) &
+    evaluate(parsedate(Date),[Year,Month,Day]) &
+    evaluate(parsedate(DOB),[DOBYear,DOBMonth,DOBDay]) &
+    evaluate(minus(Year,DOBYear), YearDiff) &
+    not_yet_birthday_delta(Month,Day, DOBMonth, DOBDay, Delta) &
+    evaluate(plus(YearDiff, Delta), Age)
+
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, -1) :-
+    less(Month, DOBMonth)
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, -1) :-
+    same(Month, DOBMonth) &
+    less(Day, DOBDay)
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, 0) :-
+    less(DOBMonth, Month)
+
+not_yet_birthday_delta(Month, Day, FOBMonth, DOBDay, 0) :-
+    same(Month, DOBMonth) &
+    leq(DOBDay, Day)
+
+
+date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
+    symleq(BeginDateRange, Date) &
+    symleq(Date, EndDateRange)
+
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, Diff) &
+    less(Diff, N)
+
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, N) &
+    evaluate(parsedate(EarlierDate),[_,_,SameDay]) & 
+    evaluate(parsedate(LaterDate),[_,_,SameDay])
+
+n_months_diff(EarlierDate, LaterDate, N) :-
+    evaluate(parsedate(EarlierDate),[EY,EM,ED]) & 
+    evaluate(parsedate(LaterDate),[LY,LM,LD]) &
+    evaluate(times(minus(LY, EY), 12), MonthsFromYear) & 
+    not_yet_day_of_month_delta(ED, LD, Delta) &
+    evaluate(plus(MonthsFromYear, minus(LM, EM), Delta), N)
+
+not_yet_day_of_month_delta(D1, D2, 0) :-
+    leq(D1, D2)
+
+not_yet_day_of_month_delta(D1, D2, -1) :-
+    less(D2, D1)
+
+%%%%% Relations to faciliate choosing elements from lists that may have repeats
+
+% Generates all pairs (unordered) of elements from a list, counting identical elements at different positions as distinct
+choose_2_with_indices_from_list_no_repeats(L, E1, I1, E2, I2) :-
+    choose_2_with_indices_from_sublist_no_repeats(0, L, E1, I1, E2, I2)
+
+
+% Case 1: The first element is the head
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, H, NumBefore, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E2, I2)
+
+% Case 2: The first element is in the tail
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, E1, I1, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_2_with_indices_from_sublist_no_repeats(NewNumBefore, T, E1, I1, E2, I2)
+
+
+% Entry point
+choose_1_with_index_from_list(L, E, I) :-
+    choose_1_with_index_from_sublist(0, L, E, I)
+
+% Case 1: The element is the head
+choose_1_with_index_from_sublist(NumBefore, H!T, H, NumBefore)
+
+% Case 2: The element is in the tail
+choose_1_with_index_from_sublist(NumBefore, H!T, E, I) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E, I)

@@ -1,8 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%% General Exclusions %%%%%%%%%%%%%%%%%%%%%%%
-attribute(claim, claim.exclusions)
+attribute(replace_this_term, claim.exclusions)
 
 type(claim.exclusions, attributerelation)
-domain(claim.exclusions, claim)
+domain(claim.exclusions, replace_this_term)
 codomain(claim.exclusions, general_exclusion)
 unique(claim.exclusions, yes)
 total(claim.exclusions, yes)

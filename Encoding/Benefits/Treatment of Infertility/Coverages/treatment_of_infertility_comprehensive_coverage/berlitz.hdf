@@ -2,7 +2,7 @@
 data:
     - ../../berlitz.hdf
     - ../../patient_is_infertile Definition/berlitz.hdf
-    - ../../Non-basic Infertility Coverages/berlitz.hdf
+    - ../../Non-basic Infertility Services/berlitz.hdf
 ---
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -25,22 +25,11 @@ berlitz(claim.num_other_covered_artificial_insemination_attempts(C, N),
 
 %%%%%%%%%%%%%%%%%% For III and IV %%%%%%%%%%%%%%%%%%
 
-berlitz(claim.patient_has_partner(C, yes),
-        "the patient in $C$ has a partner")
-berlitz(claim.patient_has_partner(C, no),
-        "the patient in $C$ does not have a partner")
-
-
-
 berlitz(claim.patient_has_had_voluntary_sterilization(C, yes),
         "the patient in $C$ has had a voluntary sterilization")
 berlitz(claim.patient_has_had_voluntary_sterilization(C, no),
         "the patient in $C$ has not had a voluntary sterilization")
 
-berlitz(claim.patients_partner_has_had_voluntary_sterilization(C, yes),
-        "the patient in $C$ has a partner who has had a voluntary sterilization procedure")
-berlitz(claim.patients_partner_has_had_voluntary_sterilization(C, no),
-        "the patient in $C$ does not have a partner who has had a voluntary sterilization procedure")
 
 berlitz(claim.demonstrated_and_documented_condition_causing_infertility(C, COND),
         "the demonstrated and documented condition causing infertility for the patient in $C$ is $COND$")

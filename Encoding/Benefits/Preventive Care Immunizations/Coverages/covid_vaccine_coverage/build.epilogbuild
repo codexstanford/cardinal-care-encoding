@@ -1,0 +1,5 @@
+world.hdf ==> Deploy/world.hdf
+rules.hrf ==> Deploy/rules.hrf
+metadata_consolidation_order.metadata ==> Deploy/metadata.metadata
+berlitz.hdf ==> Deploy/berlitz.hdf
+overwrite: true

@@ -1,0 +1,47 @@
+---
+data:
+    - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
+---
+
+%%%%%% Not covered example 5 %%%%%%
+%%%%%% Service: intrauterine_insemination %%%%%%
+%%%%%% Patient: Female with male partner %%%%%%
+%%%%%% Reason: Patient has had a voluntary sterilization %%%%%%
+
+%%% Types %%%
+type(rta_bondonado, person)
+type(claim1, claim)
+
+
+%%% Claim %%%
+% claim.patient(claim1, rta_bondonado)
+% claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
+claim.patient_dob(claim1, 1999_06_01)
+claim.date_service_received(claim1,2024_08_10)
+claim.service_type(claim1, intrauterine_insemination)
+claim.precertification_received(claim1, yes)
+
+
+claim.location_service_received(claim1, stanford_health_care)
+claim.service_available_at_tier_one_or_two_location(claim1, yes)
+
+%% Claim type-specific %%
+claim.sex_of_patient_trying_to_conceive(claim1, female)
+
+claim.patient_or_partner_diagnosed_with_gender_dysphoria(claim1, no)
+claim.sex_of_patients_partner(claim1, male)
+
+claim.num_cycles_donor_insemination(claim1, 0)
+claim.num_months_unprotected_intercourse(claim1, 12)
+
+claim.num_other_covered_artificial_insemination_attempts(claim1, 0)
+claim.patient_has_had_voluntary_sterilization(claim1, yes)
+
+claim.demonstrated_and_documented_condition_causing_infertility(claim1, other)
+claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan(claim1, no)
+
+claim.day_3_fsh_tests(claim1, [fsh_test(18, 2023_07_01, 12_00)])
+
+
+%% General Exclusions %% 
+% Imported from no_exclusion_claim.hdf

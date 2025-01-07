@@ -15,12 +15,12 @@ type(claim1, claim)
 %% Service-generic %%
 % claim.patient(claim1, rta_bondonado)
 % claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
-claim.patient_dob(claim1, 1999_06_25)
+claim.patient_dob(claim1, 1999_06_01)
 
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, female_voluntary_sterilization)
 claim.precertification_received(claim1, no)
-claim.waived_cardinal_care(claim1, no)
+
 
 claim.location_service_received(claim1, stanford_health_care)
 claim.service_available_at_tier_one_or_two_location(claim1, yes)

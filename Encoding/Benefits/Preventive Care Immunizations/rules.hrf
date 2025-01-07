@@ -5,7 +5,7 @@
 
 %%%% Preventive Care Immunizations
 covered_under_cardinal_care_24_25_benefit(C, preventive_care_immunizations_benefit) :-
-    claim.service_type(C, preventive_care_immunization) &
+    claim.service_type(C, immunization) &
     is_immunization_for_preventive_care(C) &
     % claim.immunization_for_disease(C, Disease) &
     infectious_disease_for_which_cdc_acip_recommends_immunization(Disease)
@@ -30,50 +30,26 @@ is_immunization_for_preventive_care(C) :-
 %%%% Preventive Care Immunizations
 % Preventive care is a larger category of benefits, including female contraceptives
 % Note: CPB 0035 concerns Influenza Vaccines, but just points to the CDC ACIP guidelines
-is_preventive_care_service(preventive_care_immunization)
+is_preventive_care_service(immunization)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Limitations from Schedule of Benefits
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% beyond_limits(Claim) :-
-%     claim.service_type(Claim, preventive_care_immunization) &
-%     claim.date_service_received(Claim, Date) &
-%     date_between_dates_incl(Date, 2025_01_01, 2025_12_31) & 
-%     ~below_2025_cdc_acip_age_guideline_max(Claim)
-
-
 beyond_limits(Claim) :-
-    claim.service_type(Claim, preventive_care_immunization) &
+    claim.service_type(Claim, immunization) &
     claim.date_service_received(Claim, Date) &
     date_between_dates_incl(Date, 2024_01_01, 2024_12_31) & 
-    ~below_2024_cdc_acip_age_guideline_max(Claim)
+    meets_or_exceeds_2024_cdc_acip_age_guideline_max(Claim)
 
-% beyond_limits(Claim) :-
-%     claim.service_type(Claim, preventive_care_immunization) &
-%     claim.date_service_received(Claim, Date) &
-%     date_between_dates_incl(Date, 2023_01_01, 2023_12_31) & 
-%     ~below_2023_cdc_acip_age_guideline_max(Claim)
 
 %% CDC ACIP Guidelines
-% below_2025_cdc_acip_age_guideline_max(C) :-
-%   % claim.immunization_for_disease(C, D) & % Should remain commented out
-%     claim.patient(C, P) &
-%     age_at_time_of_service(C, P, A) &
-%     below_2025_cdc_acip_age_guideline_max_by_age(A, C) % Definition specified in the respective immunization coverage file
-
-
-below_2024_cdc_acip_age_guideline_max(C) :-
+meets_or_exceeds_2024_cdc_acip_age_guideline_max(C) :-
     % claim.immunization_for_disease(C, D) & % Should remain commented out
     patient_age_at_time_of_service(C, A) &
-    below_2024_cdc_acip_age_guideline_max_by_age(A, C)
-
-% Note: Only encoding 2024 and 2025 guidelines, since we won't be using 2023 guidelines in the final service if we don't make the 2023-2024 policy available
-% below_2023_cdc_acip_age_guideline_max(Claim) :-
-%     below_2024_cdc_acip_age_guideline_max(Claim)
+    meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(A, C)
 
 %%% Disease-specific guidelines are in the respective immunization coverage files
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Helper functions
@@ -84,16 +60,3 @@ patient_geq_6_months_old_at_time_of_service(Claim) :-
     claim.patient_dob(Claim, PatientDOB) & 
     n_months_diff(PatientDOB, ServiceDate, N) &
     leq(6, N)
-
-n_months_diff(EarlierDate, LaterDate, N) :-
-    evaluate(parsedate(EarlierDate),[EY,EM,ED]) & 
-    evaluate(parsedate(LaterDate),[LY,LM,LD]) &
-    evaluate(times(minus(LY, EY), 12), MonthsFromYear) & 
-    not_yet_day_of_month_delta(ED, LD, Delta) &
-    evaluate(plus(MonthsFromYear, minus(LM, EM), Delta), N)
-
-not_yet_day_of_month_delta(D1, D2, 0) :-
-    leq(D1, D2)
-
-not_yet_day_of_month_delta(D1, D2, -1) :-
-    less(D2, D1)

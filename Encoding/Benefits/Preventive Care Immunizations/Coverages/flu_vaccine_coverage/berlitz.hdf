@@ -21,5 +21,5 @@ berlitz(claim.patient_had_received_at_least_two_doses_flu_vaccine_before_july_20
 
 
 
-berlitz(max_doses_flu_vaccine_allowed_for_child_6_months_through_9_years(C, N),
+berlitz(max_doses_flu_vaccine_allowed_for_child_6_months_to_9_years(C, N),
         "if the patient in $C$ is a child of age 6 months through 9 years, then the maximum number of doses of the flu vaccine they should receive this year is $N$")

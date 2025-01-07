@@ -5,7 +5,7 @@ data:
 
 %%%%%% Not covered example 1 %%%%%%
 %%%%%% Service: diagnose_and_evaluate_underlying_medical_cause_of_infertility %%%%%%
-%%%%%% Reason: Male with female partner, fewer than 12 months unprotected intercourse %%%%%%
+%%%%%% Patient: Male with female partner under 35 years old %%%%%%
 
 %%% Types %%%
 type(petra_maldonado, person)
@@ -13,27 +13,22 @@ type(claim1, claim)
 
 
 %%% Claim %%%
-% claim.patient(claim1, petra_maldonado)
-% claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
-claim.patient_dob(claim1, 1999_06_25)
+claim.patient_dob(claim1, 1999_06_01)
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, diagnose_and_evaluate_underlying_medical_cause_of_infertility)
 claim.precertification_received(claim1, no)
-claim.waived_cardinal_care(claim1, no)
 
 claim.location_service_received(claim1, stanford_health_care)
 claim.service_available_at_tier_one_or_two_location(claim1, yes)
 
 %% Claim type-specific %%
-claim.patient_has_female_reproductive_organs(claim1, no)
-claim.patient_has_male_reproductive_organs(claim1, yes)
-
-claim.patient_diagnosed_with_gender_dysphoria(claim1, no)
-claim.patient_has_partner_with_female_reproductive_organs(claim1, yes)
-claim.patient_has_partner_with_male_reproductive_organs(claim1, no)
+claim.sex_of_patient_trying_to_conceive(claim1, male)
+claim.sex_of_patients_partner(claim1, female)
 claim.age_of_patients_female_partner(claim1, 25)
-claim.num_cycles_donor_insemination(claim1, 0)
 
+claim.patient_or_partner_diagnosed_with_gender_dysphoria(claim1, no)
+
+claim.num_cycles_donor_insemination(claim1, 0)
 claim.num_months_unprotected_intercourse(claim1, 11)
 
 %% General Exclusions %% 
