@@ -5,8 +5,8 @@ data:
 
 %%%%%% Covered example 1 %%%%%%
 %%%%%% Service: diagnose_and_evaluate_underlying_medical_cause_of_infertility %%%%%%
-%%%%%% Patient: Male without female partner %%%%%%
-%%%%%% Case: gender dysphoria, no analyses %%%%%%
+%%%%%% Patient: Male %%%%%%
+%%%%%% Case: No female partner (no partner), gender dysphoria, no analyses %%%%%%
 
 %%% Types %%%
 type(petra_maldonado, person)
