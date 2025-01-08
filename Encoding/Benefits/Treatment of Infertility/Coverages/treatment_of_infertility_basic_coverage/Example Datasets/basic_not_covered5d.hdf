@@ -3,10 +3,10 @@ data:
     - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
 ---
 
-%%%%%% Covered example 4a %%%%%%
+%%%%%% Not covered example 5d %%%%%%
 %%%%%% Service: diagnose_and_evaluate_underlying_medical_cause_of_infertility %%%%%%
 %%%%%% Patient: Male %%%%%%
-%%%%%% Case: No female partner (male partner), two tests 14 days apart, another test between them %%%%%%
+%%%%%% Case: Female partner 35, two tests 13 days apart, 6 months, 0 cycles %%%%%%
 
 %%% Types %%%
 type(petra_maldonado, person)
@@ -24,14 +24,15 @@ claim.service_available_at_tier_one_or_two_location(claim1, yes)
 
 %% Claim type-specific %%
 claim.sex_of_patient_trying_to_conceive(claim1, male)
-claim.sex_of_patients_partner(claim1, male)
+claim.sex_of_patients_partner(claim1, female)
+claim.age_of_patients_female_partner(claim1, 35)
 
 claim.patient_or_partner_diagnosed_with_gender_dysphoria(claim1, no)
 
-claim.abnormal_semen_analyses(claim1, [abnormal_semen_analysis(2024_07_01), abnormal_semen_analysis(2024_07_10), abnormal_semen_analysis(2024_07_15)])
+claim.abnormal_semen_analyses(claim1, [abnormal_semen_analysis(2024_07_02), abnormal_semen_analysis(2024_07_15)])
 
 
-claim.num_months_frequent_unprotected_heterosexual_intercourse(claim1, 0)
+claim.num_months_frequent_unprotected_heterosexual_intercourse(claim1, 6)
 claim.num_cycles_donor_insemination(claim1, 0)
 
 %% General Exclusions %% 
