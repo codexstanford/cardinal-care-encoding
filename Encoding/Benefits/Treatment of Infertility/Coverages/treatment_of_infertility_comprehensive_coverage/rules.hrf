@@ -134,15 +134,15 @@ meets_policy_wording_table_reqs(C) :-
 %%% Medical necessity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Source: A.3 from CPB 0327 on 1/4/2025: https://www.aetna.com/cpb/medical/data/300_399/0327.html
+medically_necessary_service(C) :-
+    claim.service_type(C, intrauterine_insemination)
+
 medically_necessary_service(C) :-
     claim.service_type(C, ovulation_induction_cycle_with_menotropins) &
     patient_age_at_time_of_service(C, Age) &
     leq(Age, 37) &
     meets_cpb_egg_sperm_contact_trial_reqs(C)
-
-% Source: A.3 from CPB 0327 on 1/4/2025: https://www.aetna.com/cpb/medical/data/300_399/0327.html
-medically_necessary_service(C) :-
-    claim.service_type(C, intrauterine_insemination)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
