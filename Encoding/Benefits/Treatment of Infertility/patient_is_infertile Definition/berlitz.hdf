@@ -40,11 +40,5 @@ berlitz(claim.patient_or_partner_diagnosed_with_gender_dysphoria(C, no),
 berlitz(patient_is_infertile(C),
         "the patient in $C$ is infertile")
 
-berlitz(meets_attempt_to_conceive_reqs_female_without_male_partner(C, A),
-        "$C$ meets the minimum requirements for attempting to conceive for a female of age $A$ without a male partner")
-
-berlitz(meets_attempt_to_conceive_reqs_female_with_male_partner(C, A),
-        "$C$ meets the minimum requirements for attempting to conceive for a female of age $A$ with a male partner")
-
-berlitz(meets_attempt_to_conceive_reqs_male_with_female_partner(C, A),
-        "$C$ meets the minimum requirements for attempting to conceive for a male with a female partner of age $A$")
+berlitz(abnormal_semen_analyses_in_claim_at_least_two_weeks_apart(C),
+        "the claim $C$ lists two abnormal semen analyses that are at least two weeks apart")
