@@ -1,5 +1,6 @@
 type(diagnose_and_evaluate_underlying_medical_cause_of_infertility, cardinal_care_2024_2025_service)
 type(surgery_to_treat_underlying_medical_cause_of_infertility, cardinal_care_2024_2025_service)
+type(other, cardinal_care_2024_2025_service)
 
 type(male, biological_sex)
 type(female, biological_sex)

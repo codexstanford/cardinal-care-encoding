@@ -41,21 +41,6 @@ berlitz(is_comprehensive_infertility_service(S),
 
 berlitz(meets_comprehensive_infertility_service_eligibility_requirements(C),
         "$C$ meets the eligibility requirements for comprehensive infertility services")
-
-berlitz(meets_no_voluntary_sterilization_req(C),
-        "either the patient in $C$ or their partner has not had a voluntary sterilization procedure")
-
-berlitz(patient_meets_day_3_fsh_level_criteria(C),
-        "the day 3 FSH level criteria are met by the patient in $C$")
-
-berlitz(meets_ovulation_induction_cpb_reqs(C),
-        "$C$ meets the requirements for ovulation induction that are listed in Aetna's CPB 0327")
-
-berlitz(meets_ovulation_induction_reqs_under_35(C),
-        "$C$ meets the requirements for ovulation induction for a patient under age 35 that are listed in Aetna's CPB 0327")
-
-berlitz(meets_ovulation_induction_reqs_35_and_over(C),
-        "$C$ meets the requirements for ovulation induction for a patient age 35 or over that are listed in Aetna's CPB 0327")
 %%%%%%%%%%% Treatment of Infertility Benefit %%%%%%%%%%%
 
 
@@ -131,8 +116,8 @@ berlitz(claim.day_3_fsh_tests(C, Tests),
 berlitz(most_recent_day_3_fsh_test(C, fsh_test(L, DATE, TIME)),
         "the most recent day 3 FSH test in $C$ was on $DATE$ at $TIME$ and was $L$ mIU/ML")
 
-berlitz(day_3_fsh_tests_after_age_40_in_claim(C, Tests),
-        "claim $C$ specifies the following list of day 3 FSH tests taken after the age of 40: $Tests$")
+berlitz(day_3_fsh_tests_since_age_40_in_claim(C, Tests),
+        "claim $C$ specifies the following list of day 3 FSH tests since turning 40: $Tests$")
 
 berlitz(leq_datetime(DT1, DT2),
         "$DT1$ is on or before $DT2$")
