@@ -11,12 +11,8 @@ data:
 
 %%% III. Ovulation Induction Cycle with Menotropins
 
-berlitz(claim.num_months_regular_intravaginal_inseminations(C, N), 
-        "the patient in $C$ has undergone $N$ months of regular intravaginal inseminations")
-
-berlitz(claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N), 
-        "the patient in $C$ has undergone $N$ cycles of intrauterine or intracervical inseminations, document in the medical record")
-
+berlitz(claim.num_months_timed_unprotected_intercourse(C, N), 
+        "the patient in $C$ has tried to conceive for $N$ months of unprotected, timed intercourse")
 
 %%% IV. Intrauterine Insemination
 

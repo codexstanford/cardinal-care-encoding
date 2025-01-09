@@ -1,6 +1,9 @@
 
 %%%%%%%%%%%%%%%%%% For III, IV, V, and VI %%%%%%%%%%%%%%%%%%
 
+berlitz(claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N), 
+        "the patient in $C$ has undergone $N$ cycles of timed intrauterine or intracervical inseminations, documented in the medical record")
+
 berlitz(claim.day_3_fsh_tests(C, Tests),
         "claim $C$ specifies list of day 3 FSH tests as: $Tests$")
 
