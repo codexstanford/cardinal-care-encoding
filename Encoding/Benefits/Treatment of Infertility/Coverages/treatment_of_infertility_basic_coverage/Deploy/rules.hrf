@@ -70,78 +70,81 @@ is_basic_infertility_service(surgery_to_treat_underlying_medical_cause_of_infert
 get_timestamp_from_date(DATE,STAMP) :-
   evaluate(parsedate(DATE),[Y,M,D]) &
   evaluate(maketimestamp(Y,M,D,0,0,0),STAMP)
-%% General definition of infertility
+%%% General definition of infertility from 2023-2024 Certificate of Coverage Glossary %%%
 
-% Female without a male partner
-patient_is_infertile(C) :-
-    claim.sex_of_patient_trying_to_conceive(C, female) &
-    ~claim.sex_of_patients_partner(C, male) &
-    patient_age_at_time_of_service(C, Age) &
-    meets_attempt_to_conceive_reqs_female_without_male_partner(C, Age)
-
+%% Female with a male partner %%
 % Under 35
-meets_attempt_to_conceive_reqs_female_without_male_partner(C, PersonAge) :-
-    less(PersonAge, 35) &
-    claim.num_cycles_donor_insemination(C, NumCycles) &
-    leq(12, NumCycles)
-
-% 35 and over
-meets_attempt_to_conceive_reqs_female_without_male_partner(C, PersonAge) :-
-    leq(35, PersonAge) &
-    claim.num_cycles_donor_insemination(C, NumCycles) &
-    leq(6, NumCycles)
-
-
-% Female with a male partner
 patient_is_infertile(C) :-
     claim.sex_of_patient_trying_to_conceive(C, female) &
     claim.sex_of_patients_partner(C, male) &
     patient_age_at_time_of_service(C, Age) &
-    meets_attempt_to_conceive_reqs_female_with_male_partner(C, Age)
-
-
-% Under 35
-meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
-    less(PersonAge, 35) &
-    claim.num_months_unprotected_intercourse(C, NumMonths) &
-    leq(12, NumMonths)
+    less(Age, 35) &
+    claim.num_months_frequent_unprotected_heterosexual_intercourse(C, N) &
+    leq(12, N)
 
 % 35 or over
-meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
-    leq(35, PersonAge) &
-    claim.num_months_unprotected_intercourse(C, NumMonths) &
-    leq(6, NumMonths)
-
-% Can also have tried donor insemination
-meets_attempt_to_conceive_reqs_female_with_male_partner(C, PersonAge) :-
-    meets_attempt_to_conceive_reqs_female_without_male_partner(C, PersonAge)
-
-
-% Male with a female partner
 patient_is_infertile(C) :-
-    claim.sex_of_patient_trying_to_conceive(C, male) &
-    claim.sex_of_patients_partner(C, female) &
-    claim.age_of_patients_female_partner(C, PartnerAge) & 
-    meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge)
+    claim.sex_of_patient_trying_to_conceive(C, female) &
+    claim.sex_of_patients_partner(C, male) &
+    patient_age_at_time_of_service(C, Age) &
+    leq(35, Age) &
+    claim.num_months_frequent_unprotected_heterosexual_intercourse(C, N) &
+    leq(6, N)
 
-% Female partner under 35
-meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
-    less(PartnerAge, 35) &
-    claim.num_months_unprotected_intercourse(C, NumMonths) &
-    leq(12, NumMonths)
+%% Female without a male partner %%
+% Under 35
+patient_is_infertile(C) :-
+    claim.sex_of_patient_trying_to_conceive(C, female) &
+    ~claim.sex_of_patients_partner(C, male) &
+    patient_age_at_time_of_service(C, Age) &
+    less(Age, 35) &
+    claim.num_cycles_donor_insemination(C, N) &
+    leq(12, N)
 
-% Female partner 35 or over
-meets_attempt_to_conceive_reqs_male_with_female_partner(C, PartnerAge) :-
-    leq(35, PartnerAge) &
-    claim.num_months_unprotected_intercourse(C, NumMonths) &
-    leq(6, NumMonths)
+% 35 or over
+patient_is_infertile(C) :-
+    claim.sex_of_patient_trying_to_conceive(C, female) &
+    ~claim.sex_of_patients_partner(C, male) &
+    patient_age_at_time_of_service(C, Age) &
+    leq(35, Age) &
+    claim.num_cycles_donor_insemination(C, N) &
+    leq(6, N)
 
 
-% Male without a female partner
-% Bug Note: This is actually buggy because the policy would care about dates, not solar/sidereal time - should use a real datetime module for computing difference of two weeks
+%% Male without a female partner %%
 patient_is_infertile(C) :-
     claim.sex_of_patient_trying_to_conceive(C, male) &
     ~claim.sex_of_patients_partner(C, female) &
+    abnormal_semen_analyses_in_claim_at_least_two_weeks_apart(C)
+
+%% Male with a female partner %%
+
+% NOT ACTUALLY MENTIONED IN THE GLOSSARY, but we're assuming Aetna allows for the possibility that a male with a female partner can be infertile %
+% To be conservative, using the female with a male partner requirements applied to the female partner, and the requirements for the male without a female partner applied to the male patient
+
+% Patient's partner is under 35
+patient_is_infertile(C) :-
+    claim.sex_of_patient_trying_to_conceive(C, male) &
+    claim.sex_of_patients_partner(C, female) &
+    claim.age_of_patients_female_partner(C, PartnerAge) &
+    less(PartnerAge, 35) &
+    claim.num_months_frequent_unprotected_heterosexual_intercourse(C, N) &
+    leq(12, N) &
+    abnormal_semen_analyses_in_claim_at_least_two_weeks_apart(C)
+
+% Patient's partner is 35 or over
+patient_is_infertile(C) :-
+    claim.sex_of_patient_trying_to_conceive(C, male) &
+    claim.sex_of_patients_partner(C, female) &
+    claim.age_of_patients_female_partner(C, PartnerAge) &
+    leq(35, PartnerAge) &
+    claim.num_months_frequent_unprotected_heterosexual_intercourse(C, N) &
+    leq(6, N) &
+    abnormal_semen_analyses_in_claim_at_least_two_weeks_apart(C)
+
+% Helper relation for male infertility %
+% Bug Note: This is actually buggy because the policy would care about dates, not solar/sidereal time - should use a real datetime module for computing difference of two weeks
+abnormal_semen_analyses_in_claim_at_least_two_weeks_apart(C) :-
     claim.abnormal_semen_analyses(C, Analyses) &
     choose_2_with_indices_from_list_no_repeats(Analyses, abnormal_semen_analysis(Date1), _, abnormal_semen_analysis(Date2), _) &
     get_timestamp_from_date(Date1, TS1) &
@@ -150,8 +153,7 @@ patient_is_infertile(C) :-
     evaluate(times(14, 24, 60, 60, 1000), NUM_MS_IN_TWO_WEEKS) &
     leq(NUM_MS_IN_TWO_WEEKS, TimeDiff)
 
-
-% Person with gender dysphoria
+%% Person with gender dysphoria %%
 patient_is_infertile(C) :-
     claim.patient_or_partner_diagnosed_with_gender_dysphoria(C, yes)
 % covers(Policy, C) :-

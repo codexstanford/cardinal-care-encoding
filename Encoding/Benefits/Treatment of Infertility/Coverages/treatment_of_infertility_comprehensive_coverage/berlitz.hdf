@@ -11,12 +11,8 @@ data:
 
 %%% III. Ovulation Induction Cycle with Menotropins
 
-berlitz(claim.num_months_regular_intravaginal_inseminations(C, N), 
-        "the patient in $C$ has undergone $N$ months of regular intravaginal inseminations")
-
-berlitz(claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N), 
-        "the patient in $C$ has undergone $N$ cycles of intrauterine or intracervical inseminations, document in the medical record")
-
+berlitz(claim.num_months_timed_unprotected_intercourse(C, N), 
+        "the patient in $C$ has tried to conceive for $N$ months of unprotected, timed intercourse")
 
 %%% IV. Intrauterine Insemination
 
@@ -49,17 +45,15 @@ berlitz(is_comprehensive_infertility_service(S),
 berlitz(meets_comprehensive_infertility_service_eligibility_requirements(C),
         "$C$ meets the eligibility requirements for comprehensive infertility services")
 
-berlitz(meets_no_voluntary_sterilization_req(C),
-        "either the patient in $C$ or their partner has not had a voluntary sterilization procedure")
 
-berlitz(patient_meets_day_3_fsh_level_criteria(C),
-        "the day 3 FSH level criteria are met by the patient in $C$")
+berlitz(meets_policy_wording_table_reqs(C),
+        "the claim $C$ meets the requirements for egg-sperm contact and day 3 FSH tests listed in the table in the certificate of coverage")
 
-berlitz(meets_ovulation_induction_cpb_reqs(C),
-        "$C$ meets the requirements for ovulation induction that are listed in Aetna's CPB 0327")
+berlitz(meets_policy_wording_table_reqs_egg_sperm_contact_female_under_35_with_male_partner(C),
+        "the claim $C$ meets the requirements for egg-sperm contact listed in the table in the certificate of coverage for a female under 35 with a male partner")
 
-berlitz(meets_ovulation_induction_reqs_under_35(C),
-        "$C$ meets the requirements for ovulation induction for a patient under age 35 that are listed in Aetna's CPB 0327")
+berlitz(meets_policy_wording_table_reqs_egg_sperm_contact_female_35_or_over_with_male_partner(C),
+        "the claim $C$ meets the requirements for egg-sperm contact listed in the table in the certificate of coverage for a female 35 or over with a male partner")
 
-berlitz(meets_ovulation_induction_reqs_35_and_over(C),
-        "$C$ meets the requirements for ovulation induction for a patient age 35 or over that are listed in Aetna's CPB 0327")
+berlitz(meets_day_3_fsh_level_criteria_female_35_or_over(C), 
+        "the claim $C$ meets the day 3 FSH level criteria listed in the table in the certificate of coverage for a female 35 or over")

@@ -1,0 +1,49 @@
+---
+data:
+    - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
+---
+
+%%%%%% Covered example 17a %%%%%%
+
+%%%%%% Service: ivf_for_fertility_preservation %%%%%%
+%%%%%% Patient: Age 34 %%%%%%
+%%%%%% Case: not using own eggs, no POF, no tests, IVF not expected to be only effective treatment %%%%%%
+%%%%%% Less invasive procedures: 12 months regular, 0 cycles timed, 3 cycles ovulation induction %%%%%%
+
+%%% Types %%%
+type(rta_bondonado, person)
+type(claim1, claim)
+
+%%% Claim %%%
+% claim.patient(claim1, rta_bondonado)
+% claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
+claim.patient_dob(claim1, 1990_06_01)
+claim.date_service_received(claim1,2024_08_10)
+claim.service_type(claim1, ivf_for_fertility_preservation)
+claim.precertification_received(claim1, yes)
+
+
+claim.location_service_received(claim1, stanford_health_care)
+claim.service_available_at_tier_one_or_two_location(claim1, yes)
+
+%% Claim type-specific %%
+claim.sex_of_patient_trying_to_conceive(claim1, female)
+
+claim.patient_is_believed_to_be_fertile(claim1, yes)
+claim.patient_has_premature_ovarian_failure(claim1, no)
+
+
+claim.day_3_fsh_tests(claim1, [])
+
+claim.planned_service(claim1, chemotherapy)
+
+claim.will_be_retrieving_eggs_for_use(claim1, no)
+claim.num_other_covered_art_services(claim1, 0)
+
+claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_only_effective_treatment(claim1, no)
+claim.num_months_frequent_unprotected_heterosexual_intercourse(claim1, 12)
+claim.num_cycles_timed_intrauterine_intracervical_inseminations(claim1, 0)
+claim.num_cycles_oral_or_injectable_ovulation_induction(claim1, 3)
+
+%% General Exclusions %% 
+% Imported from no_exclusion_claim.hdf

@@ -1,4 +1,12 @@
+attribute(replace_this_term, claim.num_cycles_timed_intrauterine_intracervical_inseminations)
 attribute(replace_this_term, claim.day_3_fsh_tests)
+
+type(claim.num_cycles_timed_intrauterine_intracervical_inseminations, attributerelation)
+domain(claim.num_cycles_timed_intrauterine_intracervical_inseminations, replace_this_term)
+codomain(claim.num_cycles_timed_intrauterine_intracervical_inseminations, number)
+unique(claim.num_cycles_timed_intrauterine_intracervical_inseminations, yes)
+total(claim.num_cycles_timed_intrauterine_intracervical_inseminations, no)
+changestyle(claim.num_cycles_timed_intrauterine_intracervical_inseminations, numberstyle)
 
 type(claim.day_3_fsh_tests, attributerelation)
 domain(claim.day_3_fsh_tests, replace_this_term)

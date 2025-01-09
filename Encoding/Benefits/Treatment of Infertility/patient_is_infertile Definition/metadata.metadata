@@ -2,7 +2,6 @@ attribute(replace_this_term, claim.sex_of_patient_trying_to_conceive) % Also use
 attribute(replace_this_term, claim.sex_of_patients_partner)
 attribute(replace_this_term, claim.age_of_patients_female_partner)
 attribute(replace_this_term, claim.num_cycles_donor_insemination)
-attribute(replace_this_term, claim.num_months_unprotected_intercourse)
 attribute(replace_this_term, claim.abnormal_semen_analyses)
 attribute(replace_this_term, claim.patient_or_partner_diagnosed_with_gender_dysphoria)
 
@@ -33,13 +32,6 @@ codomain(claim.num_cycles_donor_insemination, number)
 unique(claim.num_cycles_donor_insemination, yes)
 total(claim.num_cycles_donor_insemination, no)
 changestyle(claim.num_cycles_donor_insemination, numberstyle)
-
-type(claim.num_months_unprotected_intercourse, attributerelation)
-domain(claim.num_months_unprotected_intercourse, replace_this_term)
-codomain(claim.num_months_unprotected_intercourse, number)
-unique(claim.num_months_unprotected_intercourse, yes)
-total(claim.num_months_unprotected_intercourse, no)
-changestyle(claim.num_months_unprotected_intercourse, numberstyle)
 
 type(claim.abnormal_semen_analyses, attributerelation)
 domain(claim.abnormal_semen_analyses, replace_this_term)

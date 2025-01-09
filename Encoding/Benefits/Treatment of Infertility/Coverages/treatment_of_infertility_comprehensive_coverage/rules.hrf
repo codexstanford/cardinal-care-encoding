@@ -23,92 +23,126 @@ meets_comprehensive_infertility_service_eligibility_requirements(C) :-
         other_natural_physiologic_process
     ]) &
     claim.successful_pregnancy_can_be_attained_through_less_costly_treatment_covered_by_plan(C, no) &
-    patient_meets_day_3_fsh_level_criteria(C)
+    meets_policy_wording_table_reqs(C) % This encodes the last two criteria bullets in the "Infertility Services" heading on page 62
 
-% If under 35, only care about most recent test
-% And most recent test must be within the last 12 months
-patient_meets_day_3_fsh_level_criteria(C) :-
+%%%% From 2023-2024 Certificate of Coverage table on pages 62 and 63 %%%%%
+%% Female under 35 with a male partner %%
+meets_policy_wording_table_reqs(C) :-
+    claim.sex_of_patient_trying_to_conceive(C, female) &
+    claim.sex_of_patients_partner(C, male) &
     patient_age_at_time_of_service(C, Age) &
     less(Age, 35) &
-    most_recent_day_3_fsh_test(C, fsh_test(Level, TestDate, _)) &
-    less(Level, 19) &
+    meets_policy_wording_table_reqs_egg_sperm_contact_female_under_35_with_male_partner(C) &
+    most_recent_day_3_fsh_test(C, fsh_test(Level, TestDate, TestTime)) &
     claim.date_service_received(C, ServiceDate) &
-    symleq(TestDate, ServiceDate) &
-    leq_n_months_diff(TestDate, ServiceDate, 12)
+    leq_n_months_diff(TestDate, ServiceDate, 12) &
+    less(Level, 19)
 
-% If >= 35 and < 40, only care about most recent test, and test must be within the last 6 months
-patient_meets_day_3_fsh_level_criteria(C) :-
+meets_policy_wording_table_reqs_egg_sperm_contact_female_under_35_with_male_partner(C) :-
+    claim.num_months_timed_unprotected_intercourse(C, N) &
+    leq(12, N)
+
+meets_policy_wording_table_reqs_egg_sperm_contact_female_under_35_with_male_partner(C) :-
+    claim.num_cycles_donor_insemination(C, N) &
+    leq(12, N)
+
+
+%% Female under 35 without a male partner %%
+meets_policy_wording_table_reqs(C) :-
+    claim.sex_of_patient_trying_to_conceive(C, female) &
+    ~claim.sex_of_patients_partner(C, male) &
+    patient_age_at_time_of_service(C, Age) &
+    less(Age, 35) &
+    claim.num_cycles_donor_insemination(C, N) &
+    leq(12, N) &
+    most_recent_day_3_fsh_test(C, fsh_test(Level, TestDate, TestTime)) &
+    claim.date_service_received(C, ServiceDate) &
+    leq_n_months_diff(TestDate, ServiceDate, 12) &
+    less(Level, 19)
+
+%% Female 35 or over with a male partner %%
+meets_policy_wording_table_reqs(C) :-
+    claim.sex_of_patient_trying_to_conceive(C, female) &
+    claim.sex_of_patients_partner(C, male) &
     patient_age_at_time_of_service(C, Age) &
     leq(35, Age) &
-    less(Age, 40) &
-    most_recent_day_3_fsh_test(C, fsh_test(Level, TestDate, _)) &
-    less(Level, 19) &
+    meets_policy_wording_table_reqs_egg_sperm_contact_female_35_or_over_with_male_partner(C) &
+    most_recent_day_3_fsh_test(C, fsh_test(_, TestDate, TestTime)) &
     claim.date_service_received(C, ServiceDate) &
-    symleq(TestDate, ServiceDate) &
-    leq_n_months_diff(TestDate, ServiceDate, 6)
+    leq_n_months_diff(TestDate, ServiceDate, 6) &
+    meets_day_3_fsh_level_criteria_female_35_or_over(C)
+
+meets_policy_wording_table_reqs_egg_sperm_contact_female_35_or_over_with_male_partner(C) :-
+    claim.num_months_timed_unprotected_intercourse(C, N) &
+    leq(6, N)
+
+meets_policy_wording_table_reqs_egg_sperm_contact_female_35_or_over_with_male_partner(C) :-
+    claim.num_cycles_donor_insemination(C, N) &
+    leq(6, N)
 
 
-% If over 40, care about all tests performed after age 40. And most recent test must be within the last 6 months.
-% Practically, this almost certainly means "since you became 40". But this is technically an assumption.
-% Another practical assumption: There must be at least one test after age 40
-patient_meets_day_3_fsh_level_criteria(C) :-
+%% Female 35 or over without a male partner %%
+meets_policy_wording_table_reqs(C) :-
+    claim.sex_of_patient_trying_to_conceive(C, female) &
+    ~claim.sex_of_patients_partner(C, male) &
+    patient_age_at_time_of_service(C, Age) &
+    leq(35, Age) &
+    claim.num_cycles_donor_insemination(C, N) &
+    leq(6, N) &
+    most_recent_day_3_fsh_test(C, fsh_test(_, TestDate, TestTime)) &
+    claim.date_service_received(C, ServiceDate) &
+    leq_n_months_diff(TestDate, ServiceDate, 6) &
+    meets_day_3_fsh_level_criteria_female_35_or_over(C)
+
+% Day 3 FSH level criteria for women 35 or over %
+% If under 40, only care about most recent test
+meets_day_3_fsh_level_criteria_female_35_or_over(C) :-
+    patient_age_at_time_of_service(C, Age) &
+    less(Age, 40) &
+    most_recent_day_3_fsh_test(C, fsh_test(Level, _, _)) &
+    less(Level, 19)
+
+% If 40 or over, care about all tests performed since age 40 (and there must be at least one test)
+meets_day_3_fsh_level_criteria_female_35_or_over(C) :-
     patient_age_at_time_of_service(C, Age) &
     leq(40, Age) &
-    day_3_fsh_tests_after_age_40_in_claim(C, Tests) &
+    day_3_fsh_tests_since_age_40_in_claim(C, Tests) &
     evaluate(length(Tests), NumTests) &
     leq(1, NumTests) &
-    ~exists_test_with_level_at_least_19(Tests) &
-    most_recent_day_3_fsh_test(C, fsh_test(_, TestDate, _)) &
-    claim.date_service_received(C, ServiceDate) &
-    symleq(TestDate, ServiceDate) &
-    leq_n_months_diff(TestDate, ServiceDate, 6)
+    ~exists_test_with_level_at_least_19(Tests)
 
-% N/A if male
-patient_meets_day_3_fsh_level_criteria(C) :-
-    claim.sex_of_patient_trying_to_conceive(C, male)
+%% Male with female partner under 35 %%
+meets_policy_wording_table_reqs(C) :-
+    claim.sex_of_patient_trying_to_conceive(C, male) &
+    claim.sex_of_patients_partner(C, female) &
+    claim.age_of_patients_female_partner(C, Age) &
+    less(Age, 35) &
+    claim.num_months_timed_unprotected_intercourse(C, N) &
+    leq(12, N)
+
+%% Male with female partner 35 or over %%
+meets_policy_wording_table_reqs(C) :-
+    claim.sex_of_patient_trying_to_conceive(C, male) &
+    claim.sex_of_patients_partner(C, female) &
+    claim.age_of_patients_female_partner(C, Age) &
+    leq(35, Age) &
+    claim.num_months_timed_unprotected_intercourse(C, N) &
+    leq(6, N)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Medical necessity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Source: A.3 from CPB 0327 on 1/4/2025: https://www.aetna.com/cpb/medical/data/300_399/0327.html
+medically_necessary_service(C) :-
+    claim.service_type(C, intrauterine_insemination)
+
 medically_necessary_service(C) :-
     claim.service_type(C, ovulation_induction_cycle_with_menotropins) &
     patient_age_at_time_of_service(C, Age) &
     leq(Age, 37) &
-    meets_ovulation_induction_cpb_reqs(C)
-
-meets_ovulation_induction_cpb_reqs(C) :-
-    patient_age_at_time_of_service(C, Age) &
-    less(Age, 35) &
-    meets_ovulation_induction_reqs_under_35(C)
-
-
-meets_ovulation_induction_reqs_under_35(C) :-
-    claim.num_months_regular_intravaginal_inseminations(C, N) &
-    leq(12, N)
-
-meets_ovulation_induction_reqs_under_35(C) :-
-    claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
-    leq(4, N)
-
-meets_ovulation_induction_cpb_reqs(C) :-
-    patient_age_at_time_of_service(C, Age) &
-    leq(35, Age) &
-    meets_ovulation_induction_reqs_35_and_over(C)
-
-meets_ovulation_induction_reqs_under_35(C) :-
-    claim.num_months_regular_intravaginal_inseminations(C, N) &
-    leq(6, N)
-
-meets_ovulation_induction_reqs_35_and_over(C) :-
-    claim.num_cycles_timed_intrauterine_intracervical_inseminations(C, N) &
-    leq(3, N)
-
-
-% Based on artificial inseminations being considered medically necessary from CPB 0327 section "Artificial Inseminations"
-medically_necessary_service(C) :-
-    claim.service_type(C, intrauterine_insemination)
+    meets_cpb_egg_sperm_contact_trial_reqs(C)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

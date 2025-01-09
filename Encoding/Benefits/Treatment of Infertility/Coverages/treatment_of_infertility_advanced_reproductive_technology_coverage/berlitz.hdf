@@ -18,11 +18,6 @@ berlitz(claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_
 berlitz(claim.inseminations_not_expected_to_be_effective_and_ivf_expected_to_be_only_effective_treatment(C, no), 
         "for the patient in $C$, intravaginal, intrauterine, or intracervical inseminations would have been expected to be effective, or IVF would not have been expected to be the only effective treatment for infertility")
 
-berlitz(claim.service_is_ivf_with_embryo_transfer(C, yes), 
-        "the IVF procedure in $C$ is IVF with embryo transfer")
-berlitz(claim.service_is_ivf_with_embryo_transfer(C, no), 
-        "the IVF procedure in $C$ is not IVF with embryo transfer")
-
 %%% VI. Cryopreservation for Fertility Preservation
 
 %%%%%%%%%%%%%%%%%% For V, and VI %%%%%%%%%%%%%%%%%%
@@ -57,7 +52,7 @@ berlitz(is_art_service(S),
         "$S$ is an ART service")
 
 berlitz(meets_fertility_preservation_eligibility_requirements(C),
-        "$C$ meets the eligibility requirements for fertility preservation services")
+        "the claim $C$ meets the eligibility requirements for fertility preservation services")
 
 berlitz(eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, A),
         "the eggs of the patient in $C$ that are to be retrieved for use meet the required ovarian responsiveness criteria for someone of age $A$")
@@ -65,5 +60,14 @@ berlitz(eggs_to_be_retrieved_meet_fsh_and_ovarian_responsiveness_criteria(C, A),
 berlitz(meets_fsh_test_recency_req(C, T),
         "the FSH test $T$ in $C$ meets the FSH test recency requirements")
 
+berlitz(younger_than_40_or_has_provided_evidence_not_menopausal(C),
+        "the patient in $C$ is younger than 40 or has provided evidence that they are not menopausal")
+
 berlitz(meets_ivf_cpb_reqs(C),
-        "$C$ meets the requirements for IVF that are listed in Aetna's CPB 0327")
+        "the claim $C$ meets the requirements for IVF that are listed in Aetna's Clinical Policy Bulletin 0327")
+
+berlitz(meets_less_invasive_prior_treatment_reqs(C),
+        "the claim $C$ meets the requirements for less invasive prior treatment that are listed in Aetna's Clinical Policy Bulletin 0327")
+
+berlitz(meets_ovulation_induction_trial_reqs(C),
+        "the claim $C$ meets the requirements for prior trials of ovulation induction that are listed in Aetna's Clinical Policy Bulletin 0327")

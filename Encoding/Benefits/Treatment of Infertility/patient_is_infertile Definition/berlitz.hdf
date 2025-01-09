@@ -8,12 +8,12 @@
 berlitz(claim.sex_of_patient_trying_to_conceive(C, S),
         "the sex of the patient in $C$ is $S$")
 
-berlitz(claim.sex_of_patients_partner(C, no_partner),
-        "the patient in $C$ does not have a partner")
 berlitz(claim.sex_of_patients_partner(C, male),
         "the patient in $C$ has a male partner")
 berlitz(claim.sex_of_patients_partner(C, female),
         "the patient in $C$ has a female partner")
+berlitz(claim.sex_of_patients_partner(C, no_partner),
+        "the patient in $C$ does not have a partner")
 
 
 berlitz(claim.age_of_patients_female_partner(C, A), 
@@ -22,10 +22,6 @@ berlitz(claim.age_of_patients_female_partner(C, A),
 
 berlitz(claim.num_cycles_donor_insemination(C, N), 
         "the patient in $C$ has undergone $N$ cycles of donor artifical insemination")
-
-
-berlitz(claim.num_months_unprotected_intercourse(C, N), 
-        "the patient in $C$ has tried to conceive for $N$ months of unprotected timed intercourse")
 
 
 berlitz(claim.abnormal_semen_analyses(C, Analyses),
@@ -44,11 +40,5 @@ berlitz(claim.patient_or_partner_diagnosed_with_gender_dysphoria(C, no),
 berlitz(patient_is_infertile(C),
         "the patient in $C$ is infertile")
 
-berlitz(meets_attempt_to_conceive_reqs_female_without_male_partner(C, A),
-        "$C$ meets the minimum requirements for attempting to conceive for a female of age $A$ without a male partner")
-
-berlitz(meets_attempt_to_conceive_reqs_female_with_male_partner(C, A),
-        "$C$ meets the minimum requirements for attempting to conceive for a female of age $A$ with a male partner")
-
-berlitz(meets_attempt_to_conceive_reqs_male_with_female_partner(C, A),
-        "$C$ meets the minimum requirements for attempting to conceive for a male with a female partner of age $A$")
+berlitz(abnormal_semen_analyses_in_claim_at_least_two_weeks_apart(C),
+        "the claim $C$ lists two abnormal semen analyses that are at least two weeks apart")
