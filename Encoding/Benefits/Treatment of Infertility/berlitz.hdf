@@ -5,6 +5,9 @@ data:
 
 %%%%%%%%%%% Treatment of Infertility Benefit %%%%%%%%%%%
 
+berlitz(claim.num_months_frequent_unprotected_heterosexual_intercourse(C, N), 
+        "the patient in $C$ has tried to conceive for $N$ months of frequent, unprotected, heterosexual intercourse")
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Defined Relations 
