@@ -3,11 +3,11 @@ data:
     - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
 ---
 
-%%%%%% Not covered example 3c %%%%%%
+%%%%%% Not covered example 4c %%%%%%
 %%%%%% Service: intrauterine_insemination %%%%%%
-%%%%%% Patient: Female >= 35 (age 39) %%%%%%
+%%%%%% Patient: Female >= 35 (age 40) %%%%%%
 %%%%%% Case: Male partner, 6 months timed, 0 cycles %%%%%%
-%%%%%% Tests: one in last 6 months, level 19 %%%%%%
+%%%%%% Tests: one in last 6 months, since 40, level 19 %%%%%%
 
 %%% Types %%%
 type(rta_bondonado, person)
@@ -15,7 +15,7 @@ type(claim1, claim)
 
 
 %%% Claim %%%
-claim.patient_dob(claim1, 1985_06_01)
+claim.patient_dob(claim1, 1984_01_01)
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, intrauterine_insemination)
 claim.precertification_received(claim1, yes)

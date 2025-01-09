@@ -3,10 +3,10 @@ data:
     - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
 ---
 
-%%%%%% Not covered example 3c %%%%%%
+%%%%%% Not covered example 5d %%%%%%
 %%%%%% Service: intrauterine_insemination %%%%%%
 %%%%%% Patient: Female >= 35 (age 39) %%%%%%
-%%%%%% Case: Male partner, 6 months timed, 0 cycles %%%%%%
+%%%%%% Case: No male partner (female partner), 0 months timed, 6 cycles %%%%%%
 %%%%%% Tests: one in last 6 months, level 19 %%%%%%
 
 %%% Types %%%
@@ -26,13 +26,13 @@ claim.service_available_at_tier_one_or_two_location(claim1, yes)
 
 %% Claim type-specific %%
 claim.sex_of_patient_trying_to_conceive(claim1, female)
-claim.sex_of_patients_partner(claim1, male)
+claim.sex_of_patients_partner(claim1, female)
 claim.patient_or_partner_diagnosed_with_gender_dysphoria(claim1, no)
 
-claim.num_months_frequent_unprotected_heterosexual_intercourse(claim1, 12)
+claim.num_months_frequent_unprotected_heterosexual_intercourse(claim1, 0)
 
-claim.num_months_timed_unprotected_intercourse(claim1, 6)
-claim.num_cycles_donor_insemination(claim1, 0)
+claim.num_months_timed_unprotected_intercourse(claim1, 0)
+claim.num_cycles_donor_insemination(claim1, 6)
 
 claim.num_other_covered_artificial_insemination_attempts(claim1, 0)
 claim.patient_has_had_voluntary_sterilization(claim1, no)
