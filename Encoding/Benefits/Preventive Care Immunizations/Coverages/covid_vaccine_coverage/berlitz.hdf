@@ -6,6 +6,11 @@ data:
 
 %%%%%%%%%%% Preventive Care Immunizations Benefit %%%%%%%%%%%
 
+berlitz(claim.patient_is_immunocompromised(C, yes),
+        "the patient in $C$ is immunocompromised")
+berlitz(claim.patient_is_immunocompromised(C, no),
+        "the patient in $C$ is not immunocompromised")
+
 berlitz(claim.covid19_vaccine_brand(C, BRAND),
         "the brand of the Covid-19 vaccine received during the immunization in $C$ is $BRAND$")
 

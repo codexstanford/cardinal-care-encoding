@@ -4,11 +4,6 @@
 berlitz(claim.reason_for_immunization(C, R),
         "the immunization in $C$ was received because $R$")
 
-berlitz(claim.patient_is_immunocompromised(C, yes),
-        "the patient in $C$ is immunocompromised")
-berlitz(claim.patient_is_immunocompromised(C, no),
-        "the patient in $C$ is not immunocompromised")
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Defined Relations 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
