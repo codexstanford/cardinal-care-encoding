@@ -1,26 +1,31 @@
+---
+rules:
+    - ../../../../Cardinal Care Core/rules.hrf
+---
+
 covered_under_cardinal_care_24_25_benefit(C, ambulance_service_benefit) :-
     claim.service_type(C, emergency_ambulance_service) &
     is_covered_emergency_ambulance_service(C)
 
+% Assuming ambulance service to first hospital (i.e. NOT from one hospital to
+% another) is covered *regardless* of whether the first hospital can provide
+% emergency services.
 is_covered_emergency_ambulance_service(C) :-
-    claim.first_hospital_can_provide_emergency_services(C, yes) &
-    claim.ambulance_service_to_first_hospital(C, yes)
+    claim.is_ambulance_service_from_one_hospital_to_another(C, no)
 
 is_covered_emergency_ambulance_service(C) :-
-    claim.first_hospital_can_provide_emergency_services(C, no) &
-    claim.ambulance_service_from_one_hospital_to_another(C, yes)
-
+    claim.can_first_hospital_provide_emergency_services(C, no) &
+    claim.is_ambulance_service_from_one_hospital_to_another(C, yes)
 
 covered_under_cardinal_care_24_25_benefit(C, ambulance_service_benefit) :-
     claim.service_type(C, non_emergency_ambulance_service) &
-    claim.non_emergency_transport_is_precertified(C, yes) &
-    claim.non_emergency_transport_is_licensed(C, yes) &
+    claim.is_non_emergency_transport_precertified(C, yes) &
     is_covered_type_of_non_emergency_transportation(C) &
-    claim.non_emergency_transport_is_the_only_safe_means_of_transportation(C, yes)
+    claim.is_the_only_safe_way_to_transport_you(C, yes)
 
 is_covered_type_of_non_emergency_transportation(C) :-
     claim.type_of_non_emergency_transportation(C, T) &
     member(T, [
-        ambulance,
-        psychiatric_transport_van
+        licensed_ambulance,
+        licensed_psychiatric_transport_van
     ])
