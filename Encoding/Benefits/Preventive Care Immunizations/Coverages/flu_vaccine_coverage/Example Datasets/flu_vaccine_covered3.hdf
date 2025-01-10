@@ -10,7 +10,7 @@ data:
 
 %%% Types %%%
 type(rta_bondonado, person)
-type(claim1, claim)
+type(claim1, flu_vaccine_coverage)
 
 
 %%% Person %%%
@@ -22,7 +22,7 @@ type(claim1, claim)
 claim.patient_dob(claim1, 2024_04_14)
 % claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
 claim.date_service_received(claim1,2024_10_14)
-claim.service_type(claim1, immunization)
+
 claim.precertification_received(claim1, no)
 
 

@@ -77,6 +77,8 @@ meets_additional_eligibility_requirements_if_present(C) :-
 %%% Medical necessity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%% Preventive care services are always medically necessary, but we don't want users to have to specify the service type when there is only one option
+%%%%% So in e.g. immunization coverages, we infer medical necessity from the type of the claim object
 medically_necessary_service(C) :-
     claim.service_type(C, ServiceType) &
     is_preventive_care_service(ServiceType)

@@ -4,8 +4,6 @@ rules:
     - ../../../../Cardinal Care Core/rules.hrf
 ---
 
-infectious_disease_for_which_cdc_acip_recommends_immunization(covid19_disease)
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Limitations from Schedule of Benefits
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
