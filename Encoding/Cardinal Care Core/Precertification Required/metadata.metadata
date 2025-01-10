@@ -1,0 +1,8 @@
+attribute(replace_this_term, claim.precertification_received)
+
+type(claim.precertification_received, attributerelation)
+domain(claim.precertification_received, replace_this_term)
+codomain(claim.precertification_received, boolean)
+unique(claim.precertification_received, yes)
+total(claim.precertification_received, yes)
+changestyle(claim.precertification_received,selector)

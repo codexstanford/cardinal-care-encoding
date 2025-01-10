@@ -1,6 +1,7 @@
 ---
 metadata:
     - ../../../../Cardinal Care Core/metadata.metadata
+    - ../../../../Cardinal Care Core/Precertification Required/metadata.metadata
     - ../../metadata.metadata
     - ../../patient_is_infertile Definition/metadata.metadata
     - ../../Non-basic Infertility Services/metadata.metadata

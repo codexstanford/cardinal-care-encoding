@@ -116,3 +116,12 @@ is_preventive_care_service(ServiceType) :-
 female_contraceptives_service(female_contraceptive_counseling)
 female_contraceptives_service(female_contraceptive_drugs_or_devices_and_follow_up_care)
 female_contraceptives_service(female_voluntary_sterilization)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Not necessary for family planning services - contraceptives
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    female_contraceptives_service(ServiceType)

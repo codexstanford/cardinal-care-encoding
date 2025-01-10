@@ -87,15 +87,10 @@ medically_necessary_service(C) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Precertified if necessary
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-precertified_if_necessary(C) :-
-    claim.service_type(C, ServiceType) &
-    requires_precertification(ServiceType) & 
-    claim.precertification_received(C, yes)
 
-precertified_if_necessary(C) :-
-    claim.service_type(C, ServiceType) &
-    ~requires_precertification(ServiceType)
-
+% If the service does not require precertification, then it is "precertified_if_necessary". 
+% However, developers should be aware of precertification requirements for the services for which they're encoding coverage.
+% So if precertification is not required, then the developer should add an additional precertified_if_necessary rule to their coverage.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Limitations from Schedule of Benefits

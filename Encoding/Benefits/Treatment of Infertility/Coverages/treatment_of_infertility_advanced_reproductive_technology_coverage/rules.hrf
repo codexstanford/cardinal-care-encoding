@@ -1,6 +1,7 @@
 ---
 rules:
     - ../../rules.hrf
+    - ../../../../Cardinal Care Core/Precertification Required/rules.hrf
     - ../../Non-basic Infertility Services/rules.hrf
 ---
 

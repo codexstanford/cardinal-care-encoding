@@ -2,6 +2,7 @@
 rules:
     - ../../rules.hrf
     - ../../patient_is_infertile Definition/rules.hrf
+    - ../../../../Cardinal Care Core/Precertification Required/rules.hrf
     - ../../Non-basic Infertility Services/rules.hrf
 ---
 
