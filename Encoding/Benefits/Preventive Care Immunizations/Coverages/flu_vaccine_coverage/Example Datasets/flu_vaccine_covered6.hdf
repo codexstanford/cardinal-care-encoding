@@ -23,7 +23,7 @@ claim.patient_dob(claim1, 2024_04_14)
 % claim.quarter_enrolled_stanford_2024_2025(claim1, autumn_quarter_2024)
 claim.date_service_received(claim1,2024_10_14)
 
-claim.precertification_received(claim1, no)
+
 
 
 claim.location_service_received(claim1, stanford_health_care)

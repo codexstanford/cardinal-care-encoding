@@ -17,7 +17,7 @@ type(claim1, claim)
 claim.patient_dob(claim1, 1989_01_01)
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, diagnose_and_evaluate_underlying_medical_cause_of_infertility)
-claim.precertification_received(claim1, no)
+
 
 claim.location_service_received(claim1, stanford_health_care)
 claim.service_available_at_tier_one_or_two_location(claim1, yes)

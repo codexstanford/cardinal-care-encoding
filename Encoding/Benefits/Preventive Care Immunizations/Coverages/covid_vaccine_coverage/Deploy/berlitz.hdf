@@ -1,5 +1,10 @@
 %%%%%%%%%%% Preventive Care Immunizations Benefit %%%%%%%%%%%
 
+berlitz(claim.patient_is_immunocompromised(C, yes),
+        "the patient in $C$ is immunocompromised")
+berlitz(claim.patient_is_immunocompromised(C, no),
+        "the patient in $C$ is not immunocompromised")
+
 berlitz(claim.covid19_vaccine_brand(C, BRAND),
         "the brand of the Covid-19 vaccine received during the immunization in $C$ is $BRAND$")
 
@@ -30,19 +35,25 @@ berlitz(already_begun_another_updated_2024_2025_covid19_vaccination_series(C),
 berlitz(claim.reason_for_immunization(C, R),
         "the immunization in $C$ was received because $R$")
 
-berlitz(claim.patient_is_immunocompromised(C, yes),
-        "the patient in $C$ is immunocompromised")
-berlitz(claim.patient_is_immunocompromised(C, no),
-        "the patient in $C$ is not immunocompromised")
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Defined Relations 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 berlitz(is_immunization_for_preventive_care(C),
         "the immunization in $C$ is for preventive care")
 
+berlitz(claim_is_immunization_for_disease(C, D),
+        "the claim $C$ is regarding an immunization for the disease $D$")
+
+berlitz(immunization_coverage_type(T),
+        "$T$ is a type of immunization coverage")
+
+
 berlitz(infectious_disease_for_which_cdc_acip_recommends_immunization(D),
         "$D$ is an infectious disease for which the CDC ACIP recommends immunization")
+
+berlitz(coverage_type_is_immunization_for_disease(T, D),
+        "$T$ is a coverage type regarding an immunization for the disease $D$")
 
         
 berlitz(meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(A, C),

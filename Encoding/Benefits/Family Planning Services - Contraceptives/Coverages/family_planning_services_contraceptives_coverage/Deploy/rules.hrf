@@ -110,6 +110,15 @@ is_preventive_care_service(ServiceType) :-
 female_contraceptives_service(female_contraceptive_counseling)
 female_contraceptives_service(female_contraceptive_drugs_or_devices_and_follow_up_care)
 female_contraceptives_service(female_voluntary_sterilization)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Not necessary for family planning services - contraceptives
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    female_contraceptives_service(ServiceType)
 % covers(Policy, C) :-
 %     policy.type(Policy, aetna_cardinal_care_2023_2024) &
 %     covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024)
@@ -189,6 +198,8 @@ meets_additional_eligibility_requirements_if_present(C) :-
 %%% Medical necessity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%% Preventive care services are always medically necessary, but we don't want users to have to specify the service type when there is only one option
+%%%%% So in e.g. immunization coverages, we infer medical necessity from the type of the claim object
 medically_necessary_service(C) :-
     claim.service_type(C, ServiceType) &
     is_preventive_care_service(ServiceType)
@@ -197,15 +208,10 @@ medically_necessary_service(C) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Precertified if necessary
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-precertified_if_necessary(C) :-
-    claim.service_type(C, ServiceType) &
-    requires_precertification(ServiceType) & 
-    claim.precertification_received(C, yes)
 
-precertified_if_necessary(C) :-
-    claim.service_type(C, ServiceType) &
-    ~requires_precertification(ServiceType)
-
+% If the service does not require precertification, then it is "precertified_if_necessary". 
+% However, developers should be aware of precertification requirements for the services for which they're encoding coverage.
+% So if precertification is not required, then the developer should add an additional precertified_if_necessary rule to their coverage.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Limitations from Schedule of Benefits

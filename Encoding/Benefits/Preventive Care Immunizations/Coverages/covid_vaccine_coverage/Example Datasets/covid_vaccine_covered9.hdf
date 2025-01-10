@@ -24,7 +24,7 @@ type(claim1, covid_vaccine_coverage)
 claim.date_service_received(claim1,2024_08_30)
 claim.patient_dob(claim1, 2018_08_31)
 
-claim.precertification_received(claim1, no)
+
 
 
 claim.location_service_received(claim1, stanford_health_care)

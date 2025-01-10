@@ -19,7 +19,7 @@ type(claim1, claim)
 claim.patient_dob(claim1, 1999_06_01)
 claim.date_service_received(claim1,2024_08_10)
 claim.service_type(claim1, female_contraceptive_drugs_or_devices_and_follow_up_care)
-claim.precertification_received(claim1, no)
+
 
 
 claim.location_service_received(claim1, stanford_health_care)

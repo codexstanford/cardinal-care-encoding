@@ -202,6 +202,13 @@ beyond_limits(Claim) :-
 get_timestamp_from_date(DATE,STAMP) :-
   evaluate(parsedate(DATE),[Y,M,D]) &
   evaluate(maketimestamp(Y,M,D,0,0,0),STAMP)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    requires_precertification(ServiceType) & 
+    claim.precertification_received(C, yes)
 %%% Egg-sperm contact requirements %%% 
 
 % For ages under 35
@@ -348,6 +355,8 @@ meets_additional_eligibility_requirements_if_present(C) :-
 %%% Medical necessity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%% Preventive care services are always medically necessary, but we don't want users to have to specify the service type when there is only one option
+%%%%% So in e.g. immunization coverages, we infer medical necessity from the type of the claim object
 medically_necessary_service(C) :-
     claim.service_type(C, ServiceType) &
     is_preventive_care_service(ServiceType)
@@ -356,15 +365,10 @@ medically_necessary_service(C) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Precertified if necessary
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-precertified_if_necessary(C) :-
-    claim.service_type(C, ServiceType) &
-    requires_precertification(ServiceType) & 
-    claim.precertification_received(C, yes)
 
-precertified_if_necessary(C) :-
-    claim.service_type(C, ServiceType) &
-    ~requires_precertification(ServiceType)
-
+% If the service does not require precertification, then it is "precertified_if_necessary". 
+% However, developers should be aware of precertification requirements for the services for which they're encoding coverage.
+% So if precertification is not required, then the developer should add an additional precertified_if_necessary rule to their coverage.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Limitations from Schedule of Benefits

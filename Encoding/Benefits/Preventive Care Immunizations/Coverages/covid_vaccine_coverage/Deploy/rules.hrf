@@ -1,5 +1,3 @@
-infectious_disease_for_which_cdc_acip_recommends_immunization(covid19_disease)
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Limitations from Schedule of Benefits
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -165,10 +163,9 @@ max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, Brand, 1, old_dose_co
 
 %%%% Preventive Care Immunizations
 covered_under_cardinal_care_24_25_benefit(C, preventive_care_immunizations_benefit) :-
-    claim.service_type(C, immunization) &
-    is_immunization_for_preventive_care(C) &
-    % claim.immunization_for_disease(C, Disease) &
-    infectious_disease_for_which_cdc_acip_recommends_immunization(Disease)
+    claim_is_immunization_for_disease(C, D) &
+    infectious_disease_for_which_cdc_acip_recommends_immunization(D) &
+    is_immunization_for_preventive_care(C)
 
 is_immunization_for_preventive_care(C) :-
     claim.reason_for_immunization(C, R) &
@@ -183,21 +180,49 @@ is_immunization_for_preventive_care(C) :-
     % The infectious_disease_for_which_cdc_acip_recommends_immunization relation is defined in the respective immunization coverage files
     % Removed the claim.immunization_for_disease subgoal from covered_under_cardinal_care_24_25_benefit since we don't need to specify it on a per-claim basis anymore
 
+%%% Immunization coverage types and the diseases for which they are immunizations %%%
+
+claim_is_immunization_for_disease(C, D) :-
+    type(C, CoverageType) &
+    coverage_type_is_immunization_for_disease(CoverageType, D)
+
+immunization_coverage_type(flu_vaccine_coverage)
+immunization_coverage_type(covid_vaccine_coverage)
+
+infectious_disease_for_which_cdc_acip_recommends_immunization(influenza_disease)
+infectious_disease_for_which_cdc_acip_recommends_immunization(covid19_disease)
+
+coverage_type_is_immunization_for_disease(flu_vaccine_coverage, influenza_disease)
+coverage_type_is_immunization_for_disease(covid_vaccine_coverage, covid19_disease)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Medical necessity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%% Preventive Care Immunizations
-% Preventive care is a larger category of benefits, including female contraceptives
+% Preventive care is a larger category of benefits, including female contraceptives, which is always considered medically necessary
+% So we infer medical necessity from the type of the claim object in each of the immunization coverages
 % Note: CPB 0035 concerns Influenza Vaccines, but just points to the CDC ACIP guidelines
-is_preventive_care_service(immunization)
+
+medically_necessary_service(C) :-
+    type(C, CoverageType) &
+    immunization_coverage_type(CoverageType)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Not necessary for immunizations
+precertified_if_necessary(C) :-
+    type(C, CoverageType) &
+    immunization_coverage_type(CoverageType)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Limitations from Schedule of Benefits
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 beyond_limits(Claim) :-
-    claim.service_type(Claim, immunization) &
+    claim_is_immunization_for_disease(Claim, Disease) &
+    infectious_disease_for_which_cdc_acip_recommends_immunization(Disease) &
     claim.date_service_received(Claim, Date) &
     date_between_dates_incl(Date, 2024_01_01, 2024_12_31) & 
     meets_or_exceeds_2024_cdc_acip_age_guideline_max(Claim)
@@ -299,6 +324,8 @@ meets_additional_eligibility_requirements_if_present(C) :-
 %%% Medical necessity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%% Preventive care services are always medically necessary, but we don't want users to have to specify the service type when there is only one option
+%%%%% So in e.g. immunization coverages, we infer medical necessity from the type of the claim object
 medically_necessary_service(C) :-
     claim.service_type(C, ServiceType) &
     is_preventive_care_service(ServiceType)
@@ -307,15 +334,10 @@ medically_necessary_service(C) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Precertified if necessary
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-precertified_if_necessary(C) :-
-    claim.service_type(C, ServiceType) &
-    requires_precertification(ServiceType) & 
-    claim.precertification_received(C, yes)
 
-precertified_if_necessary(C) :-
-    claim.service_type(C, ServiceType) &
-    ~requires_precertification(ServiceType)
-
+% If the service does not require precertification, then it is "precertified_if_necessary". 
+% However, developers should be aware of precertification requirements for the services for which they're encoding coverage.
+% So if precertification is not required, then the developer should add an additional precertified_if_necessary rule to their coverage.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Limitations from Schedule of Benefits

@@ -15,7 +15,6 @@ type(required_for_employment, immunization_reason)
 type(required_for_travel, immunization_reason)
 type(other, immunization_reason)
 
-type(immunization, cardinal_care_2024_2025_service)
 % Commented out for now, since not explicitly checking time of service
 % type(autumn_quarter_2024, quarter_2024_2025)
 % type(winter_quarter_2025, quarter_2024_2025)
