@@ -7,7 +7,7 @@
 covered(C) :-
     % policy_in_effect(C, Policy) &
     service_received_at_valid_provider(C) &
-    meets_additional_eligibility_requirements_if_present(C) &
+    covered_under_cardinal_care_24_25_benefit(C, _ ) &
     medically_necessary_service(C) &
     precertified_if_necessary(C) &
     ~beyond_limits(C) &
@@ -66,12 +66,10 @@ service_received_at_valid_provider(C) :-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Eligible for service - additional eligibility requirements
+%%% For an Eligible health service, and meets additional eligibility requirements
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-meets_additional_eligibility_requirements_if_present(C) :-
-    covered_under_cardinal_care_24_25_benefit(C, B)
-
+% Important Note: Loaded from other, coverage-specific rulesets
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Medical necessity
@@ -88,6 +86,8 @@ medically_necessary_service(C) :-
 %%% Precertified if necessary
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Important Note: Loaded from other, coverage-specific rulesets
+
 % If the service does not require precertification, then it is "precertified_if_necessary". 
 % However, developers should be aware of precertification requirements for the services for which they're encoding coverage.
 % So if precertification is not required, then the developer should add an additional precertified_if_necessary rule to their coverage.
@@ -96,8 +96,8 @@ medically_necessary_service(C) :-
 %%% Limitations from Schedule of Benefits
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Important Note: Loaded from other, benefit-specific rulesets
-    
+% Important Note: Loaded from other, coverage-specific rulesets
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% General exclusions 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

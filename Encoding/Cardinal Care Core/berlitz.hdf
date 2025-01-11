@@ -106,9 +106,6 @@ berlitz(member(E, L),
 berlitz(service_received_at_valid_provider(C),
         "the service in $C$ was received at a valid provider")
 
-berlitz(meets_additional_eligibility_requirements_if_present(C),
-        "$C$ meets additional eligibility requirements, if there are any")
-
 
 berlitz(medically_necessary_service(C),
         "the service received in $C$ is medically necessary")
