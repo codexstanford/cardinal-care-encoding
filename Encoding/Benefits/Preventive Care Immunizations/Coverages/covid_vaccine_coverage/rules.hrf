@@ -15,7 +15,7 @@ meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
     patient_age_bracket_for_covid19_vaccination(Claim, Age, AgeBracket) &
     claim.patient_is_immunocompromised(Claim, ImmStatus) & 
     claim.covid19_vaccine_brand(Claim, Brand) &
-    covid19_dose_counts(Claim, NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand) &
+    old_covid19_dose_counts(Claim, NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand) &
     max_allowed_doses_covid19_vaccine(ImmStatus, AgeBracket, Brand, MaxDoses, old_dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)) &
     leq(MaxDoses, NumUpdatedOfBrand)
 
@@ -36,7 +36,7 @@ patient_age_bracket_for_covid19_vaccination(Claim, Age, 5_to_11_years) :-
 patient_age_bracket_for_covid19_vaccination(Claim, Age, 12_years_and_older) :-
     leq(12, Age)
 
-covid19_dose_counts(Claim, NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand) :-
+old_covid19_dose_counts(Claim, NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand) :-
     claim.covid19_vaccine_history(Claim, Vaccines) &
     num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumOldModerna) &
     num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumOldPfizer) &
@@ -78,6 +78,9 @@ max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, pfizer_biontech, 1, o
     % 1 dose new Moderna or new Pfizer-BioNTech 
 max_allowed_doses_covid19_vaccine(no, 5_to_11_years, moderna, 1, old_dose_counts(_, _, _, _))
 max_allowed_doses_covid19_vaccine(no, 5_to_11_years, pfizer_biontech, 1, old_dose_counts(_, _, _, _))
+
+    % Or, if turned 5 since last dose and no old doses, 2 doses new Moderna or new Pfizer-BioNTech
+    % And if more than 8 weeks since last new dose, 1 dose of either - can break series
 
 % For ages >= 12 years,
     % If no old vaccines, 1 dose new Moderna, 2 doses new Novavax, or 1 dose new Pfizer-BioNTech
