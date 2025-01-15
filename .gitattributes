@@ -1,2 +1,6 @@
-# Set the default behavior, in case people don't have core.autocrlf set.
-text eol=crlf
+# Ensure epilog files always use CRLF line endings
+*.epilogscript text eol=crlf
+*.epilogbuild text eol=crlf
+*.metadata text eol=crlf
+*.hdf text eol=crlf
+*.hrf text eol=crlf
