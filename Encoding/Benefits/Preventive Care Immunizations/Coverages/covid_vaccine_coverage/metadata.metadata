@@ -32,6 +32,7 @@ type(covid19_vaccination_obj,class)
 functional(covid19_vaccination_obj, covid19_vaccination)
 attribute(covid19_vaccination_obj, covid19_vaccination.brand)
 attribute(covid19_vaccination_obj, covid19_vaccination.version)
+attribute(covid19_vaccination_obj, covid19_vaccination.date)
 
 type(covid19_vaccination.brand, attributerelation)
 domain(covid19_vaccination.brand, covid19_vaccination_obj)
@@ -46,6 +47,13 @@ codomain(covid19_vaccination.version, covid19_vaccine_version)
 unique(covid19_vaccination.version, yes)
 total(covid19_vaccination.version, yes)
 changestyle(covid19_vaccination.version,selector)
+
+type(covid19_vaccination.date, attributerelation)
+domain(covid19_vaccination.date, covid19_vaccination_obj)
+codomain(covid19_vaccination.date, date)
+unique(covid19_vaccination.date, yes)
+total(covid19_vaccination.date, yes)
+changestyle(covid19_vaccination.date,datestyle)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Classes without attributes
