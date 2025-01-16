@@ -1,9 +1,3 @@
-% covers(Policy, C) :-
-%     policy.type(Policy, aetna_cardinal_care_2023_2024) &
-%     covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024)
-
-
-%covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024) :-
 covered(C) :-
     % policy_in_effect(C, Policy) &
     service_received_at_valid_provider(C) &

@@ -56,7 +56,7 @@ changestyle(claim.patient_dob,datestyle)
 
 %%% type(claim.quarter_enrolled_stanford_2024_2025, attributerelation)
 %%% domain(claim.quarter_enrolled_stanford_2024_2025, replace_this_term)
-%%% codomain(claim.quarter_enrolled_stanford_2024_2025, quarter_2023_2024)
+%%% codomain(claim.quarter_enrolled_stanford_2024_2025, quarter_2024_2025)
 %%% unique(claim.quarter_enrolled_stanford_2024_2025, yes)
 %%% total(claim.quarter_enrolled_stanford_2024_2025, no)
 

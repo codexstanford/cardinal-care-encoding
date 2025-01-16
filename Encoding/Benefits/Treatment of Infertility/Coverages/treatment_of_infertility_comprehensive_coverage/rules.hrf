@@ -161,7 +161,7 @@ is_comprehensive_infertility_service(intrauterine_insemination)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Note: later encodings will compute these from other claims, but right now we're only doing one claim at a time
-% Maximum six covered attempts at IUI in a policy year (between September 1 2023 and August 31 2024, in this case)
+% Maximum six covered attempts at IUI in a policy year (between September 1 2024 and August 31 2025, in this case)
 beyond_limits(Claim) :-
     claim.service_type(Claim, intrauterine_insemination) &
     claim.num_other_covered_artificial_insemination_attempts(Claim, N) &

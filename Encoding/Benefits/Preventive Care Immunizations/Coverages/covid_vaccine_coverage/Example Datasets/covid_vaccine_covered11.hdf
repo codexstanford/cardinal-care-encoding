@@ -14,7 +14,7 @@ type(claim1, covid_vaccine_coverage)
 
 %%% Policy %%%
 % policy.insuree(policy1, rta_bondonado)
-% policy.type(policy1, aetna_cardinal_care_2023_2024)
+
 
 
 %%% Claim %%%

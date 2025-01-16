@@ -10,7 +10,7 @@ berlitz(claim.patient(C, P),
         "the patient in $C$ is $P$")
 
 % berlitz(claim.quarter_enrolled_stanford_2024_2025(C, Q), 
-%         "$Q$ is the first quarter that the patient in $C$ was enrolled in Stanford in the 2023-2024 academic year")
+%         "$Q$ is the first quarter that the patient in $C$ was enrolled in Stanford in the 2024-2025 academic year")
 
 
 berlitz(claim.date_service_received(C, D), 
