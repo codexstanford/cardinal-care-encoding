@@ -40,9 +40,9 @@ claim.covid19_vaccine_brand(claim1, novavax)
 
 % Three old mrna
 claim.covid19_vaccine_history(claim1, 
-        [covid19_vaccination_event(moderna, not_updated_2024_2025), 
-        covid19_vaccination_event(moderna, not_updated_2024_2025), 
-        covid19_vaccination_event(pfizer_biontech, not_updated_2024_2025)])
+        [covid19_vaccination(moderna, not_updated_2024_2025), 
+        covid19_vaccination(moderna, not_updated_2024_2025), 
+        covid19_vaccination(pfizer_biontech, not_updated_2024_2025)])
 
 %% General Exclusions %% 
 % Imported from no_exclusion_claim.hdf

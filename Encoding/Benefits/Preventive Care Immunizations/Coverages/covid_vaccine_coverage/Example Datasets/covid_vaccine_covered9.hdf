@@ -40,15 +40,15 @@ claim.covid19_vaccine_brand(claim1, pfizer_biontech)
 
 % 3 doses old pfizer, 3 doses old moderna, two doses old novavax, one dose old J&J
 claim.covid19_vaccine_history(claim1, 
-                            [covid19_vaccination_event(pfizer_biontech, not_updated_2024_2025), 
-                            covid19_vaccination_event(pfizer_biontech, not_updated_2024_2025), 
-                            covid19_vaccination_event(pfizer_biontech, not_updated_2024_2025), 
-                            covid19_vaccination_event(moderna, not_updated_2024_2025), 
-                            covid19_vaccination_event(moderna, not_updated_2024_2025), 
-                            covid19_vaccination_event(moderna, not_updated_2024_2025), 
-                            covid19_vaccination_event(novavax, not_updated_2024_2025), 
-                            covid19_vaccination_event(novavax, not_updated_2024_2025), 
-                            covid19_vaccination_event(j_n_j, not_updated_2024_2025)])
+                            [covid19_vaccination(pfizer_biontech, not_updated_2024_2025), 
+                            covid19_vaccination(pfizer_biontech, not_updated_2024_2025), 
+                            covid19_vaccination(pfizer_biontech, not_updated_2024_2025), 
+                            covid19_vaccination(moderna, not_updated_2024_2025), 
+                            covid19_vaccination(moderna, not_updated_2024_2025), 
+                            covid19_vaccination(moderna, not_updated_2024_2025), 
+                            covid19_vaccination(novavax, not_updated_2024_2025), 
+                            covid19_vaccination(novavax, not_updated_2024_2025), 
+                            covid19_vaccination(j_n_j, not_updated_2024_2025)])
 
 %% General Exclusions %% 
 % Imported from no_exclusion_claim.hdf

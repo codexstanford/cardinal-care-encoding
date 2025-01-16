@@ -40,8 +40,8 @@ claim.covid19_vaccine_brand(claim1, novavax)
 
 % Old J&J and novavax, one new novavax
 claim.covid19_vaccine_history(claim1, 
-        [covid19_vaccination_event(j_n_j, not_updated_2024_2025), 
-        covid19_vaccination_event(novavax, updated_2024_2025), % Covered if you remove this
-        covid19_vaccination_event(novavax, not_updated_2024_2025)])
+        [covid19_vaccination(j_n_j, not_updated_2024_2025), 
+        covid19_vaccination(novavax, updated_2024_2025), % Covered if you remove this
+        covid19_vaccination(novavax, not_updated_2024_2025)])
 %% General Exclusions %% 
 % Imported from no_exclusion_claim.hdf
