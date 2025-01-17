@@ -2,6 +2,7 @@ type(covid_vaccine_coverage, class)
 superclass(covid_vaccine_coverage, claim)
 attribute(covid_vaccine_coverage, claim.patient_is_immunocompromised)
 attribute(covid_vaccine_coverage, claim.covid19_vaccine_brand)
+attribute(covid_vaccine_coverage, claim.covid19_vaccines_available_at_location)
 attribute(covid_vaccine_coverage, claim.covid19_vaccine_history)
 
 
@@ -19,11 +20,18 @@ unique(claim.covid19_vaccine_brand, yes)
 total(claim.covid19_vaccine_brand, no)
 changestyle(claim.covid19_vaccine_brand,selector)
 
+type(claim.covid19_vaccines_available_at_location, attributerelation)
+domain(claim.covid19_vaccines_available_at_location, covid_vaccine_coverage)
+codomain(claim.covid19_vaccines_available_at_location, vaccine_brand)
+unique(claim.covid19_vaccines_available_at_location, yes)
+total(claim.covid19_vaccines_available_at_location, yes)
+changestyle(claim.covid19_vaccines_available_at_location,checkboxfield)
+
 type(claim.covid19_vaccine_history, attributerelation)
 domain(claim.covid19_vaccine_history, covid_vaccine_coverage)
 codomain(claim.covid19_vaccine_history, covid19_vaccination_obj)
-unique(claim.covid19_vaccine_history, no)
-total(claim.covid19_vaccine_history, no)
+unique(claim.covid19_vaccine_history, yes)
+total(claim.covid19_vaccine_history, yes)
 changestyle(claim.covid19_vaccine_history,table)
 
 %%%% Functional classes %%%%
