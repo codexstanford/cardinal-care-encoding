@@ -70,11 +70,24 @@ beyond_limits(Claim) :-
     meets_or_exceeds_2024_cdc_acip_age_guideline_max(Claim)
 
 
+beyond_limits(Claim) :-
+    claim_is_immunization_for_disease(Claim, Disease) &
+    infectious_disease_for_which_cdc_acip_recommends_immunization(Disease) &
+    claim.date_service_received(Claim, Date) &
+    date_between_dates_incl(Date, 2025_01_01, 2025_12_31) & 
+    meets_or_exceeds_2025_cdc_acip_age_guideline_max(Claim)
+
+
 %% CDC ACIP Guidelines
 meets_or_exceeds_2024_cdc_acip_age_guideline_max(C) :-
     % claim.immunization_for_disease(C, D) & % Should remain commented out
     patient_age_at_time_of_service(C, A) &
     meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(A, C)
+
+% As currently encoded, 2024 and 2025 guidelines are the same
+meets_or_exceeds_2025_cdc_acip_age_guideline_max(C) :-
+    meets_or_exceeds_2024_cdc_acip_age_guideline_max(C)
+
 
 %%% Disease-specific guidelines are in the respective immunization coverage files
 
