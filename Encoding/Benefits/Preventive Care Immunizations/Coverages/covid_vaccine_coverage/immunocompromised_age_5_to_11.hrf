@@ -1,0 +1,168 @@
+%%%%% People under age 12 can only receive mrna vaccines %%%%%
+
+%%%% No old or updated vaccines %%%%
+%%% Can get any updated mrna vaccine
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 5_to_11_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    claim.covid19_vaccine_history(Claim, nil)
+    
+%%%% No old vaccines, some (> 0, < 4) updated vaccines
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 5_to_11_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_old_mrna_vaccines_in_claim(Claim, 0) &
+    num_updated_mrna_vaccines_in_claim(Claim, NumUpdated) &
+    less(NumUpdated, 4) &
+    less(0, NumUpdated) &
+    allowed_for_no_old_some_new_immunocompromised_5_to_11(Brand, Claim)
+
+
+%%% If 3 updated, can receive any mrna
+allowed_for_no_old_some_new_immunocompromised_5_to_11(MRNABrand, Claim) :-
+    num_updated_mrna_vaccines_in_claim(Claim, 3)
+
+% If 1 each updated moderna and pfizer, then can receive any mrna
+allowed_for_no_old_some_new_immunocompromised_5_to_11(MRNABrand, Claim) :-
+    num_updated_mrna_vaccines_in_claim(Claim, 2) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, 1) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, 1)
+
+
+% If 1-2 updated of same type, then can receive another of the same type
+allowed_for_no_old_some_new_immunocompromised_5_to_11(MRNABrand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNABrand, NumUpdatedOfBrand) &
+    leq(NumUpdatedOfBrand, 2) &
+    leq(1, NumUpdatedOfBrand) &
+    num_updated_mrna_vaccines_in_claim(Claim, NumUpdatedOfBrand)
+
+% If 1-2 updated of one type, then can receive another of different type if the different type is the only mrna available
+allowed_for_no_old_some_new_immunocompromised_5_to_11(MRNAToReceiveBrand, Claim) :-
+    mrna_vaccine(MRNAReceivedBrand) &
+    distinct(MRNAToReceiveBrand, MRNAReceivedBrand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, NumUpdatedReceivedBrand) &
+    leq(NumUpdatedReceivedBrand, 2) &
+    leq(1, NumUpdatedReceivedBrand) &
+    num_updated_mrna_vaccines_in_claim(Claim, NumUpdatedReceivedBrand) &
+    claim.covid19_vaccines_available_at_location(Claim, CovidVaccineList) &
+    member(MRNAToReceiveBrand, CovidVaccineList) &
+    ~member(MRNAReceivedBrand, CovidVaccineList)
+
+%%%% Some old vaccines, no updated vaccines %%%%
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 5_to_11_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    less(0, NumOld) &
+    num_updated_mrna_vaccines_in_claim(Claim, 0) &
+    allowed_for_some_old_no_new_immunocompromised_5_to_11(Brand, Claim)
+
+%%% If 3 or more old vaccines, then can receive any mrna
+allowed_for_some_old_no_new_immunocompromised_5_to_11(MRNABrand, Claim) :-
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    leq(3, NumOld)
+
+%%% If 1 old moderna and 1 old pfizer, then can receive any mrna
+allowed_for_some_old_no_new_immunocompromised_5_to_11(MRNABrand, Claim) :-
+    num_old_mrna_vaccines_in_claim(Claim, 2) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, 1) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, 1)
+
+% If 1-2 updated of same type, then can receive another of the same type
+allowed_for_some_old_no_new_immunocompromised_5_to_11(MRNAToReceiveBrand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAToReceiveBrand, NumOldOfBrand) &
+    leq(NumOldOfBrand, 2) &
+    leq(1, NumOldOfBrand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOldOfBrand)
+
+% If 1-2 old of one type, then can receive another of different type if the different type is the only mrna available
+allowed_for_some_old_no_new_immunocompromised_5_to_11(MRNAToReceiveBrand, Claim) :-
+    mrna_vaccine(MRNAReceivedBrand) &
+    distinct(MRNAToReceiveBrand, MRNAReceivedBrand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, NumOldReceivedBrand) &
+    leq(NumOldReceivedBrand, 2) &
+    leq(1, NumOldReceivedBrand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOldReceivedBrand) &
+    claim.covid19_vaccines_available_at_location(Claim, CovidVaccineList) &
+    member(MRNAToReceiveBrand, CovidVaccineList) &
+    ~member(MRNAReceivedBrand, CovidVaccineList)
+
+%%%% Some old vaccines, some (> 0, < 3) updated vaccines %%%%
+%%%% If 3 or more updated vaccines, then can't receive any more
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 5_to_11_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    less(0, NumOld) &
+    num_updated_mrna_vaccines_in_claim(Claim, NumUpdated) &
+    less(0, NumUpdated) &
+    less(NumUpdated, 3) &
+    allowed_for_some_old_some_new_immunocompromised_5_to_11(Brand, Claim)
+
+%% If 2 or more old and 2 or more updated vaccines, then can't receive any more
+%% Not actually necessary, since implied by the other rules
+% too_many_old_and_new_vaccines_immunocompromised_5_to_11(NumOldMrna, NumUpdatedMrna) :-
+%     leq(2, NumOldMrna) &
+%     leq(2, NumUpdatedMrna)
+
+%%% If 2 or 3 mrna vaccines total, with >= 1 old and >= 1 new of different types, can receive any mrna
+allowed_for_some_old_some_new_immunocompromised_5_to_11(Brand, Claim) :-
+    num_mrna_vaccines_in_claim(Claim, NumVaccines) &
+    leq(2, NumVaccines) &
+    leq(NumVaccines, 3) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    mrna_vaccine(Brand1) &
+    mrna_vaccine(Brand2) &
+    distinct(Brand1, Brand2) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand1, NumOldBrand1) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand2, NumUpdatedBrand2) &
+    leq(1, NumOldBrand1) &
+    leq(1, NumUpdatedBrand2)
+
+% If 1 old and 2 updated of same mrna type, then can receive another of any mrna type
+allowed_for_some_old_some_new_immunocompromised_5_to_11(Brand, Claim) :-
+    mrna_vaccine(MRNAReceivedBrand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, 1) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, 2) &
+    num_mrna_vaccines_in_claim(Claim, 3)
+
+
+% If 1-2 old and 1 updated of same mrna type, can receive another of the same type
+allowed_for_some_old_some_new_immunocompromised_5_to_11(Brand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumOldOfBrand) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, 1) &
+    leq(NumOldOfBrand, 2) &
+    leq(1, NumOldOfBrand) &
+    evaluate(plus(NumOldOfBrand, 1), NumOfBrand) &
+    num_mrna_vaccines_in_claim(Claim, NumOfBrand)
+
+% If 1-2 old and 1 updated of one mrna type, then can receive another of different type if the different type is the only mrna available
+allowed_for_some_old_some_new_immunocompromised_5_to_11(MRNAToReceiveBrand, Claim) :-
+    mrna_vaccine(MRNAReceivedBrand) &
+    distinct(MRNAToReceiveBrand, MRNAReceivedBrand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, NumOldOfReceivedBrand) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, 1) &
+    leq(NumOldOfReceivedBrand, 2) &
+    leq(1, NumOldOfReceivedBrand) &
+    evaluate(plus(NumOldOfReceivedBrand, 1), NumOfReceivedBrand) &
+    num_mrna_vaccines_in_claim(Claim, NumOfReceivedBrand) &
+    claim.covid19_vaccines_available_at_location(Claim, CovidVaccineList) &
+    member(MRNAToReceiveBrand, CovidVaccineList) &
+    ~member(MRNAReceivedBrand, CovidVaccineList)
+
+% If >= 1 old of each mrna type and 1 new of any mrna type, can receive any mrna
+allowed_for_some_old_some_new_immunocompromised_5_to_11(Brand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumOldModerna) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumOldPfizer) &
+    leq(1, NumOldModerna) &
+    leq(1, NumOldPfizer) &
+    num_updated_mrna_vaccines_in_claim(Claim, 1)
+
+
+
