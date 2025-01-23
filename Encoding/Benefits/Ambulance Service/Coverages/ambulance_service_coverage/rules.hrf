@@ -29,3 +29,21 @@ is_covered_type_of_non_emergency_transportation(C) :-
         licensed_ambulance,
         licensed_psychiatric_transport_van
     ])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Preventive care is a larger category of benefits, including immunizations
+is_preventive_care_service(ServiceType) :-
+    ambulance_service(ServiceType)
+
+% Is a service under the ambulance service benefit
+ambulance_service(emergency_ambulance_service)
+ambulance_service(non_emergency_ambulance_service)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% No limitations listed in the PDBS
