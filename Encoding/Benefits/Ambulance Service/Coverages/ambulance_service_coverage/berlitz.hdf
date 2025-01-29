@@ -1,0 +1,42 @@
+---
+data:
+    - ../../../../Cardinal Care Core/berlitz.hdf
+---
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Base Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(claim.first_hospital_can_provide_emergency_services(C, yes), 
+        "the first hospital to which the patient in $C$ was taken can provide the emergency services that the patient needs.")
+berlitz(claim.first_hospital_can_provide_emergency_services(C, no), 
+        "the first hospital to which the patient in $C$ was taken cannot provide the emergency services that the patient needs.")
+
+berlitz(claim.ambulance_service_from_one_hospital_to_another(C, yes), 
+        "the ambulance service for the patient in $C$ was from one hospital to another.")
+berlitz(claim.ambulance_service_from_one_hospital_to_another(C, no), 
+        "the ambulance service for the patient in $C$ was not from one hospital to another.")
+
+berlitz(claim.is_the_only_safe_way_to_transport_you(C, yes), 
+        "the type of transportation used to transport the patient in $C$ was the only safe way to transport the patient.")
+berlitz(claim.is_the_only_safe_way_to_transport_you(C, no), 
+        "the type of transportation used to transport the patient in $C$ was not the only safe way to transport the patient.")
+
+berlitz(claim.type_of_non_emergency_transportation(C, T), 
+        "the patient in $C$ was transported by a $T$")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Defined Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(is_covered_emergency_ambulance_service(C),
+        "$C$ is a covered emergency ambulance service")
+
+berlitz(is_covered_non_emergency_ambulance_service(C),
+        "$C$ is a covered non-emergency ambulance service")
+
+berlitz(is_covered_type_of_non_emergency_transportation(C),
+        "the type of transportation used to transport the patient in $C$ is a covered type of emergency transportation")
+
+berlitz(ambulance_service(S),
+        "$S$ is an ambulance service")
