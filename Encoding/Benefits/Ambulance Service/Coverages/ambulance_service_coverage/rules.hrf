@@ -1,0 +1,57 @@
+---
+rules:
+    - ../../../../Cardinal Care Core/rules.hrf
+---
+
+covered_under_cardinal_care_24_25_benefit(C, ambulance_service_benefit) :-
+    claim.service_type(C, emergency_ambulance_service) &
+    is_covered_emergency_ambulance_service(C)
+
+% Assuming ambulance service to first hospital (i.e. NOT from one hospital to
+% another) is covered *regardless* of whether the first hospital can provide
+% emergency services.
+is_covered_emergency_ambulance_service(C) :-
+    claim.is_ambulance_service_from_one_hospital_to_another(C, no)
+
+is_covered_emergency_ambulance_service(C) :-
+    claim.can_first_hospital_provide_emergency_services(C, no) &
+    claim.is_ambulance_service_from_one_hospital_to_another(C, yes)
+
+covered_under_cardinal_care_24_25_benefit(C, ambulance_service_benefit) :-
+    claim.service_type(C, non_emergency_ambulance_service) &
+    is_covered_non_emergency_ambulance_service(C)
+
+is_covered_non_emergency_ambulance_service(C) :-
+    is_covered_type_of_non_emergency_transportation(C) &
+    claim.is_the_only_safe_way_to_transport_you(C, yes)
+
+is_covered_type_of_non_emergency_transportation(C) :-
+    claim.type_of_non_emergency_transportation(C, T) &
+    member(T, [
+        licensed_ambulance,
+        licensed_psychiatric_transport_van
+    ])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+requires_precertification(non_emergency_ambulance_service)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Preventive care is a larger category of benefits, including immunizations
+is_preventive_care_service(ServiceType) :-
+    ambulance_service(ServiceType)
+
+% Is a service under the ambulance service benefit
+ambulance_service(emergency_ambulance_service)
+ambulance_service(non_emergency_ambulance_service)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% No limitations listed in the PDBS

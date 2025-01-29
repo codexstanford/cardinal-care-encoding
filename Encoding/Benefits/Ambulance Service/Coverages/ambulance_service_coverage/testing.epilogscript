@@ -1,0 +1,3 @@
+ruleset: rules.hrf
+dataset: Example Datasets/
+query: covered(claim1)

@@ -1,0 +1,7 @@
+%%%%%%%% Other Services - Ambulance Service %%%%%%%%
+type(emergency_ambulance_service, cardinal_care_2024_2025_service)
+type(non_emergency_ambulance_service, cardinal_care_2024_2025_service)
+
+type(licensed_ambulance, type_of_non_emergency_transportation)
+type(licensed_psychiatric_transport_van, type_of_non_emergency_transportation)
+type(other, type_of_non_emergency_transportation)

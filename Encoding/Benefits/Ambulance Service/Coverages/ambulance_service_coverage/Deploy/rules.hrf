@@ -1,0 +1,261 @@
+covered_under_cardinal_care_24_25_benefit(C, ambulance_service_benefit) :-
+    claim.service_type(C, emergency_ambulance_service) &
+    is_covered_emergency_ambulance_service(C)
+
+% Assuming ambulance service to first hospital (i.e. NOT from one hospital to
+% another) is covered *regardless* of whether the first hospital can provide
+% emergency services.
+is_covered_emergency_ambulance_service(C) :-
+    claim.is_ambulance_service_from_one_hospital_to_another(C, no)
+
+is_covered_emergency_ambulance_service(C) :-
+    claim.can_first_hospital_provide_emergency_services(C, no) &
+    claim.is_ambulance_service_from_one_hospital_to_another(C, yes)
+
+covered_under_cardinal_care_24_25_benefit(C, ambulance_service_benefit) :-
+    claim.service_type(C, non_emergency_ambulance_service) &
+    is_covered_non_emergency_ambulance_service(C)
+
+is_covered_non_emergency_ambulance_service(C) :-
+    is_covered_type_of_non_emergency_transportation(C) &
+    claim.is_the_only_safe_way_to_transport_you(C, yes)
+
+is_covered_type_of_non_emergency_transportation(C) :-
+    claim.type_of_non_emergency_transportation(C, T) &
+    member(T, [
+        licensed_ambulance,
+        licensed_psychiatric_transport_van
+    ])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+requires_precertification(non_emergency_ambulance_service)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Preventive care is a larger category of benefits, including immunizations
+is_preventive_care_service(ServiceType) :-
+    ambulance_service(ServiceType)
+
+% Is a service under the ambulance service benefit
+ambulance_service(emergency_ambulance_service)
+ambulance_service(non_emergency_ambulance_service)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% No limitations listed in the PDBS
+% covers(Policy, C) :-
+%     policy.type(Policy, aetna_cardinal_care_2023_2024) &
+%     covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024)
+
+
+%covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024) :-
+covered(C) :-
+    % policy_in_effect(C, Policy) &
+    service_received_at_valid_provider(C) &
+    meets_additional_eligibility_requirements_if_present(C) &
+    medically_necessary_service(C) &
+    precertified_if_necessary(C) &
+    ~beyond_limits(C) &
+    claim.exclusions(C, nil)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Policy in effect
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Does not currently capture conditions on withdrawal/leaves of absence, coverage on another Stanford-offered plan, or special extensions on coverage dates
+
+% Whether the policy was in effect when the service was received
+% policy_in_effect(C, Policy) :-
+%     claim.patient(C, Patient) &
+%     claim.waived_cardinal_care(C, no) &
+%     policy_in_effect_for_claim(Policy, C)
+
+
+% Student enrolled in Autumn 2024
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, autumn_quarter_2024) &
+%     date_between_dates_incl(ServiceDate, 2024_09_01, 2025_08_31)
+
+
+% Student enrolled in Winter 2025
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, winter_quarter_2025) &
+%     date_between_dates_incl(ServiceDate, 2025_01_01, 2025_08_31)
+
+% Student enrolled in Spring 2025
+% policy_in_effect_for_claim(Policy, Claim) :-
+%     claim.date_service_received(Claim, ServiceDate) &
+%     claim.quarter_enrolled_stanford_2024_2025(Claim, spring_quarter_2025) &
+%     date_between_dates_incl(ServiceDate, 2025_04_01, 2025_08_31)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Received from a valid provider
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important note: Encoding does not currently capture the cases where treatment began out-of-network before the policy began, or when the care is emergency or urgent care and received from an out-of-network provider
+
+service_received_at_valid_provider(C) :-
+    claim.location_service_received(C, Location) &
+    member(Location, [
+        stanford_health_care,
+        menlo_medical_clinic,
+        sutter_health_palo_alto_medical_foundation,
+        tier_two_in_network
+    ])
+
+service_received_at_valid_provider(C) :-
+    claim.location_service_received(C, other) &
+    claim.service_available_at_tier_one_or_two_location(C, no)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Eligible for service - additional eligibility requirements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+meets_additional_eligibility_requirements_if_present(C) :-
+    covered_under_cardinal_care_24_25_benefit(C, B)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Medical necessity
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+medically_necessary_service(C) :-
+    claim.service_type(C, ServiceType) &
+    is_preventive_care_service(ServiceType)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Precertified if necessary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    requires_precertification(ServiceType) & 
+    claim.precertification_received(C, yes)
+
+precertified_if_necessary(C) :-
+    claim.service_type(C, ServiceType) &
+    ~requires_precertification(ServiceType)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Limitations from Schedule of Benefits
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Important Note: Loaded from other, benefit-specific rulesets
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% General exclusions 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Important Note: Formerly loaded from exclusion.hrf. Now encoded in world.hdf.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Helper functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+patient_age_at_time_of_service(Claim, Age) :-
+    claim.patient_dob(Claim, PatientDOB) &
+    claim.date_service_received(Claim, ServiceDate) &
+    patient_age_on_date(PatientDOB, ServiceDate, Age)
+
+patient_age_on_date(PatientDOB, Date, Age) :-
+    evaluate(parsedate(Date),[Year,Month,Day]) &
+    evaluate(parsedate(PatientDOB),[PatientDOBYear,PatientDOBMonth,PatientDOBDay]) &
+    evaluate(minus(Year,PatientDOBYear), YearDiff) &
+    not_yet_birthday_delta(Month,Day, PatientDOBMonth, PatientDOBDay, Delta) &
+    evaluate(plus(YearDiff, Delta), Age)
+
+age_at_time_of_service(Claim, Person, Age) :-
+    claim.date_service_received(Claim, ServiceDate) &
+    age_on_date(Person, ServiceDate, Age)
+
+age_on_date(Person, Date, Age) :-
+    person.dob(Person, DOB) &
+    evaluate(parsedate(Date),[Year,Month,Day]) &
+    evaluate(parsedate(DOB),[DOBYear,DOBMonth,DOBDay]) &
+    evaluate(minus(Year,DOBYear), YearDiff) &
+    not_yet_birthday_delta(Month,Day, DOBMonth, DOBDay, Delta) &
+    evaluate(plus(YearDiff, Delta), Age)
+
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, -1) :-
+    less(Month, DOBMonth)
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, -1) :-
+    same(Month, DOBMonth) &
+    less(Day, DOBDay)
+
+not_yet_birthday_delta(Month, Day, DOBMonth, DOBDay, 0) :-
+    less(DOBMonth, Month)
+
+not_yet_birthday_delta(Month, Day, FOBMonth, DOBDay, 0) :-
+    same(Month, DOBMonth) &
+    leq(DOBDay, Day)
+
+
+date_between_dates_incl(Date, BeginDateRange, EndDateRange) :-
+    symleq(BeginDateRange, Date) &
+    symleq(Date, EndDateRange)
+
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, Diff) &
+    less(Diff, N)
+
+leq_n_months_diff(EarlierDate, LaterDate, N) :-
+    n_months_diff(EarlierDate, LaterDate, N) &
+    evaluate(parsedate(EarlierDate),[_,_,SameDay]) & 
+    evaluate(parsedate(LaterDate),[_,_,SameDay])
+
+n_months_diff(EarlierDate, LaterDate, N) :-
+    evaluate(parsedate(EarlierDate),[EY,EM,ED]) & 
+    evaluate(parsedate(LaterDate),[LY,LM,LD]) &
+    evaluate(times(minus(LY, EY), 12), MonthsFromYear) & 
+    not_yet_day_of_month_delta(ED, LD, Delta) &
+    evaluate(plus(MonthsFromYear, minus(LM, EM), Delta), N)
+
+not_yet_day_of_month_delta(D1, D2, 0) :-
+    leq(D1, D2)
+
+not_yet_day_of_month_delta(D1, D2, -1) :-
+    less(D2, D1)
+
+%%%%% Relations to faciliate choosing elements from lists that may have repeats
+
+% Generates all pairs (unordered) of elements from a list, counting identical elements at different positions as distinct
+choose_2_with_indices_from_list_no_repeats(L, E1, I1, E2, I2) :-
+    choose_2_with_indices_from_sublist_no_repeats(0, L, E1, I1, E2, I2)
+
+
+% Case 1: The first element is the head
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, H, NumBefore, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E2, I2)
+
+% Case 2: The first element is in the tail
+choose_2_with_indices_from_sublist_no_repeats(NumBefore, H!T, E1, I1, E2, I2) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_2_with_indices_from_sublist_no_repeats(NewNumBefore, T, E1, I1, E2, I2)
+
+
+% Entry point
+choose_1_with_index_from_list(L, E, I) :-
+    choose_1_with_index_from_sublist(0, L, E, I)
+
+% Case 1: The element is the head
+choose_1_with_index_from_sublist(NumBefore, H!T, H, NumBefore)
+
+% Case 2: The element is in the tail
+choose_1_with_index_from_sublist(NumBefore, H!T, E, I) :-
+    evaluate(plus(NumBefore, 1), NewNumBefore) &
+    choose_1_with_index_from_sublist(NewNumBefore, T, E, I)
