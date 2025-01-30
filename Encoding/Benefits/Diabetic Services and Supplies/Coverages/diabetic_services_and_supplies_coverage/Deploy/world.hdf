@@ -1,0 +1,17 @@
+type(diabetic_services_and_supplies,                    cardinal_care_2024_2025_service).
+type(foot_care_for_diabetes,                           cardinal_care_2024_2025_service).
+type(insulin_preparations,                             cardinal_care_2024_2025_service).
+type(hypodermic_needles_and_syringes_for_diabetes,     cardinal_care_2024_2025_service).
+type(injection_aids_for_visually_impaired,             cardinal_care_2024_2025_service).
+type(diabetic_test_agents,                             cardinal_care_2024_2025_service).
+type(lancets_lancing_devices,                          cardinal_care_2024_2025_service).
+type(prescribed_oral_medications_for_blood_sugar,      cardinal_care_2024_2025_service).
+type(alcohol_swabs_for_diabetes,                       cardinal_care_2024_2025_service).
+type(injectable_glucagons,                             cardinal_care_2024_2025_service).
+type(glucagon_emergency_kits,                          cardinal_care_2024_2025_service).
+type(diabetes_equipment,                               cardinal_care_2024_2025_service).
+type(external_insulin_pumps,                           cardinal_care_2024_2025_service).
+type(basic_blood_glucose_meter,                        cardinal_care_2024_2025_service).
+type(over_the_counter_depth_inlay_shoes_for_diabetes,  cardinal_care_2024_2025_service).
+
+type(self_management_training_for_diabetes,            cardinal_care_2024_2025_service).

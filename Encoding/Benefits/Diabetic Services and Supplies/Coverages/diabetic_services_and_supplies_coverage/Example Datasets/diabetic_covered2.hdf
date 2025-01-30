@@ -1,0 +1,26 @@
+---
+data:
+    - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
+---
+
+%%%%%% Covered example 2 %%%%%%
+%%%%%% Service: self_management_training_for_diabetes, supervised = yes %%%%%%
+
+%%% Types %%%
+type(rta_bondonado, person)
+type(claim1, claim)
+
+%%% Claim %%%
+claim.patient_dob(claim1, 2000_05_05)
+claim.date_service_received(claim1, 2025_01_20)
+claim.service_type(claim1, self_management_training_for_diabetes)
+claim.precertification_received(claim1, no)
+
+% The key coverage condition:
+claim.self_management_training_supervised_by_qualified_professional(claim1, yes)
+
+claim.location_service_received(claim1, menlo_medical_clinic)
+claim.service_available_at_tier_one_or_two_location(claim1, yes)
+
+% No general exclusions
+% => claim.exclusions(claim1, [])

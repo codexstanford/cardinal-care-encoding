@@ -1,0 +1,24 @@
+---
+data:
+    - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
+---
+
+%%%%%% Covered example 1 %%%%%%
+%%%%%% Service: insulin_preparations %%%%%%
+
+%%% Types %%%
+type(janet_okano, person)
+type(claim1, claim)
+
+%%% Claim %%%
+%% Service-generic %%
+claim.patient_dob(claim1, 1990_02_10)
+claim.date_service_received(claim1, 2024_10_15)
+claim.service_type(claim1, insulin_preparations)
+claim.precertification_received(claim1, no)  % Not needed here, but included
+
+claim.location_service_received(claim1, stanford_health_care)
+claim.service_available_at_tier_one_or_two_location(claim1, yes)
+
+%% No general exclusions
+% Imported from no_exclusion_claim.hdf => claim.exclusions(claim1, [])

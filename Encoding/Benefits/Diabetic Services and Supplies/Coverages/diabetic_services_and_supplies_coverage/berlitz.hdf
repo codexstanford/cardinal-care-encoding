@@ -1,0 +1,66 @@
+---
+data:
+    - ../../../../Cardinal Care Core/berlitz.hdf
+---
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Base Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% If you want a plain-English line for self_management_training_supervised_by_qualified_professional:
+berlitz(claim.self_management_training_supervised_by_qualified_professional(C, yes),
+        "the self-management training in $C$ was supervised by a qualified professional")
+berlitz(claim.self_management_training_supervised_by_qualified_professional(C, no),
+        "the self-management training in $C$ was not supervised by a qualified professional")
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Diabetic coverage-specific service types
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(claim.service_type(C, diabetic_services_and_supplies),
+        "the service in $C$ is for diabetic services and supplies")
+
+berlitz(claim.service_type(C, foot_care_for_diabetes),
+        "the service in $C$ is foot care for diabetes")
+
+berlitz(claim.service_type(C, insulin_preparations),
+        "the service in $C$ is insulin preparations")
+
+berlitz(claim.service_type(C, hypodermic_needles_and_syringes_for_diabetes),
+        "the service in $C$ is hypodermic needles and syringes for diabetes")
+
+berlitz(claim.service_type(C, injection_aids_for_visually_impaired),
+        "the service in $C$ is injection aids for the visually impaired")
+
+berlitz(claim.service_type(C, diabetic_test_agents),
+        "the service in $C$ is diabetic test agents")
+
+berlitz(claim.service_type(C, lancets_lancing_devices),
+        "the service in $C$ is lancets/lancing devices")
+
+berlitz(claim.service_type(C, prescribed_oral_medications_for_blood_sugar),
+        "the service in $C$ is prescribed oral medications for blood sugar")
+
+berlitz(claim.service_type(C, alcohol_swabs_for_diabetes),
+        "the service in $C$ is alcohol swabs for diabetes")
+
+berlitz(claim.service_type(C, injectable_glucagons),
+        "the service in $C$ is injectable glucagons")
+
+berlitz(claim.service_type(C, glucagon_emergency_kits),
+        "the service in $C$ is a glucagon emergency kit")
+
+berlitz(claim.service_type(C, diabetes_equipment),
+        "the service in $C$ is diabetes equipment")
+
+berlitz(claim.service_type(C, external_insulin_pumps),
+        "the service in $C$ is an external insulin pump")
+
+berlitz(claim.service_type(C, basic_blood_glucose_meter),
+        "the service in $C$ is a basic blood glucose meter")
+
+berlitz(claim.service_type(C, over_the_counter_depth_inlay_shoes_for_diabetes),
+        "the service in $C$ is OTC depth-inlay shoes for diabetes")
+
+berlitz(claim.service_type(C, self_management_training_for_diabetes),
+        "the service in $C$ is self-management training for diabetes")

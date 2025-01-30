@@ -1,0 +1,26 @@
+---
+data:
+    - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
+---
+
+%%%%%% Not covered example 2 %%%%%%
+%%%%%% Service: random_unrecognized_service %%%%%%
+
+%%% Types %%%
+type(lucy_robin, person)
+type(claim1, claim)
+
+%%% Claim %%%
+claim.patient_dob(claim1, 1989_01_01)
+claim.date_service_received(claim1, 2025_04_10)
+claim.service_type(claim1, random_unrecognized_service)
+claim.precertification_received(claim1, no)
+
+claim.location_service_received(claim1, sutter_health_palo_alto_medical_foundation)
+claim.service_available_at_tier_one_or_two_location(claim1, yes)
+
+% No general exclusions
+% => claim.exclusions(claim1, [])
+
+% Because 'random_unrecognized_service' is not in the membership list for 
+% diabetic coverage, coverage won't match.

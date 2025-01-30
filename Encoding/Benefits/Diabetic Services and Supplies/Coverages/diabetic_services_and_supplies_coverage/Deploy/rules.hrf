@@ -1,0 +1,24 @@
+covered_under_cardinal_care_24_25_benefit(C, diabetic_services_and_supplies_benefit) :-
+  claim.service_type(C, S) &
+  member(S, [
+    diabetic_services_and_supplies,          
+    foot_care_for_diabetes,                 
+    insulin_preparations,
+    hypodermic_needles_and_syringes_for_diabetes,
+    injection_aids_for_visually_impaired,
+    diabetic_test_agents,
+    lancets_lancing_devices,
+    prescribed_oral_medications_for_blood_sugar,
+    alcohol_swabs_for_diabetes,
+    injectable_glucagons,
+    glucagon_emergency_kits,
+    diabetes_equipment,
+    external_insulin_pumps,
+    basic_blood_glucose_meter,
+    over_the_counter_depth_inlay_shoes_for_diabetes
+  ]).
+
+% 2) Self-management training is covered only if supervised by a qualified health professional.
+covered_under_cardinal_care_24_25_benefit(C, diabetic_services_and_supplies_benefit) :-
+  claim.service_type(C, self_management_training_for_diabetes) &
+  claim.self_management_training_supervised_by_qualified_professional(C, yes).

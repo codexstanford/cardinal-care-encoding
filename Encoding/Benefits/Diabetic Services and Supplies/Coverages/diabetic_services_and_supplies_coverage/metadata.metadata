@@ -1,0 +1,12 @@
+type(diabetic_services_and_supplies_coverage, class)
+superclass(diabetic_services_and_supplies_coverage, claim)
+
+% Only one extra attribute for the coverage condition on self-management training:
+attribute(diabetic_services_and_supplies_coverage, claim.self_management_training_supervised_by_qualified_professional)
+
+type(claim.self_management_training_supervised_by_qualified_professional, attributerelation)
+domain(claim.self_management_training_supervised_by_qualified_professional, claim)
+codomain(claim.self_management_training_supervised_by_qualified_professional, boolean)
+unique(claim.self_management_training_supervised_by_qualified_professional, yes)
+total(claim.self_management_training_supervised_by_qualified_professional, no)
+changestyle(claim.self_management_training_supervised_by_qualified_professional, selector)
