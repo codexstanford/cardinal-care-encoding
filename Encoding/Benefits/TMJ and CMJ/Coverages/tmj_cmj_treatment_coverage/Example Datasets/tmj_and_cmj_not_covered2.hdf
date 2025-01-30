@@ -1,0 +1,27 @@
+---
+data:
+    - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
+---
+
+%%%%%% Not covered example 2 %%%%%%
+%%%%%% Service: tmj_cmj_diagnostic_therapeutic_service, but location is out-of-network 
+%%%%%% and service is available in-network => not covered
+
+%%% Types %%%
+type(sol_hattori, person)
+type(claim7, claim)
+
+%%% Claim %%%
+%% Service-generic %%
+claim.patient_dob(claim7, 1997_03_03)
+claim.date_service_received(claim7, 2025_04_01)
+claim.service_type(claim7, tmj_cmj_diagnostic_therapeutic_service)
+claim.precertification_received(claim7, no)
+
+% "other" indicates out-of-network
+claim.location_service_received(claim7, other)
+% If service_available_at_tier_one_or_two_location is yes, out-of-network won't be covered
+claim.service_available_at_tier_one_or_two_location(claim7, yes)
+
+%% General Exclusions %%
+% Imported from no_exclusion_claim.hdf

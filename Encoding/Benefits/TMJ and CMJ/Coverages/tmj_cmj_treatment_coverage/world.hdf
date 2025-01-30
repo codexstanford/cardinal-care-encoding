@@ -1,0 +1,8 @@
+type(tmj_cmj_diagnostic_therapeutic_service, cardinal_care_2024_2025_service)
+type(tmj_cmj_medical_surgical_service,        cardinal_care_2024_2025_service)
+type(tmj_cmj_dental_surgical_service,         cardinal_care_2024_2025_service)
+type(tmj_cmj_medical_non_surgical_service,    cardinal_care_2024_2025_service)
+type(tmj_cmj_dental_non_surgical_service,     cardinal_care_2024_2025_service)
+
+% Excluded item
+type(dental_implant_service, cardinal_care_2024_2025_service)

@@ -1,0 +1,25 @@
+---
+data:
+    - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
+---
+
+%%%%%% Not covered example 1 %%%%%%
+%%%%%% Service: dental_implant_service %%%%%%
+
+%%% Types %%%
+type(ali_mason, person)
+type(claim6, claim)
+
+%%% Claim %%%
+%% Service-generic %%
+claim.patient_dob(claim6, 2001_12_09)
+claim.date_service_received(claim6, 2025_02_28)
+claim.service_type(claim6, dental_implant_service)
+claim.precertification_received(claim6, no)
+
+% Even if location is in-network
+claim.location_service_received(claim6, stanford_health_care)
+claim.service_available_at_tier_one_or_two_location(claim6, yes)
+
+%% General Exclusions %%
+% Imported from no_exclusion_claim.hdf

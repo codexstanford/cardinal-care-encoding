@@ -1,0 +1,29 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Base Relations 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(claim.service_type(C, tmj_cmj_diagnostic_therapeutic_service),
+        "the service in $C$ is a TMJ/CMJ diagnostic or therapeutic service")
+
+berlitz(claim.service_type(C, tmj_cmj_medical_surgical_service),
+        "the service in $C$ is a TMJ/CMJ medical surgical service")
+
+berlitz(claim.service_type(C, tmj_cmj_dental_surgical_service),
+        "the service in $C$ is a TMJ/CMJ dental surgical service")
+
+berlitz(claim.service_type(C, tmj_cmj_medical_non_surgical_service),
+        "the service in $C$ is a TMJ/CMJ medical non-surgical service")
+
+berlitz(claim.service_type(C, tmj_cmj_dental_non_surgical_service),
+        "the service in $C$ is a TMJ/CMJ dental non-surgical service")
+
+berlitz(claim.service_type(C, dental_implant_service),
+        "the service in $C$ is a dental implant service")
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Defined Relations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+berlitz(excluded_tmj_cmj_service(dental_implant_service),
+        "dental implants are excluded from TMJ/CMJ coverage")

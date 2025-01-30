@@ -1,0 +1,12 @@
+covered_under_cardinal_care_24_25_benefit(C, tmj_cmj_treatment_coverage) :-
+    claim.service_type(C, S) &
+    ~excluded_tmj_cmj_service(S) &
+    member(S, [
+        tmj_cmj_diagnostic_therapeutic_service,
+        tmj_cmj_medical_surgical_service,
+        tmj_cmj_dental_surgical_service,
+        tmj_cmj_medical_non_surgical_service,
+        tmj_cmj_dental_non_surgical_service
+    ]).
+
+excluded_tmj_cmj_service(dental_implant_service).

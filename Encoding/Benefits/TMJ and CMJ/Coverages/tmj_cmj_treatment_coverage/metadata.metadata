@@ -1,0 +1,2 @@
+type(tmj_cmj_treatment_coverage, class)
+superclass(tmj_cmj_treatment_coverage, claim)

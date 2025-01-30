@@ -1,0 +1,25 @@
+---
+data:
+    - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
+---
+
+%%%%%% Covered example 2 %%%%%%
+%%%%%% Service: tmj_cmj_medical_surgical_service %%%%%%
+
+%%% Types %%%
+type(rta_tubalado, person)
+type(claim2, claim)
+
+%%% Claim %%%
+%% Service-generic %%
+claim.patient_dob(claim2, 2000_01_15)
+claim.date_service_received(claim2, 2025_03_05)
+claim.service_type(claim2, tmj_cmj_medical_surgical_service)
+claim.precertification_received(claim2, no)
+
+% In-network location
+claim.location_service_received(claim2, menlo_medical_clinic)
+claim.service_available_at_tier_one_or_two_location(claim2, yes)
+
+%% General Exclusions %%
+% Imported from no_exclusion_claim.hdf
