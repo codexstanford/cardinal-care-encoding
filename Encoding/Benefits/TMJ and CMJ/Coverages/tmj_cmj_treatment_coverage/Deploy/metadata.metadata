@@ -1,1 +1,26 @@
+type(claim, class)
 
+type(tmj_cmj_treatment_coverage, class)
+superclass(tmj_cmj_treatment_coverage, claim)
+
+attribute(tmj_cmj_treatment_coverage, claim.service_type)
+
+type(claim.service_type, attributerelation)
+domain(claim.service_type, tmj_cmj_treatment_coverage)
+codomain(claim.service_type, cardinal_care_service)
+unique(claim.service_type, yes)
+total(claim.service_type, yes)
+changestyle(claim.service_type, selector)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Classes without attributes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+type(boolean, class)
+type(person, class)
+type(product, class)
+type(date, class)
+type(number, class)
+
+type(cardinal_care_service, class)
