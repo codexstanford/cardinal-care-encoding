@@ -1,0 +1,34 @@
+
+%%%% No old or updated vaccines %%%%
+%%% Can get any updated mrna vaccine
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    claim.covid19_vaccine_history(Claim, nil)
+
+%%% 1 moderna (old or updated), no unavailability assumed
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, moderna, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_mrna_vaccines_in_claim(Claim, 1) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, 1)
+
+%%% 2 pfizer (old or updated), no unavailability assumed
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, pfizer_biontech, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_mrna_vaccines_in_claim(Claim, 2) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, 2)
+
+%%%% >= 2 old moderna, 0 new, no unavailability assumed
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, moderna, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumOldOfBrand) &
+    leq(2, NumOldOfBrand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOldOfBrand) &
+    num_updated_mrna_vaccines_in_claim(Claim, 0)
+
+%%%% >= 3 old pfizer, 0 new, no unavailability assumed
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, pfizer_biontech, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumOldOfBrand) &
+    leq(3, NumOldOfBrand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOldOfBrand) &
+    num_updated_mrna_vaccines_in_claim(Claim, 0)

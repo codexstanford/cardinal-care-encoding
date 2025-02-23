@@ -43,6 +43,10 @@ num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumNotUpdatedOfBr
 num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumUpdatedOfBrand) :-
     countofall(I, choose_1_with_index_from_list(Vaccines, covid19_vaccination(Brand, updated_2024_2025, Date), I), NumUpdatedOfBrand)
 
+num_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumOfBrand) :-
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumNotUpdatedOfBrand) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumUpdatedOfBrand) &
+    evaluate(plus(NumNotUpdatedOfBrand, NumUpdatedOfBrand), NumOfBrand)
 
 mrna_vaccine(moderna)
 mrna_vaccine(pfizer_biontech)
