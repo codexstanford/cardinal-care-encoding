@@ -37,13 +37,19 @@ patient_age_bracket_for_covid19_vaccination(Claim, Age, 65_years_and_older) :-
     leq(65, Age)
 
 %%% Computing dose counts %%%
+mrna_vaccine_available_at_location(Claim, Brand) :-
+    mrna_vaccine(Brand) &
+    claim.covid19_vaccines_available_at_location(Claim, CovidVaccineList) &
+    member(Brand, CovidVaccineList)
+
+%%% Computing dose counts %%%
 num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumNotUpdatedOfBrand) :-
     countofall(I, choose_1_with_index_from_list(Vaccines, covid19_vaccination(Brand, UpdatedStatus, Date), I) & distinct(UpdatedStatus, updated_2024_2025), NumNotUpdatedOfBrand)
 
 num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumUpdatedOfBrand) :-
     countofall(I, choose_1_with_index_from_list(Vaccines, covid19_vaccination(Brand, updated_2024_2025, Date), I), NumUpdatedOfBrand)
 
-num_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumOfBrand) :-
+num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumOfBrand) :-
     num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumNotUpdatedOfBrand) &
     num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumUpdatedOfBrand) &
     evaluate(plus(NumNotUpdatedOfBrand, NumUpdatedOfBrand), NumOfBrand)
