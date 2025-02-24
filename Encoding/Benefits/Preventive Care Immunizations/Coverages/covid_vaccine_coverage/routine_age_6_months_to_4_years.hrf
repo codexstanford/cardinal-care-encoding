@@ -14,7 +14,7 @@ allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 6_months_to_4_
     claim.covid19_vaccine_history(Claim, Vaccines) &
     num_mrna_vaccines_in_claim(Claim, 1) &
     num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, 1) &
-    same(Brand, moderna); (
+    same(Brand, moderna) | (
         mrna_vaccine_available_at_location(Claim, Brand) &
         ~mrna_vaccine_available_at_location(Claim, moderna)
     )
@@ -25,7 +25,7 @@ allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 6_months_to_4_
     num_mrna_vaccines_in_claim(Claim, NumMrna) &
     num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumMrna) &
     leq(NumMrna, 2) &
-    same(Brand, pfizer_biontech); (
+    same(Brand, pfizer_biontech) | (
         mrna_vaccine_available_at_location(Claim, Brand) &
         ~mrna_vaccine_available_at_location(Claim, pfizer_biontech)
     )
@@ -46,7 +46,7 @@ allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 6_months_to_4_
     num_mrna_vaccines_in_claim(Claim, NumMrna) &
     num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumMrna) &
     leq(2, NumMrna) &
-    same(Brand, moderna); (
+    same(Brand, moderna) | (
         mrna_vaccine_available_at_location(Claim, Brand) &
         ~mrna_vaccine_available_at_location(Claim, moderna)
     )
@@ -57,7 +57,7 @@ allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 6_months_to_4_
     num_mrna_vaccines_in_claim(Claim, NumMrna) &
     num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumMrna) &
     leq(3, NumMrna) &
-    same(Brand, pfizer_biontech); (
+    same(Brand, pfizer_biontech) | (
         mrna_vaccine_available_at_location(Claim, Brand) &
         ~mrna_vaccine_available_at_location(Claim, pfizer_biontech)
     )
