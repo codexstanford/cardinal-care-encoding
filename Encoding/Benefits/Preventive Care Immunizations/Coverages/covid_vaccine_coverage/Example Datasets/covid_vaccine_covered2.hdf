@@ -4,7 +4,7 @@ data:
 ---
 
 %%% Routine 6 months to 4 years
-%%% Null hisotry of vaccination
+%%% Completed 3-dose initial series with non-updated Pfizer only
 
 %%% Types %%%
 type(claim1, covid_vaccine_coverage)
@@ -23,9 +23,11 @@ claim.reason_for_immunization(claim1, preventive_care)
 % Covid vaccine-specific
 claim.patient_is_immunocompromised(claim1, no)
 claim.covid19_vaccine_brand(claim1, pfizer_biontech)
-claim.covid19_vaccines_available_at_location(claim1, [])
-
-claim.covid19_vaccine_history(claim1, [])
+claim.covid19_vaccine_history(claim1, [
+    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01), 
+    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
+    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01)
+])
 
 %% General Exclusions %% 
 % Imported from no_exclusion_claim.hdf

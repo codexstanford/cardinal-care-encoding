@@ -1,0 +1,5 @@
+%%% Allowed exactly when no updated mRNA vaccines have been taken
+
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 5_to_11_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_updated_mrna_vaccines_in_claim(Claim, 0)

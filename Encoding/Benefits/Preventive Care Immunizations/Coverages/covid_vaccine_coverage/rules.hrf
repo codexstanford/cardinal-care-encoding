@@ -4,6 +4,7 @@ rules:
     - ../../../../Cardinal Care Core/rules.hrf
     - immunocompromised_age_5_to_11.hrf
     - routine_age_6_months_to_4_years.hrf
+    - routine_age_5_to_11_years.hrf
 ---
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
