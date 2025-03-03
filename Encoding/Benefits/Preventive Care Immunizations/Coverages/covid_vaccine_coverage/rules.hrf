@@ -59,6 +59,13 @@ num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumOf
 mrna_vaccine(moderna)
 mrna_vaccine(pfizer_biontech)
 
+non_mrna_vaccine(janssen)
+non_mrna_vaccine(novavax)
+
+covid_vaccine(Brand) :-
+    mrna_vaccine(Brand) |
+    non_mrna_vaccine(Brand)
+
 num_updated_mrna_vaccines_in_claim(Claim, NumUpdated) :-
     claim.covid19_vaccine_history(Claim, Vaccines) &
     num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumUpdatedModerna) &
@@ -72,6 +79,23 @@ num_old_mrna_vaccines_in_claim(Claim, NumOld) :-
     evaluate(plus(NumOldModerna, NumOldPfizer), NumOld)
 
 num_mrna_vaccines_in_claim(Claim, NumMrna) :-
+    num_updated_mrna_vaccines_in_claim(Claim, NumUpdated) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    evaluate(plus(NumUpdated, NumOld), NumMrna)
+
+num_updated_vaccines_in_claim(Claim, NumUpdated) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumUpdatedModerna) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumUpdatedPfizer) &
+    evaluate(plus(NumUpdatedModerna, NumUpdatedPfizer), NumUpdated)
+
+num_old_vaccines_in_claim(Claim, NumOld) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumOldModerna) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumOldPfizer) &
+    evaluate(plus(NumOldModerna, NumOldPfizer), NumOld)
+
+num_vaccines_in_claim(Claim, NumMrna) :-
     num_updated_mrna_vaccines_in_claim(Claim, NumUpdated) &
     num_old_mrna_vaccines_in_claim(Claim, NumOld) &
     evaluate(plus(NumUpdated, NumOld), NumMrna)
