@@ -1,3 +1,32 @@
 
+
+%%% Unvaccinated
+% No updated vaccines
 allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_older, Brand, Claim) :-
-    
+    covid_vaccine_2024_2025(Brand) &
+    claim.covid19_vaccine_history(Claim, nil)
+
+% One updated mRNA vaccine
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_older, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_old_vaccines_in_claim(Claim, 0) &
+    num_updated_vaccines_in_claim(Claim, 1) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, TakenBrand, 1) &
+    mrna_vaccine(TakenBrand)
+
+% One updated Novavax vaccine
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_older, novavax, Claim) :-
+    num_old_vaccines_in_claim(Claim, 0) &
+    num_updated_vaccines_in_claim(Claim, 1) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1)
+
+% Two updated Novavax vaccines
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_older, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_old_vaccines_in_claim(Claim, 0) &
+    num_updated_vaccines_in_claim(Claim, 2) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 2)
+
