@@ -62,6 +62,10 @@ mrna_vaccine(pfizer_biontech)
 non_mrna_vaccine(janssen)
 non_mrna_vaccine(novavax)
 
+covid_vaccine_2024_2025(moderna)
+covid_vaccine_2024_2025(pfizer_biontech)
+covid_vaccine_2024_2025(novavax)
+
 covid_vaccine(Brand) :-
     mrna_vaccine(Brand) |
     non_mrna_vaccine(Brand)
