@@ -163,6 +163,3 @@ allowed_for_some_old_some_new_immunocompromised_5_to_11(Brand, Claim) :-
     leq(1, NumOldModerna) &
     leq(1, NumOldPfizer) &
     num_updated_mrna_vaccines_in_claim(Claim, 1)
-
-
-
