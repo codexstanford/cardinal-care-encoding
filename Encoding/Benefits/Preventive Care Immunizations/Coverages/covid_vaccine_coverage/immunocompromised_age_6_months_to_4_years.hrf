@@ -1,0 +1,57 @@
+
+% Assuming different vaccine than previously administered is still allowed given unavailability
+% Novavax vaccines are not considered - only mRNA
+
+%%% < 4 vaccines have been administered (old and/or updated)
+% All of the same mRNA brand
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    less(NumMrna, 4) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, AdministeredBrand, NumMrna) &
+    (
+        same(Brand, AdministeredBrand) |
+        ~mrna_vaccine_available_at_location(Claim, AdministeredBrand)
+    )
+
+% Different brands
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    less(NumMrna, 4) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumModerna) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumPfizer) &
+    leq(1, NumModerna) &
+    leq(1, NumPfizer)
+
+%%% 4 vaccines have been administered
+%%%     This only works when the patient had been fully vaccinated with old vaccines
+
+% Same mRNA brand
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    same(NumMrna, 4) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    leq(3, NumOld) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, AdministeredBrand, NumMrna) &
+    (
+        same(Brand, AdministeredBrand) |
+        ~mrna_vaccine_available_at_location(Claim, AdministeredBrand)
+    )
+
+% Different brands
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    same(NumMrna, 4) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    leq(3, NumOld) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumModerna) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumPfizer) &
+    leq(1, NumModerna) &
+    leq(1, NumPfizer)

@@ -6,7 +6,9 @@ rules:
     - routine_age_5_to_11_years.hrf
     - routine_age_12_to_64_years.hrf
     - routine_age_65_years_and_older.hrf
+    - immunocompromised_age_6_months_to_4_years.hrf
     - immunocompromised_age_5_to_11.hrf
+    - immunocompromised_age_12_years_and_older.hrf
 ---
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
