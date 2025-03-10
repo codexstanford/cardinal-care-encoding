@@ -46,7 +46,7 @@ allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_o
     ) |
     (
         num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, NumOldBrand) &
-        leq(2, novavax) &
+        leq(2, novavax)
     )
 
 % No updated vaccines, 1 old Novavax
