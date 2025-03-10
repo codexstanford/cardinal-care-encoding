@@ -1,0 +1,89 @@
+% There is only one table for age 12+
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 65_years_and_older, Brand, Claim) :-
+    allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim)
+
+% Limitations for 12+ (defined for 12 to 64, extended to 65+ by the above)
+% With any complete initial series, you are allowed an additional 2024-2025 vaccine
+% If the initial series was completed with old vaccines, you are allowed two 2024-2025 vaccines
+
+%%% Initial series comprised only of mRNA vaccines (not necessarily completed with old vaccines)
+% All of the same mRNA brand, incomplete initial series (< 3)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    less(NumMrna, 3) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, AdministeredBrand, NumMrna) &
+    (
+        same(Brand, AdministeredBrand) |
+        ~mrna_vaccine_available_at_location(Claim, AdministeredBrand)
+    )
+
+% Different mRNA brands, incomplete initial series (< 3)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    less(NumMrna, 3) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumModerna) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumPfizer) &
+    leq(1, NumModerna) &
+    leq(1, NumPfizer)
+
+% Complete initial series (= 3)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_mrna_vaccines_in_claim(Claim, 3)
+
+%%% Initial series contains Novavax vaccines (not necessarily completed with old vaccines)
+% Incomplete Novavax (= 1)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, novavax, Claim) :-
+    num_vaccines_in_claim(Claim, 1) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1)
+
+% Complete Novavax (= 2), could include a substitute mRNA - not taking order into account
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_vaccines_in_claim(Claim, 2) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    (
+        num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 2) |
+        (
+            num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1) &
+            num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, MrnaBrand, 1) &
+            mrna_vaccine(MrnaBrand)
+        )
+    )
+
+%%% Initial series completed with old vaccines (mRNA, Novavax and/or Janssen) + 1 2024-2025 vaccine
+% mRNA initial series
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOldMrna) &
+    leq(3, NumOldMrna) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_vaccines_in_claim(Claim, 1)
+
+% Janssen (>= 1)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, janssen, NumJanssen) &
+    leq(1, NumJanssen) &
+    num_updated_vaccines_in_claim(Claim, 1)
+
+% Novavax
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    (
+        num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 2) |
+        (
+            num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1) &
+            num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, MrnaBrand, NumMrna) &
+            leq(1, NumMrna) &
+            mrna_vaccine(MrnaBrand)
+        )
+    ) &
+    num_updated_vaccines_in_claim(Claim, 1)
