@@ -3,6 +3,9 @@ data:
     - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
 ---
 
+%%% Immunocompromised age 5 to 11
+%%% Taking: pfizer_biontech
+%%% History: Complete initial series of old mRNA vaccines + 1 updated mRNA vaccine
 
 %%% Types %%%
 type(claim1, covid_vaccine_coverage)

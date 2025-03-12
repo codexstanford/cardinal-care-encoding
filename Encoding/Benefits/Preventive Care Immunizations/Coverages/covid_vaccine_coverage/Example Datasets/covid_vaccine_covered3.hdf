@@ -3,9 +3,9 @@ data:
     - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
 ---
 
-%%% Routine 6 months to 4 years
+%%% Routine age 5 to 11
 %%% Taking: pfizer_biontech
-%%% History: Complete initial series of non-updated mRNA vaccines + 1 updated mRNA
+%%% History: Complete initial series with 5 doses of non-updated pfizer_biontech + 1 updated moderna
 
 %%% Types %%%
 type(claim1, covid_vaccine_coverage)
@@ -13,7 +13,7 @@ type(claim1, covid_vaccine_coverage)
 %%% Claim %%%
 %% Service-generic %%
 claim.date_service_received(claim1,2024_08_30)
-claim.patient_dob(claim1, 2021_08_30)
+claim.patient_dob(claim1, 2014_08_30)
 
 claim.location_service_received(claim1, stanford_health_care)
 claim.service_available_at_tier_one_or_two_location(claim1, yes)
@@ -26,9 +26,11 @@ claim.patient_is_immunocompromised(claim1, no)
 claim.covid19_vaccine_brand(claim1, pfizer_biontech)
 claim.covid19_vaccine_history(claim1, [
     covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01), 
-    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01), 
-    covid19_vaccination(moderna, not_updated_2024_2025, 2024_08_01), 
-    covid19_vaccination(pfizer_biontech, updated_2024_2025, 2024_08_01)
+    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
+    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
+    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
+    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
+    covid19_vaccination(moderna, updated_2024_2025, 2024_08_01)
 ])
 
 %% General Exclusions %% 

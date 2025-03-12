@@ -26,16 +26,16 @@ allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4
     leq(1, NumModerna) &
     leq(1, NumPfizer)
 
-%%% 4 vaccines have been administered
+%%% >= 4 vaccines have been administered
 %%%     This only works when the patient had been fully vaccinated with old vaccines
 
 % Same mRNA brand
 allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, Brand, Claim) :-
     mrna_vaccine(Brand) &
     num_mrna_vaccines_in_claim(Claim, NumMrna) &
-    same(NumMrna, 4) &
     num_old_mrna_vaccines_in_claim(Claim, NumOld) &
     leq(3, NumOld) &
+    num_updated_mrna_vaccines_in_claim(Claim, 1) &
     claim.covid19_vaccine_history(Claim, Vaccines) &
     num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, AdministeredBrand, NumMrna) &
     (
@@ -47,9 +47,9 @@ allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4
 allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, Brand, Claim) :-
     mrna_vaccine(Brand) &
     num_mrna_vaccines_in_claim(Claim, NumMrna) &
-    same(NumMrna, 4) &
     num_old_mrna_vaccines_in_claim(Claim, NumOld) &
     leq(3, NumOld) &
+    num_updated_mrna_vaccines_in_claim(Claim, 1) &
     claim.covid19_vaccine_history(Claim, Vaccines) &
     num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumModerna) &
     num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumPfizer) &

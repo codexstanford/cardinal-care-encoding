@@ -65,8 +65,10 @@ allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_year
     claim.covid19_vaccine_history(Claim, Vaccines) &
     num_updated_vaccines_in_claim(Claim, 1)
 
-% Janssen (>= 1)
+% Janssen (>= 1) for 18+ year olds
 allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    patient_age_at_time_of_service(Claim, Age) &
+    leq(18, Age) &
     covid_vaccine_2024_2025(Brand) &
     claim.covid19_vaccine_history(Claim, Vaccines) &
     num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, janssen, NumJanssen) &

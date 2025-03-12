@@ -4,7 +4,8 @@ data:
 ---
 
 %%% Routine 6 months to 4 years
-%%% Null hisotry of vaccination
+%%% Taking: pfizer_biontech
+%%% History: Nil
 
 %%% Types %%%
 type(claim1, covid_vaccine_coverage)

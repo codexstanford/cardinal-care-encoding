@@ -34,6 +34,8 @@ allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 12_to_64_years
     num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1)
 
 allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 12_to_64_years, Brand, Claim) :-
+    patient_age_at_time_of_service(Claim, Age) &
+    leq(18, Age) &
     covid_vaccine_2024_2025(Brand) &
     num_updated_vaccines_in_claim(Claim, 0) &
     claim.covid19_vaccine_history(Claim, Vaccines) &

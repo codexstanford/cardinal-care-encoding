@@ -2,23 +2,18 @@
 %%% Limitations from Schedule of Benefits
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%% Referenced in the superfolder benefit rules file
-
-%% COVID-19 vaccine
-meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
-    patient_age_bracket_for_covid19_vaccination(Claim, Age, AgeBracket) &
-    claim.patient_is_immunocompromised(Claim, ImmStatus) & 
-    claim.covid19_vaccine_brand(Claim, Brand) &
-    covid19_dose_counts(Claim, NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand) &
-    max_allowed_doses_covid19_vaccine(ImmStatus, AgeBracket, Brand, MaxDoses, old_dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)) &
-    leq(MaxDoses, NumUpdatedOfBrand)
-
-meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
-    already_begun_another_updated_2024_2025_covid19_vaccination_series(Claim)
+%%%%% Referenced in the superfolder benefit rules file
 
 meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(0, Claim) :-
     ~patient_geq_6_months_old_at_time_of_service(Claim)
 
+meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(Age, Claim) :-
+    patient_age_bracket_for_covid19_vaccination(Claim, Age, AgeBracket) &
+    claim.patient_is_immunocompromised(Claim, ImmStatus) & 
+    claim.covid19_vaccine_brand(Claim, Brand) &
+    ~allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(ImmStatus, AgeBracket, Brand, Claim)
+
+%%% Age Brackets %%%
 patient_age_bracket_for_covid19_vaccination(Claim, Age, 6_months_to_4_years) :-
     patient_geq_6_months_old_at_time_of_service(Claim) &
     leq(Age, 4)
@@ -27,136 +22,108 @@ patient_age_bracket_for_covid19_vaccination(Claim, Age, 5_to_11_years) :-
     leq(5, Age) &
     leq(Age, 11)
 
-patient_age_bracket_for_covid19_vaccination(Claim, Age, 12_years_and_older) :-
-    leq(12, Age)
+patient_age_bracket_for_covid19_vaccination(Claim, Age, 12_to_64_years) :-
+    leq(12, Age) &
+    leq(Age, 64)
 
-covid19_dose_counts(Claim, NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ, NumUpdatedOfBrand) :-
+patient_age_bracket_for_covid19_vaccination(Claim, Age, 65_years_and_older) :-
+    leq(65, Age)
+
+%%% Computing dose counts %%%
+mrna_vaccine_available_at_location(Claim, Brand) :-
+    mrna_vaccine(Brand) &
+    claim.covid19_vaccines_available_at_location(Claim, CovidVaccineList) &
+    member(Brand, CovidVaccineList)
+
+%%% Computing dose counts %%%
+num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumNotUpdatedOfBrand) :-
+    countofall(I, choose_1_with_index_from_list(Vaccines, covid19_vaccination(Brand, UpdatedStatus, Date), I) & distinct(UpdatedStatus, updated_2024_2025), NumNotUpdatedOfBrand)
+
+num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumUpdatedOfBrand) :-
+    countofall(I, choose_1_with_index_from_list(Vaccines, covid19_vaccination(Brand, updated_2024_2025, Date), I), NumUpdatedOfBrand)
+
+num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumOfBrand) :-
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumNotUpdatedOfBrand) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumUpdatedOfBrand) &
+    evaluate(plus(NumNotUpdatedOfBrand, NumUpdatedOfBrand), NumOfBrand)
+
+mrna_vaccine(moderna)
+mrna_vaccine(pfizer_biontech)
+
+non_mrna_vaccine(janssen)
+non_mrna_vaccine(novavax)
+
+covid_vaccine_2024_2025(moderna)
+covid_vaccine_2024_2025(pfizer_biontech)
+covid_vaccine_2024_2025(novavax)
+
+covid_vaccine(Brand) :-
+    mrna_vaccine(Brand) |
+    non_mrna_vaccine(Brand)
+
+num_updated_mrna_vaccines_in_claim(Claim, NumUpdated) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumUpdatedModerna) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumUpdatedPfizer) &
+    evaluate(plus(NumUpdatedModerna, NumUpdatedPfizer), NumUpdated)
+
+num_old_mrna_vaccines_in_claim(Claim, NumOld) :-
     claim.covid19_vaccine_history(Claim, Vaccines) &
     num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumOldModerna) &
     num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumOldPfizer) &
-    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, NumOldNovavax) &
-    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, j_n_j, NumOldJnJ) &
-    claim.covid19_vaccine_brand(Claim, Brand) &
-    countofall(I, choose_1_with_index_from_list(Vaccines, covid19_vaccination_event(Brand, updated_2024_2025), I), NumUpdatedOfBrand)
+    evaluate(plus(NumOldModerna, NumOldPfizer), NumOld)
 
-num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumUpdatedOfBrand) :-
-    countofall(I, choose_1_with_index_from_list(Vaccines, covid19_vaccination_event(Brand, UpdatedStatus), I) & distinct(UpdatedStatus, updated_2024_2025), NumUpdatedOfBrand)
+num_mrna_vaccines_in_claim(Claim, NumMrna) :-
+    num_updated_mrna_vaccines_in_claim(Claim, NumUpdated) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    evaluate(plus(NumUpdated, NumOld), NumMrna)
 
-already_begun_another_updated_2024_2025_covid19_vaccination_series(Claim) :-
-    claim.covid19_vaccine_brand(Claim, Brand1) &
+num_updated_vaccines_in_claim(Claim, NumUpdated) :-
     claim.covid19_vaccine_history(Claim, Vaccines) &
-    member(covid19_vaccination_event(Brand2, updated_2024_2025), Vaccines) &
-    distinct(Brand1, Brand2)
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumUpdatedModerna) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumUpdatedPfizer) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, janssen, NumUpdatedPfizer) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, NumUpdatedPfizer) &
+    evaluate(plus(NumUpdatedModerna, NumUpdatedPfizer), NumUpdated)
+
+num_old_vaccines_in_claim(Claim, NumOld) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumOldModerna) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumOldPfizer) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, janssen, NumUpdatedPfizer) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, NumUpdatedPfizer) &
+    evaluate(plus(NumOldModerna, NumOldPfizer), NumOld)
+
+num_vaccines_in_claim(Claim, NumMrna) :-
+    num_updated_vaccines_in_claim(Claim, NumUpdated) &
+    num_old_vaccines_in_claim(Claim, NumOld) &
+    evaluate(plus(NumUpdated, NumOld), NumMrna)
+
+%%%%%%%%%%%%%%%%%%%% Covid19 Maximums %%%%%%%%%%%%%%%%%%%%
+
+% Imported from other rules files in this directory
 
 
-%%% Covid19 Maximums - Not Immunocompromised %%%
-% old_dose_counts format: old_dose_counts(NumOldModerna, NumOldPfizer, NumOldNovavax, NumOldJnJ)
-% For ages [6 months, 4 years], 
-    % If no old vaccines, 2 doses new Moderna or 3 doses new Pfizer-BioNTech  
-max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, moderna, 2, old_dose_counts(0, 0, 0, 0))
-max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, pfizer_biontech, 3, old_dose_counts(0, 0, 0, 0))
+%%%%%% Routine (not immunocompromised) %%%%%%
 
-    % If vaccinated
-        % with >= 1 doses old Moderna, then 1 dose new Moderna
-max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, moderna, 1, old_dose_counts(NumOldModerna, _, _, _)) :-
-    leq(1, NumOldModerna)
+%%% Age 6 months-4 years %%%
 
-        % with 1 dose old Pfizer-BioNTech, then 2 doses new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, pfizer_biontech, 2, old_dose_counts(_, 1, _, _))
+%%% Age 5-11 %%%
 
-        % with >=2 doses old Pfizer-BioNTech, then 1 dose new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(no, 6_months_to_4_years, pfizer_biontech, 1, old_dose_counts(_, NumOldPfizer, _, _)) :-
-    leq(2, NumOldPfizer)
+%%% Age 12-64 %%%
 
-% For ages [5 years, 11 years], regardless of vaccination history,
-    % 1 dose new Moderna or new Pfizer-BioNTech 
-max_allowed_doses_covid19_vaccine(no, 5_to_11_years, moderna, 1, old_dose_counts(_, _, _, _))
-max_allowed_doses_covid19_vaccine(no, 5_to_11_years, pfizer_biontech, 1, old_dose_counts(_, _, _, _))
-
-% For ages >= 12 years,
-    % If no old vaccines, 1 dose new Moderna, 2 doses new Novavax, or 1 dose new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(no, 12_years_and_older, moderna, 1, old_dose_counts(0, 0, 0, 0))
-max_allowed_doses_covid19_vaccine(no, 12_years_and_older, novavax, 2, old_dose_counts(0, 0, 0, 0))
-max_allowed_doses_covid19_vaccine(no, 12_years_and_older, pfizer_biontech, 1, old_dose_counts(0, 0, 0, 0))
-
-    % If vaccinated at all, 1 dose new Moderna, new Novavax, or new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(no, 12_years_and_older, Brand, 1, DoseCounts) :-
-    distinct(DoseCounts, old_dose_counts(0, 0, 0, 0)) &
-    member(Brand, [moderna, novavax, pfizer_biontech])
+%%% Age 65+ %%%
 
 
-%%% Covid19 Maximimums - Immunocompromised %%%
-% For ages [6 months, 4 years], 
-    % If no old vaccines, 3 doses new Moderna or new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, moderna, 3, old_dose_counts(0, 0, 0, 0))
-max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, pfizer_biontech, 3, old_dose_counts(0, 0, 0, 0))
-    
-    % If vaccinated,
-        % With 1 dose old Moderna, then 2 doses new Moderna
-max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, moderna, 2, old_dose_counts(1, _, _, _))
-        % With >= 2 doses old Moderna, then 1 dose new Moderna
-max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, moderna, 1, old_dose_counts(NumOldModerna, _, _, _)) :-
-    leq(2, NumOldModerna)
-        % With 1 dose old Pfizer-BioNTech, then 2 doses new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, pfizer_biontech, 2, old_dose_counts(_, 1, _, _))
-        % With >= 2 doses old Pfizer-BioNTech, then 1 dose new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(yes, 6_months_to_4_years, pfizer_biontech, 1, old_dose_counts(_, NumOldPfizer, _, _)) :-
-    leq(2, NumOldPfizer)
+%%%%%% Immunocompromised %%%%%%
 
+%%% Age 6 months-4 years %%%
 
-% For ages [5 years, 11 years], 
-    % If no old vaccines, 3 doses new Moderna or new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, moderna, 3, old_dose_counts(0, 0, 0, 0))
-max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, pfizer_biontech, 3, old_dose_counts(0, 0, 0, 0))
+%%% Age 5-11 %%%
 
-    % If vaccinated,
-        % With 1 dose old Moderna, then 2 doses new Moderna
-max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, moderna, 2, old_dose_counts(1, NumOldPfizer, _, _)) :-
-    less(NumOldPfizer, 2) % If received >= 2 doses old pfizer as well, the final rule in this section applies
-        % With 2 doses old Moderna, then 1 dose new Moderna
-max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, moderna, 1, old_dose_counts(2, _, _, _))
-        % With 1 dose old Pfizer-BioNTech, then 2 doses new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, pfizer_biontech, 2, old_dose_counts(NumOldModerna, 1, _, _)) :-
-    less(NumOldModerna, 2) % If received >= 2 doses old moderna as well, the final rule in this section applies
-        % With 2 doses old Pfizer-BioNTech, then 1 dose new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, pfizer_biontech, 1, old_dose_counts(_, 2, _, _))
-        % With 3 or more doses any old mRNA vaccine (i.e. Moderna or Pfizer-BioNTech), then 1 dose new Moderna or Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(yes, 5_to_11_years, Brand, 1, old_dose_counts(NumOldModerna, NumOldPfizer, _, _)) :-
-    evaluate(plus(NumOldModerna, NumOldPfizer), NumOldmrna) &
-    leq(3, NumOldmrna) &
-    member(Brand, [moderna, pfizer_biontech])
+%%% Age 12-64 %%%
 
-% For ages >= 12 years, 
-    % If no old vaccines, 3 doses new Moderna or new Pfizer-BioNTech, or 2 doses new Novavax
-max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, moderna, 3, old_dose_counts(0, 0, 0, 0))
-max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, novavax, 2, old_dose_counts(0, 0, 0, 0))
-max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, pfizer_biontech, 3, old_dose_counts(0, 0, 0, 0))
-
-    % If vaccinated,
-        % With 1 dose old Moderna, then 2 doses new Moderna
-            % If received old novavax or J&J, then final rule in this section applies
-max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, moderna, 2, old_dose_counts(1, NumOldPfizer, 0, 0)) :-
-    less(NumOldPfizer, 2) % If received >= 2 doses old pfizer as well, the second-to-last rule in this section applies
-        % With 2 doses old Moderna, then 1 dose new Moderna
-max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, moderna, 1, old_dose_counts(2, _, _, _))
-        % With 1 dose old Pfizer-BioNTech, then 2 doses new Pfizer-BioNTech
-            % If received old novavax or J&J, then final rule in this section applies
-max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, pfizer_biontech, 2, old_dose_counts(NumOldModerna, 1,  0, 0)) :-
-    less(NumOldModerna, 2) % If received >= 2 doses old moderna as well, the second-to-last rule in this section applies
-        % With 2 doses old Pfizer-BioNTech, then 1 dose new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, pfizer_biontech, 1, old_dose_counts(_, 2, _, _))
-        % With 3 or more doses any old mRNA vaccine (i.e. Moderna or Pfizer-BioNTech), 
-            % then 1 dose new Moderna, new Novavax, or new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, Brand, 1, old_dose_counts(NumOldModerna, NumOldPfizer, _, _)) :-
-    evaluate(plus(NumOldModerna, NumOldPfizer), NumOldmrna) &
-    leq(3, NumOldmrna) &
-    member(Brand, [moderna, novavax, pfizer_biontech])
-        % With >= 1 doses old Novavax or J&J,
-            % then 1 dose new Moderna, new Novavax, or new Pfizer-BioNTech
-max_allowed_doses_covid19_vaccine(yes, 12_years_and_older, Brand, 1, old_dose_counts(_, _, NumOldNovavax, NumOldJnJ)) :-
-    evaluate(plus(NumOldNovavax, NumOldJnJ), NumOldNonmrna) &
-    leq(1, NumOldNonmrna) &
-    member(Brand, [moderna, novavax, pfizer_biontech])
+%%% Age 65+ (same as 12-64) %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Eligible for service - additional eligibility requirements
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -228,11 +195,24 @@ beyond_limits(Claim) :-
     meets_or_exceeds_2024_cdc_acip_age_guideline_max(Claim)
 
 
+beyond_limits(Claim) :-
+    claim_is_immunization_for_disease(Claim, Disease) &
+    infectious_disease_for_which_cdc_acip_recommends_immunization(Disease) &
+    claim.date_service_received(Claim, Date) &
+    date_between_dates_incl(Date, 2025_01_01, 2025_12_31) & 
+    meets_or_exceeds_2025_cdc_acip_age_guideline_max(Claim)
+
+
 %% CDC ACIP Guidelines
 meets_or_exceeds_2024_cdc_acip_age_guideline_max(C) :-
     % claim.immunization_for_disease(C, D) & % Should remain commented out
     patient_age_at_time_of_service(C, A) &
     meets_or_exceeds_2024_cdc_acip_age_guideline_max_by_age(A, C)
+
+% As currently encoded, 2024 and 2025 guidelines are the same
+meets_or_exceeds_2025_cdc_acip_age_guideline_max(C) :-
+    meets_or_exceeds_2024_cdc_acip_age_guideline_max(C)
+
 
 %%% Disease-specific guidelines are in the respective immunization coverage files
 
@@ -245,16 +225,10 @@ patient_geq_6_months_old_at_time_of_service(Claim) :-
     claim.patient_dob(Claim, PatientDOB) & 
     n_months_diff(PatientDOB, ServiceDate, N) &
     leq(6, N)
-% covers(Policy, C) :-
-%     policy.type(Policy, aetna_cardinal_care_2023_2024) &
-%     covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024)
-
-
-%covered_under_policy(C, Policy, aetna_cardinal_care_2023_2024) :-
 covered(C) :-
     % policy_in_effect(C, Policy) &
     service_received_at_valid_provider(C) &
-    meets_additional_eligibility_requirements_if_present(C) &
+    covered_under_cardinal_care_24_25_benefit(C, _ ) &
     medically_necessary_service(C) &
     precertified_if_necessary(C) &
     ~beyond_limits(C) &
@@ -313,12 +287,10 @@ service_received_at_valid_provider(C) :-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Eligible for service - additional eligibility requirements
+%%% For an Eligible health service, and meets additional eligibility requirements
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-meets_additional_eligibility_requirements_if_present(C) :-
-    covered_under_cardinal_care_24_25_benefit(C, B)
-
+% Important Note: Loaded from other, coverage-specific rulesets
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Medical necessity
@@ -335,6 +307,8 @@ medically_necessary_service(C) :-
 %%% Precertified if necessary
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Important Note: Loaded from other, coverage-specific rulesets
+
 % If the service does not require precertification, then it is "precertified_if_necessary". 
 % However, developers should be aware of precertification requirements for the services for which they're encoding coverage.
 % So if precertification is not required, then the developer should add an additional precertified_if_necessary rule to their coverage.
@@ -343,8 +317,8 @@ medically_necessary_service(C) :-
 %%% Limitations from Schedule of Benefits
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Important Note: Loaded from other, benefit-specific rulesets
-    
+% Important Note: Loaded from other, coverage-specific rulesets
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% General exclusions 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -451,3 +425,496 @@ choose_1_with_index_from_sublist(NumBefore, H!T, H, NumBefore)
 choose_1_with_index_from_sublist(NumBefore, H!T, E, I) :-
     evaluate(plus(NumBefore, 1), NewNumBefore) &
     choose_1_with_index_from_sublist(NewNumBefore, T, E, I)
+%%%%% People under age 12 can only receive mrna vaccines %%%%%
+
+%%% If the initial series *was not* completed with old vaccines,
+%%% then it is recommended to complete the series (2 moderna, 3 pfizer or 3 mixed)
+
+%%%% No old or updated vaccines %%%%
+%%% Can get any updated mrna vaccine
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 6_months_to_4_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    claim.covid19_vaccine_history(Claim, nil)
+
+%%% 1 moderna (old or updated)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 6_months_to_4_years, Brand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_mrna_vaccines_in_claim(Claim, 1) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, 1) &
+    same(Brand, moderna) | (
+        mrna_vaccine_available_at_location(Claim, Brand) &
+        ~mrna_vaccine_available_at_location(Claim, moderna)
+    )
+
+%%% <= 2 pfizer (old or updated)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 6_months_to_4_years, Brand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumMrna) &
+    leq(NumMrna, 2) &
+    same(Brand, pfizer_biontech) | (
+        mrna_vaccine_available_at_location(Claim, Brand) &
+        ~mrna_vaccine_available_at_location(Claim, pfizer_biontech)
+    )
+
+%%% 1 pfizer, 1 moderna (old or updated)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 6_months_to_4_years, Brand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_mrna_vaccines_in_claim(Claim, 2) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, 1) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, 1)
+
+%%% If the initial series *was* completed with old vaccines (2 moderna, 3 pfizer or 3 mixed),
+%%% then it is recommended to take one updated vaccine (same manufacturer, but shouldn't matter if mixed)
+
+%%%% >= 2 old moderna only, 0 new
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 6_months_to_4_years, Brand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumMrna) &
+    leq(2, NumMrna) &
+    same(Brand, moderna) | (
+        mrna_vaccine_available_at_location(Claim, Brand) &
+        ~mrna_vaccine_available_at_location(Claim, moderna)
+    )
+
+%%%% >= 3 old pfizer only, 0 new
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 6_months_to_4_years, Brand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumMrna) &
+    leq(3, NumMrna) &
+    same(Brand, pfizer_biontech) | (
+        mrna_vaccine_available_at_location(Claim, Brand) &
+        ~mrna_vaccine_available_at_location(Claim, pfizer_biontech)
+    )
+
+%%%% >= 3 old mixed, 0 new
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 6_months_to_4_years, Brand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    num_updated_mrna_vaccines_in_claim(Claim, 0) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumOldModerna) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumOldPfizer) &
+    leq(1, NumOldModerna) &
+    leq(1, NumOldPfizer)
+%%% Allowed exactly when no updated mRNA vaccines have been taken
+
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 5_to_11_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_updated_mrna_vaccines_in_claim(Claim, 0)
+%%% Unvaccinated
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 12_to_64_years, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    claim.covid19_vaccine_history(Claim, nil)
+
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 12_to_64_years, Brand, Claim) :-
+    same(Brand, novavax) &
+    num_old_vaccines_in_claim(Claim, 0) &
+    num_updated_vaccines_in_claim(Claim, 1) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1)
+
+%%% Previously vaccinated before 2024-2025 vaccine
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 12_to_64_years, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_updated_vaccines_in_claim(Claim, 0) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    (
+        (
+            num_old_mrna_vaccines_in_claim(Claim, NumOldMrna) &
+            leq(1, NumOldMrna)
+        ) |
+        (
+            num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, NumOldNovavax) &
+            leq(2, NumOldNovavax)
+        )
+    )
+
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 12_to_64_years, Brand, Claim) :-
+    same(Brand, novavax) &
+    num_updated_vaccines_in_claim(Claim, 0) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1)
+
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 12_to_64_years, Brand, Claim) :-
+    patient_age_at_time_of_service(Claim, Age) &
+    leq(18, Age) &
+    covid_vaccine_2024_2025(Brand) &
+    num_updated_vaccines_in_claim(Claim, 0) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, janssen, NumOldJanssen) &
+    leq(1, NumOldJanssen)
+%%% Unvaccinated
+% No updated vaccines
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_older, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    claim.covid19_vaccine_history(Claim, nil)
+
+% One updated mRNA vaccine
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_older, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_old_vaccines_in_claim(Claim, 0) &
+    num_updated_vaccines_in_claim(Claim, 1) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, TakenBrand, 1) &
+    mrna_vaccine(TakenBrand)
+
+% One updated Novavax vaccine
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_older, novavax, Claim) :-
+    num_old_vaccines_in_claim(Claim, 0) &
+    num_updated_vaccines_in_claim(Claim, 1) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1)
+
+% Two updated Novavax vaccines
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_older, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_old_vaccines_in_claim(Claim, 0) &
+    num_updated_vaccines_in_claim(Claim, 2) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 2)
+
+%%% Previously vaccinated
+% No updated vaccines, >= 1 old (mRNA or Janssen) or >= 2 old Novavax
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_older, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_updated_vaccines_in_claim(Claim, 0) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    (
+        num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, OldBrand, NumOldBrand) &
+        (
+            mrna_vaccine(OldBrand) |
+            same(OldBrand, janssen)
+        ) &
+        leq(1, OldBrand)
+    ) |
+    (
+        num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, NumOldBrand) &
+        leq(2, novavax)
+    )
+
+% No updated vaccines, 1 old Novavax
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_older, novavax, Claim) :-
+    num_updated_vaccines_in_claim(Claim, 0) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1)
+
+% One updated vaccine
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(no, 65_years_and_older, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_old_vaccines_in_claim(Claim, NumOldVaccines) &
+    leq(1, NumOldVaccines) &
+    num_updated_vaccines_in_claim(Claim, 1)
+% Assuming different vaccine than previously administered is still allowed given unavailability
+% Novavax vaccines are not considered - only mRNA
+
+%%% < 4 vaccines have been administered (old and/or updated)
+% All of the same mRNA brand
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    less(NumMrna, 4) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, AdministeredBrand, NumMrna) &
+    (
+        same(Brand, AdministeredBrand) |
+        ~mrna_vaccine_available_at_location(Claim, AdministeredBrand)
+    )
+
+% Different brands
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    less(NumMrna, 4) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumModerna) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumPfizer) &
+    leq(1, NumModerna) &
+    leq(1, NumPfizer)
+
+%%% >= 4 vaccines have been administered
+%%%     This only works when the patient had been fully vaccinated with old vaccines
+
+% Same mRNA brand
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    leq(3, NumOld) &
+    num_updated_mrna_vaccines_in_claim(Claim, 1) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, AdministeredBrand, NumMrna) &
+    (
+        same(Brand, AdministeredBrand) |
+        ~mrna_vaccine_available_at_location(Claim, AdministeredBrand)
+    )
+
+% Different brands
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 6_months_to_4_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    leq(3, NumOld) &
+    num_updated_mrna_vaccines_in_claim(Claim, 1) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumModerna) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumPfizer) &
+    leq(1, NumModerna) &
+    leq(1, NumPfizer)
+%%%%% People under age 12 can only receive mrna vaccines %%%%%
+
+%%%% No old or updated vaccines %%%%
+%%% Can get any updated mrna vaccine
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 5_to_11_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    claim.covid19_vaccine_history(Claim, nil)
+    
+%%%% No old vaccines, some (> 0, < 4) updated vaccines
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 5_to_11_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_old_mrna_vaccines_in_claim(Claim, 0) &
+    num_updated_mrna_vaccines_in_claim(Claim, NumUpdated) &
+    less(NumUpdated, 4) &
+    less(0, NumUpdated) &
+    allowed_for_no_old_some_new_immunocompromised_5_to_11(Brand, Claim)
+
+
+%%% If 3 updated, can receive any mrna
+allowed_for_no_old_some_new_immunocompromised_5_to_11(MRNABrand, Claim) :-
+    num_updated_mrna_vaccines_in_claim(Claim, 3)
+
+% If 1 each updated moderna and pfizer, then can receive any mrna
+allowed_for_no_old_some_new_immunocompromised_5_to_11(MRNABrand, Claim) :-
+    num_updated_mrna_vaccines_in_claim(Claim, 2) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, 1) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, 1)
+
+
+% If 1-2 updated of same type, then can receive another of the same type
+allowed_for_no_old_some_new_immunocompromised_5_to_11(MRNABrand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNABrand, NumUpdatedOfBrand) &
+    leq(NumUpdatedOfBrand, 2) &
+    leq(1, NumUpdatedOfBrand) &
+    num_updated_mrna_vaccines_in_claim(Claim, NumUpdatedOfBrand)
+
+% If 1-2 updated of one type, then can receive another of different type if the different type is the only mrna available
+allowed_for_no_old_some_new_immunocompromised_5_to_11(MRNAToReceiveBrand, Claim) :-
+    mrna_vaccine(MRNAReceivedBrand) &
+    distinct(MRNAToReceiveBrand, MRNAReceivedBrand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, NumUpdatedReceivedBrand) &
+    leq(NumUpdatedReceivedBrand, 2) &
+    leq(1, NumUpdatedReceivedBrand) &
+    num_updated_mrna_vaccines_in_claim(Claim, NumUpdatedReceivedBrand) &
+    claim.covid19_vaccines_available_at_location(Claim, CovidVaccineList) &
+    member(MRNAToReceiveBrand, CovidVaccineList) &
+    ~member(MRNAReceivedBrand, CovidVaccineList)
+
+%%%% Some old vaccines, no updated vaccines %%%%
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 5_to_11_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    less(0, NumOld) &
+    num_updated_mrna_vaccines_in_claim(Claim, 0) &
+    allowed_for_some_old_no_new_immunocompromised_5_to_11(Brand, Claim)
+
+%%% If 3 or more old vaccines, then can receive any mrna
+allowed_for_some_old_no_new_immunocompromised_5_to_11(MRNABrand, Claim) :-
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    leq(3, NumOld)
+
+%%% If 1 old moderna and 1 old pfizer, then can receive any mrna
+allowed_for_some_old_no_new_immunocompromised_5_to_11(MRNABrand, Claim) :-
+    num_old_mrna_vaccines_in_claim(Claim, 2) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, 1) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, 1)
+
+% If 1-2 updated of same type, then can receive another of the same type
+allowed_for_some_old_no_new_immunocompromised_5_to_11(MRNAToReceiveBrand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAToReceiveBrand, NumOldOfBrand) &
+    leq(NumOldOfBrand, 2) &
+    leq(1, NumOldOfBrand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOldOfBrand)
+
+% If 1-2 old of one type, then can receive another of different type if the different type is the only mrna available
+allowed_for_some_old_no_new_immunocompromised_5_to_11(MRNAToReceiveBrand, Claim) :-
+    mrna_vaccine(MRNAReceivedBrand) &
+    distinct(MRNAToReceiveBrand, MRNAReceivedBrand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, NumOldReceivedBrand) &
+    leq(NumOldReceivedBrand, 2) &
+    leq(1, NumOldReceivedBrand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOldReceivedBrand) &
+    claim.covid19_vaccines_available_at_location(Claim, CovidVaccineList) &
+    member(MRNAToReceiveBrand, CovidVaccineList) &
+    ~member(MRNAReceivedBrand, CovidVaccineList)
+
+%%%% Some old vaccines, some (> 0, < 3) updated vaccines %%%%
+%%%% If 3 or more updated vaccines, then can't receive any more
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 5_to_11_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOld) &
+    less(0, NumOld) &
+    num_updated_mrna_vaccines_in_claim(Claim, NumUpdated) &
+    less(0, NumUpdated) &
+    less(NumUpdated, 3) &
+    allowed_for_some_old_some_new_immunocompromised_5_to_11(Brand, Claim)
+
+%% If 2 or more old and 2 or more updated vaccines, then can't receive any more
+%% Not actually necessary, since implied by the other rules
+% too_many_old_and_new_vaccines_immunocompromised_5_to_11(NumOldMrna, NumUpdatedMrna) :-
+%     leq(2, NumOldMrna) &
+%     leq(2, NumUpdatedMrna)
+
+%%% If 2 or 3 mrna vaccines total, with >= 1 old and >= 1 new of different types, can receive any mrna
+allowed_for_some_old_some_new_immunocompromised_5_to_11(Brand, Claim) :-
+    num_mrna_vaccines_in_claim(Claim, NumVaccines) &
+    leq(2, NumVaccines) &
+    leq(NumVaccines, 3) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    mrna_vaccine(Brand1) &
+    mrna_vaccine(Brand2) &
+    distinct(Brand1, Brand2) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand1, NumOldBrand1) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand2, NumUpdatedBrand2) &
+    leq(1, NumOldBrand1) &
+    leq(1, NumUpdatedBrand2)
+
+% If 1 old and 2 updated of same mrna type, then can receive another of any mrna type
+allowed_for_some_old_some_new_immunocompromised_5_to_11(Brand, Claim) :-
+    mrna_vaccine(MRNAReceivedBrand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, 1) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, 2) &
+    num_mrna_vaccines_in_claim(Claim, 3)
+
+
+% If 1-2 old and 1 updated of same mrna type, can receive another of the same type
+allowed_for_some_old_some_new_immunocompromised_5_to_11(Brand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, NumOldOfBrand) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, Brand, 1) &
+    leq(NumOldOfBrand, 2) &
+    leq(1, NumOldOfBrand) &
+    evaluate(plus(NumOldOfBrand, 1), NumOfBrand) &
+    num_mrna_vaccines_in_claim(Claim, NumOfBrand)
+
+% If 1-2 old and 1 updated of one mrna type, then can receive another of different type if the different type is the only mrna available
+allowed_for_some_old_some_new_immunocompromised_5_to_11(MRNAToReceiveBrand, Claim) :-
+    mrna_vaccine(MRNAReceivedBrand) &
+    distinct(MRNAToReceiveBrand, MRNAReceivedBrand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, NumOldOfReceivedBrand) &
+    num_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, MRNAReceivedBrand, 1) &
+    leq(NumOldOfReceivedBrand, 2) &
+    leq(1, NumOldOfReceivedBrand) &
+    evaluate(plus(NumOldOfReceivedBrand, 1), NumOfReceivedBrand) &
+    num_mrna_vaccines_in_claim(Claim, NumOfReceivedBrand) &
+    claim.covid19_vaccines_available_at_location(Claim, CovidVaccineList) &
+    member(MRNAToReceiveBrand, CovidVaccineList) &
+    ~member(MRNAReceivedBrand, CovidVaccineList)
+
+% If >= 1 old of each mrna type and 1 new of any mrna type, can receive any mrna
+allowed_for_some_old_some_new_immunocompromised_5_to_11(Brand, Claim) :-
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumOldModerna) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumOldPfizer) &
+    leq(1, NumOldModerna) &
+    leq(1, NumOldPfizer) &
+    num_updated_mrna_vaccines_in_claim(Claim, 1)
+% There is only one table for age 12+
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 65_years_and_older, Brand, Claim) :-
+    allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim)
+
+% Limitations for 12+ (defined for 12 to 64, extended to 65+ by the above)
+% With any complete initial series, you are allowed an additional 2024-2025 vaccine
+% If the initial series was completed with old vaccines, you are allowed two 2024-2025 vaccines
+
+%%% Initial series comprised only of mRNA vaccines (not necessarily completed with old vaccines)
+% All of the same mRNA brand, incomplete initial series (< 3)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    less(NumMrna, 3) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, AdministeredBrand, NumMrna) &
+    (
+        same(Brand, AdministeredBrand) |
+        ~mrna_vaccine_available_at_location(Claim, AdministeredBrand)
+    )
+
+% Different mRNA brands, incomplete initial series (< 3)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    mrna_vaccine(Brand) &
+    num_mrna_vaccines_in_claim(Claim, NumMrna) &
+    less(NumMrna, 3) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, moderna, NumModerna) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, pfizer_biontech, NumPfizer) &
+    leq(1, NumModerna) &
+    leq(1, NumPfizer)
+
+% Complete initial series (= 3)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_mrna_vaccines_in_claim(Claim, 3)
+
+%%% Initial series contains Novavax vaccines (not necessarily completed with old vaccines)
+% Incomplete Novavax (= 1)
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, novavax, Claim) :-
+    num_vaccines_in_claim(Claim, 1) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1)
+
+% Complete Novavax (= 2), could include a substitute mRNA - not taking order into account
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_vaccines_in_claim(Claim, 2) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    (
+        num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 2) |
+        (
+            num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1) &
+            num_old_and_updated_2024_2025_covid19_vaccines_with_brand(Vaccines, MrnaBrand, 1) &
+            mrna_vaccine(MrnaBrand)
+        )
+    )
+
+%%% Initial series completed with old vaccines (mRNA, Novavax and/or Janssen) + 1 2024-2025 vaccine
+% mRNA initial series
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    num_old_mrna_vaccines_in_claim(Claim, NumOldMrna) &
+    leq(3, NumOldMrna) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_updated_vaccines_in_claim(Claim, 1)
+
+% Janssen (>= 1) for 18+ year olds
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    patient_age_at_time_of_service(Claim, Age) &
+    leq(18, Age) &
+    covid_vaccine_2024_2025(Brand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, janssen, NumJanssen) &
+    leq(1, NumJanssen) &
+    num_updated_vaccines_in_claim(Claim, 1)
+
+% Novavax
+allowed_one_more_updated_2024_2025_covid19_vaccine_with_brand(yes, 12_to_64_years, Brand, Claim) :-
+    covid_vaccine_2024_2025(Brand) &
+    claim.covid19_vaccine_history(Claim, Vaccines) &
+    (
+        num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 2) |
+        (
+            num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, novavax, 1) &
+            num_old_2024_2025_covid19_vaccines_with_brand(Vaccines, MrnaBrand, NumMrna) &
+            leq(1, NumMrna) &
+            mrna_vaccine(MrnaBrand)
+        )
+    ) &
+    num_updated_vaccines_in_claim(Claim, 1)

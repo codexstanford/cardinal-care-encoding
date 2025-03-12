@@ -57,7 +57,7 @@ changestyle(claim.patient_dob,datestyle)
 
 %%% type(claim.quarter_enrolled_stanford_2024_2025, attributerelation)
 %%% domain(claim.quarter_enrolled_stanford_2024_2025, covid_vaccine_coverage)
-%%% codomain(claim.quarter_enrolled_stanford_2024_2025, quarter_2023_2024)
+%%% codomain(claim.quarter_enrolled_stanford_2024_2025, quarter_2024_2025)
 %%% unique(claim.quarter_enrolled_stanford_2024_2025, yes)
 %%% total(claim.quarter_enrolled_stanford_2024_2025, no)
 
@@ -134,6 +134,7 @@ type(covid_vaccine_coverage, class)
 superclass(covid_vaccine_coverage, claim)
 attribute(covid_vaccine_coverage, claim.patient_is_immunocompromised)
 attribute(covid_vaccine_coverage, claim.covid19_vaccine_brand)
+attribute(covid_vaccine_coverage, claim.covid19_vaccines_available_at_location)
 attribute(covid_vaccine_coverage, claim.covid19_vaccine_history)
 
 
@@ -151,33 +152,48 @@ unique(claim.covid19_vaccine_brand, yes)
 total(claim.covid19_vaccine_brand, no)
 changestyle(claim.covid19_vaccine_brand,selector)
 
+type(claim.covid19_vaccines_available_at_location, attributerelation)
+domain(claim.covid19_vaccines_available_at_location, covid_vaccine_coverage)
+codomain(claim.covid19_vaccines_available_at_location, vaccine_brand)
+unique(claim.covid19_vaccines_available_at_location, yes)
+total(claim.covid19_vaccines_available_at_location, yes)
+changestyle(claim.covid19_vaccines_available_at_location,checkboxfield)
+
 type(claim.covid19_vaccine_history, attributerelation)
 domain(claim.covid19_vaccine_history, covid_vaccine_coverage)
-codomain(claim.covid19_vaccine_history, covid19_vaccination)
-unique(claim.covid19_vaccine_history, no)
-total(claim.covid19_vaccine_history, no)
+codomain(claim.covid19_vaccine_history, covid19_vaccination_obj)
+unique(claim.covid19_vaccine_history, yes)
+total(claim.covid19_vaccine_history, yes)
 changestyle(claim.covid19_vaccine_history,table)
 
 %%%% Functional classes %%%%
 
-type(covid19_vaccination,class)
-functional(covid19_vaccination, covid19_vaccination_event)
-attribute(covid19_vaccination, covid19_vaccination.brand)
-attribute(covid19_vaccination, covid19_vaccination.version)
+type(covid19_vaccination_obj,class)
+functional(covid19_vaccination_obj, covid19_vaccination)
+attribute(covid19_vaccination_obj, covid19_vaccination.brand)
+attribute(covid19_vaccination_obj, covid19_vaccination.version)
+attribute(covid19_vaccination_obj, covid19_vaccination.date)
 
 type(covid19_vaccination.brand, attributerelation)
-domain(covid19_vaccination.brand, covid19_vaccination)
+domain(covid19_vaccination.brand, covid19_vaccination_obj)
 codomain(covid19_vaccination.brand, vaccine_brand)
 unique(covid19_vaccination.brand, yes)
 total(covid19_vaccination.brand, yes)
 changestyle(covid19_vaccination.brand,selector)
 
 type(covid19_vaccination.version, attributerelation)
-domain(covid19_vaccination.version, covid19_vaccination)
+domain(covid19_vaccination.version, covid19_vaccination_obj)
 codomain(covid19_vaccination.version, covid19_vaccine_version)
 unique(covid19_vaccination.version, yes)
 total(covid19_vaccination.version, yes)
 changestyle(covid19_vaccination.version,selector)
+
+type(covid19_vaccination.date, attributerelation)
+domain(covid19_vaccination.date, covid19_vaccination_obj)
+codomain(covid19_vaccination.date, date)
+unique(covid19_vaccination.date, yes)
+total(covid19_vaccination.date, yes)
+changestyle(covid19_vaccination.date,datestyle)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Classes without attributes
