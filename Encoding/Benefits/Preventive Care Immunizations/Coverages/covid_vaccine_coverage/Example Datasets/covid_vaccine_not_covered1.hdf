@@ -5,7 +5,7 @@ data:
 
 %%% Routine age 5 to 11
 %%% Taking: pfizer_biontech
-%%% History: Complete initial series with 5 doses of non-updated pfizer_biontech
+%%% History: Complete initial series with 5 doses of non-updated pfizer_biontech + 1 updated moderna
 
 %%% Types %%%
 type(claim1, covid_vaccine_coverage)
@@ -29,7 +29,8 @@ claim.covid19_vaccine_history(claim1, [
     covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
     covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
     covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
-    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01)
+    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
+    covid19_vaccination(pfizer_biontech, updated_2024_2025, 2024_08_01)
 ])
 
 %% General Exclusions %% 

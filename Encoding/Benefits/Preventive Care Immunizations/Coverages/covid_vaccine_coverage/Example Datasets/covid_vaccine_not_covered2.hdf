@@ -3,9 +3,9 @@ data:
     - ../../../../../Cardinal Care Core/General Exclusions/no_exclusion_claim.hdf
 ---
 
-%%% Routine age 5 to 11
-%%% Taking: pfizer_biontech
-%%% History: Complete initial series with 5 doses of non-updated pfizer_biontech
+%%% Routine age 12 to 64
+%%% Taking: novavax
+%%% History: 1 dose of non-updated novavax + 1 does of updated novavax
 
 %%% Types %%%
 type(claim1, covid_vaccine_coverage)
@@ -13,7 +13,7 @@ type(claim1, covid_vaccine_coverage)
 %%% Claim %%%
 %% Service-generic %%
 claim.date_service_received(claim1,2024_08_30)
-claim.patient_dob(claim1, 2014_08_30)
+claim.patient_dob(claim1, 1994_08_30)
 
 claim.location_service_received(claim1, stanford_health_care)
 claim.service_available_at_tier_one_or_two_location(claim1, yes)
@@ -23,13 +23,10 @@ claim.reason_for_immunization(claim1, preventive_care)
 
 % Covid vaccine-specific
 claim.patient_is_immunocompromised(claim1, no)
-claim.covid19_vaccine_brand(claim1, pfizer_biontech)
+claim.covid19_vaccine_brand(claim1, novavax)
 claim.covid19_vaccine_history(claim1, [
-    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01), 
-    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
-    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
-    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01),
-    covid19_vaccination(pfizer_biontech, not_updated_2024_2025, 2024_08_01)
+    covid19_vaccination(novavax, not_updated_2024_2025, 2024_08_01),
+    covid19_vaccination(novavax, updated_2024_2025, 2024_08_01)
 ])
 
 %% General Exclusions %% 
