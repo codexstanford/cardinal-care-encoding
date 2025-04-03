@@ -1,0 +1,53 @@
+type(claim, class).
+
+type(claim.patient_dob, attributerelation).
+domain(claim.patient_dob, clinical_related_injury_coverage).
+codomain(claim.patient_dob, date).
+unique(claim.patient_dob, yes).
+total(claim.patient_dob, yes).
+changestyle(claim.patient_dob, datestyle).
+
+type(claim.date_of_injury, attributerelation).
+domain(claim.date_of_injury, clinical_related_injury_coverage).
+codomain(claim.date_of_injury, date).
+unique(claim.date_of_injury, yes).
+total(claim.date_of_injury, yes).
+changestyle(claim.date_of_injury, datestyle).
+
+type(claim.service_type, attributerelation).
+domain(claim.service_type, clinical_related_injury_coverage).
+codomain(claim.service_type, clinical_related_injury_service).
+unique(claim.service_type, yes).
+total(claim.service_type, yes).
+changestyle(claim.service_type, selector).
+
+type(claim.location_of_service, attributerelation).
+domain(claim.location_of_service, clinical_related_injury_coverage).
+codomain(claim.location_of_service, clinical_related_injury_location).
+unique(claim.location_of_service, yes).
+total(claim.location_of_service, yes).
+changestyle(claim.location_of_service, selector).
+
+type(claim.treatment_required, attributerelation).
+domain(claim.treatment_required, clinical_related_injury_coverage).
+codomain(claim.treatment_required, boolean).
+unique(claim.treatment_required, yes).
+total(claim.treatment_required, yes).
+changestyle(claim.treatment_required, checkboxfield).
+
+type(claim.source_patient_diagnostic_services, attributerelation).
+domain(claim.source_patient_diagnostic_services, clinical_related_injury_coverage).
+codomain(claim.source_patient_diagnostic_services, clinical_related_diagnostic_services).
+unique(claim.source_patient_diagnostic_services, yes).
+total(claim.source_patient_diagnostic_services, yes).
+changestyle(claim.source_patient_diagnostic_services, selector).
+
+% General exclusions
+attribute(claim, exclusions).
+
+type(claim.exclusions, attributerelation).
+domain(claim.exclusions, clinical_related_injury_coverage).
+codomain(claim.exclusions, general_exclusion).
+unique(claim.exclusions, yes).
+total(claim.exclusions, yes).
+changestyle(claim.exclusions, checkboxfield).
