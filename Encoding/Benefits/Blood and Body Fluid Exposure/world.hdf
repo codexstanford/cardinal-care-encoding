@@ -1,0 +1,12 @@
+type(clinical_related_injury, clinical_related_injury_coverage)
+type(treatment_required, clinical_related_injury_coverage)
+type(exclusion_type, general_exclusion)
+type(clinical_injury_service, clinical_related_injury_service)
+type(clinical_injury_location, clinical_related_injury_location)
+type(clinical_related_diagnostic_services, clinical_related_diagnostic_services)
+type(patient_dob, date)
+type(date_of_injury, date)
+
+type(patient_eligibility_for_treatment, boolean)
+type(exclusion_for_treatment, boolean)
+type(patient_has_required_treatment, boolean)

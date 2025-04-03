@@ -1,0 +1,41 @@
+eligible_health_services_for_clinical_injury(Claim) :-
+    patient_in_clinical_capacity(Claim) &
+    claim.has_clinical_injury(Claim) &
+    claim.is_treatment_for_wound(Claim).
+
+eligible_health_services_for_wound_treatment(Claim) :-
+    eligible_health_services_for_clinical_injury(Claim) &
+    claim.is_immediate_treatment(Claim) &
+    claim.includes_medications(Claim, prophylactic_medications) &
+    claim.includes_physician_visit(Claim) &
+    claim.includes_specialist_visit(Claim) &
+    claim.includes_outpatient_visit(Claim) &
+    claim.includes_walk_in_clinic_visit(Claim) &
+    claim.includes_urgent_care(Claim) &
+    claim.includes_emergency_services(Claim) &
+    claim.includes_diagnostic_lab_work(Claim) &
+    claim.includes_radiological_services(Claim).
+
+eligible_health_services_for_source_diagnosis(Claim) :-
+    patient_in_clinical_capacity(Claim) &
+    claim.has_clinical_injury(Claim) &
+    claim.is_source_of_injury(Claim) &
+    claim.includes_diagnostic_lab_work(Claim) &
+    claim.includes_radiological_services(Claim).
+
+eligible_health_services_for_illness_treatment(Claim) :-
+    claim.has_illness_due_to_wound(Claim) &
+    eligible_health_services_for_clinical_injury(Claim) &
+    claim.is_treatment_for_illness(Claim) &
+    claim.includes_physician_visit(Claim) &
+    claim.includes_specialist_visit(Claim) &
+    claim.includes_emergency_services(Claim) &
+    claim.includes_outpatient_visit(Claim) &
+    claim.includes_walk_in_clinic_visit(Claim) &
+    claim.includes_urgent_care(Claim) &
+    claim.includes_diagnostic_lab_work(Claim) &
+    claim.includes_radiological_services(Claim).
+
+non_covered_services_for_clinical_injury_illness(Claim) :-
+    claim.has_illness_due_to_wound(Claim) &
+    claim.includes_services_for_illness_not_related_to_wound(Claim).

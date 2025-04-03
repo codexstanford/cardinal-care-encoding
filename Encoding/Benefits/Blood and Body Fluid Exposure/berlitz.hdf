@@ -1,0 +1,26 @@
+berlitz(clinical_injury_coverage(C),
+        "The clinical injury coverage applies to $C$")
+
+berlitz(claim_has_injury_coverage(C),
+        "The claim $C$ has injury coverage")
+
+berlitz(claim_requires_treatment(C),
+        "The claim $C$ requires treatment")
+
+berlitz(claim_is_exempt_from_coverage(C),
+        "The claim $C$ is exempt from coverage")
+
+berlitz(clinical_injury_service_type(S),
+        "$S$ is a type of clinical injury service")
+
+berlitz(clinical_injury_location_type(L),
+        "$L$ is a type of clinical injury location")
+
+berlitz(clinical_injury_diagnostic_service(D),
+        "$D$ is a diagnostic service for a clinical injury")
+
+berlitz(patient_is_eligible_for_treatment(P),
+        "The patient $P$ is eligible for treatment under clinical injury coverage")
+
+berlitz(patient_has_exclusion(P),
+        "The patient $P$ has an exclusion from treatment")
